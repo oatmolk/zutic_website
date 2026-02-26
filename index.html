@@ -1261,8 +1261,11 @@ footer {
   <h1>Datenschutz&shy;erklärung</h1>
 
   <h2>1. Verantwortlicher</h2>
-  <p>Zutic 3D Studio Solutions<br>
-  Kontakt: <a href="mailto:info@zutic3d.com" style="color:var(--gold);">info@zutic3d.com</a></p>
+  <p>Aleksandar Zutic<br>
+  Zutic 3D Studio Solutions<br>
+  Thomas-Mann-Straße 22a<br>
+  63477 Maintal<br>
+  Kontakt: <a href="mailto:aleks@zutic.de" style="color:var(--gold);">aleks@zutic.de</a></p>
 
   <h2>2. Erhobene Daten</h2>
   <p>Diese Website erhebt beim Besuch technisch notwendige Daten (Server-Logfiles: IP-Adresse, Browsertyp, Datum/Uhrzeit des Zugriffs). Diese Daten werden nicht mit anderen Datenquellen zusammengeführt und nach spätestens 7 Tagen gelöscht.</p>
@@ -1283,6 +1286,52 @@ footer {
 
   <h2>6. Änderungen</h2>
   <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf zu aktualisieren. Stand: Februar 2026.</p>
+</div>
+
+<!-- ═══════════════════════════════════ IMPRESSUM ═══════════════════════════════════ -->
+<div id="impressum-page" class="page" style="display:none;">
+  <button class="back-btn" onclick="hideImpressum()" style="margin-bottom:40px;">← Zurück</button>
+  <div class="label">Rechtliches</div>
+  <h1>Impressum</h1>
+
+  <h2>Angaben gemäß § 5 TMG</h2>
+  <p>
+    Aleksandar Zutic<br>
+    Zutic 3D Studio Solutions<br>
+    Thomas-Mann-Straße 22a<br>
+    63477 Maintal<br>
+    Deutschland
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>
+    E-Mail: <a href="mailto:aleks@zutic.de" style="color:var(--gold);">aleks@zutic.de</a>
+  </p>
+
+  <h2>Umsatzsteuer-Identifikationsnummer</h2>
+  <p>Die Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz wird nach Erteilung nachgereicht.</p>
+
+  <h2>Berufsbezeichnung</h2>
+  <p>3D Visualisierung / Einzelunternehmer<br>
+  Zuständiges Land: Deutschland</p>
+
+  <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+  <p>
+    Aleksandar Zutic<br>
+    Thomas-Mann-Straße 22a<br>
+    63477 Maintal
+  </p>
+
+  <h2>Haftung für Inhalte</h2>
+  <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+
+  <h2>Haftung für Links</h2>
+  <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+
+  <h2>Urheberrecht</h2>
+  <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+
+  <p style="margin-top:40px;"><a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;">→ Zur Datenschutzerklärung</a></p>
 </div>
 
 <!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
@@ -1673,6 +1722,7 @@ footer {
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('about')">Studio</a>
       <a onclick="showPage('contact')">Contact</a>
+      <a onclick="showImpressum()" style="color:var(--white-dim);opacity:0.5;">Impressum</a>
       <a onclick="showPrivacy()" style="color:var(--white-dim);opacity:0.5;">Datenschutz</a>
       <a onclick="cookieOpenSettings()" style="color:var(--white-dim);opacity:0.5;">Cookie-Einstellungen</a>
     </div>
@@ -2336,6 +2386,15 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   };
   window.hidePrivacy = function() {
     document.getElementById('privacy-page').style.display = 'none';
+    showPage('home');
+  };
+  window.showImpressum = function() {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.getElementById('impressum-page').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  window.hideImpressum = function() {
+    document.getElementById('impressum-page').style.display = 'none';
     showPage('home');
   };
   document.getElementById('cookie-modal').addEventListener('click', function(e) {
