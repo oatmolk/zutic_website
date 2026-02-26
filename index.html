@@ -1,0 +1,2347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZUTIC 3D STUDIO SOLUTIONS — High-End 3D Visualization</title>
+<meta name="description" content="Premium 3D visualization studio specializing in retail, product and interior concepts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --black: #080808;
+  --black-2: #101010;
+  --black-3: #161616;
+  --white: #F6F1E9;
+  --white-dim: rgba(246,241,233,0.55);
+  --gold: #C8A96E;
+  --gold-dim: rgba(200,169,110,0.18);
+  --border: rgba(246,241,233,0.08);
+  --border-hover: rgba(246,241,233,0.2);
+  --radius: 2px;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Barlow', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* ─── PAGES ─── */
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; animation: fadeIn 0.5s var(--ease); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 48px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  background: rgba(8,8,8,0.82);
+  transition: border-color 0.3s;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  cursor: pointer;
+  user-select: none;
+}
+.nav-logo span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0; right: 100%;
+  height: 1px;
+  background: var(--gold);
+  transition: right 0.3s var(--ease);
+}
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-links a:hover::after, .nav-links a.active::after { right: 0; }
+
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--gold);
+  border: none;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* ─── TYPOGRAPHY ─── */
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.display-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 300;
+  line-height: 1.1;
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.body-text {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--white-dim);
+  font-weight: 300;
+}
+
+/* ─── SECTIONS ─── */
+section { padding: 120px 48px; }
+.container { max-width: 1280px; margin: 0 auto; }
+
+/* ─── HOME: HERO ─── */
+#home .hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 72px 0 0;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Ambient background — subtle warm gradient + faint grid */
+#home .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 72% 50%, rgba(200,169,110,0.055) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 15% 80%, rgba(200,169,110,0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+/* Faint vertical grid lines */
+#home .hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(246,241,233,0.025) 0px,
+    rgba(246,241,233,0.025) 1px,
+    transparent 1px,
+    transparent 120px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Large decorative "3D" watermark */
+.hero-watermark {
+  position: absolute;
+  right: -0.05em;
+  top: 50%;
+  transform: translateY(-55%);
+  font-family: var(--font-display);
+  font-size: clamp(16rem, 28vw, 34rem);
+  font-weight: 300;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(200,169,110,0.07);
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+  letter-spacing: -0.04em;
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 48px 60px 64px;
+  position: relative;
+  z-index: 2;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7.5vw, 9.5rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  max-width: 860px;
+}
+.hero-headline em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-subline {
+  margin-top: 40px;
+  font-size: 0.9rem;
+  color: var(--white-dim);
+  letter-spacing: 0.06em;
+  max-width: 400px;
+  line-height: 1.7;
+}
+.hero-actions {
+  margin-top: 56px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--gold);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 16px 36px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  text-decoration: none;
+}
+.btn-primary:hover { background: var(--white); transform: translateY(-2px); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 15px 32px;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--border-hover); color: var(--white); }
+
+.hero-scroll-indicator {
+  padding: 28px 48px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+}
+.scroll-line {
+  width: 32px;
+  height: 1px;
+  background: var(--white-dim);
+  animation: scrollPulse 2.5s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleX(1); opacity: 0.4; }
+  50% { transform: scaleX(1.5); opacity: 1; }
+}
+.hero-stats {
+  margin-left: auto;
+  display: flex;
+  gap: 48px;
+}
+.stat { text-align: right; }
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--white);
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+}
+
+/* ─── FEATURED WORK ─── */
+.featured-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 64px;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+.work-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--black-3);
+}
+.work-card:nth-child(1) { grid-column: span 7; aspect-ratio: 16/10; }
+.work-card:nth-child(2) { grid-column: span 5; aspect-ratio: 4/3; }
+.work-card:nth-child(3) { grid-column: span 4; aspect-ratio: 4/3; }
+.work-card:nth-child(4) { grid-column: span 4; aspect-ratio: 4/3; }
+.work-card:nth-child(5) { grid-column: span 4; aspect-ratio: 4/3; }
+.work-card:nth-child(6) { grid-column: span 12; aspect-ratio: 21/7; }
+
+.work-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s var(--ease), filter 0.4s;
+  filter: brightness(0.88) saturate(0.9);
+}
+.work-card:hover img { transform: scale(1.04); filter: brightness(1) saturate(1); }
+
+.work-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.15) 45%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+  transition: background 0.4s;
+}
+.work-card:hover .work-card-overlay {
+  background: linear-gradient(to top, rgba(6,6,6,0.96) 0%, rgba(6,6,6,0.25) 55%, transparent 100%);
+}
+.work-card-tags { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(200,169,110,0.35);
+  padding: 3px 10px;
+  border-radius: var(--radius);
+}
+.work-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+.work-card-arrow {
+  position: absolute;
+  top: 24px; right: 24px;
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white-dim);
+  font-size: 1.1rem;
+  transform: translate(8px, -8px);
+  opacity: 0;
+  transition: all 0.35s var(--ease);
+  background: rgba(8,8,8,0.6);
+}
+.work-card:hover .work-card-arrow { transform: translate(0,0); opacity: 1; }
+
+/* ─── SERVICES ─── */
+#home .services { background: var(--black-2); border-top: 1px solid var(--border); }
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+.services-list { display: flex; flex-direction: column; gap: 0; }
+.service-item {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  transition: background 0.3s;
+  cursor: default;
+}
+.service-item:first-child { border-top: 1px solid var(--border); }
+.service-num {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--gold);
+  padding-top: 3px;
+  flex-shrink: 0;
+}
+.service-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+.service-content p { font-size: 0.84rem; color: var(--white-dim); line-height: 1.65; }
+
+/* ─── PROCESS ─── */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+.process-step {
+  background: var(--black-3);
+  padding: 48px 36px;
+  position: relative;
+  transition: background 0.3s, border-left 0.3s;
+  border-left: 2px solid transparent;
+}
+.process-step:hover { background: var(--black-2); border-left-color: var(--gold); }
+.process-step-num {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  font-weight: 300;
+  color: rgba(200,169,110,0.12);
+  line-height: 1;
+  margin-bottom: 24px;
+}
+.process-step h4 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+.process-step p { font-size: 0.82rem; color: var(--white-dim); line-height: 1.65; }
+
+/* ─── CLIENTS ─── */
+.clients-section { }
+.clients-strip {
+  margin-top: 48px;
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+}
+.client-item {
+  flex: 1;
+  padding: 40px 32px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--white-dim);
+  letter-spacing: 0.06em;
+  transition: color 0.2s, background 0.2s;
+}
+.client-item:last-child { border-right: none; }
+.client-item:hover { color: var(--white); background: var(--black-3); }
+
+/* ─── CTA SECTION ─── */
+.cta-section {
+  text-align: center;
+  padding: 140px 48px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(ellipse, rgba(200,169,110,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 7rem);
+  font-weight: 300;
+  line-height: 0.95;
+  margin-bottom: 0;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-section h2 em { font-style: italic; color: var(--gold); }
+.cta-section .body-text { margin-top: 28px; }
+.cta-actions { display: flex; gap: 16px; justify-content: center; margin-top: 44px; }
+
+/* ─── WORK PAGE ─── */
+#work { padding-top: 72px; }
+.work-header {
+  padding: 80px 48px 56px;
+  border-bottom: 1px solid var(--border);
+}
+.work-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--white-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: var(--radius);
+}
+.filter-btn:hover, .filter-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.all-work-grid {
+  padding: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.all-work-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--black-3);
+  aspect-ratio: 4/3;
+}
+.all-work-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease), filter 0.4s;
+  filter: brightness(0.82) saturate(0.85);
+}
+.all-work-card:hover img { transform: scale(1.05); filter: brightness(1) saturate(1); }
+.all-work-card:hover .work-card-overlay {
+  background: linear-gradient(to top, rgba(6,6,6,0.96) 0%, rgba(6,6,6,0.25) 60%, transparent);
+}
+
+/* ─── CASE STUDY PAGE ─── */
+#case-study { padding-top: 72px; }
+.case-cover {
+  width: 100%;
+  height: 80vh;
+  position: relative;
+  overflow: hidden;
+}
+.case-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+.case-cover-content {
+  position: absolute;
+  bottom: 64px;
+  left: 48px;
+  right: 48px;
+  max-width: 900px;
+}
+.case-header { padding: 80px 48px; border-bottom: 1px solid var(--border); }
+.case-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  margin-top: 56px;
+}
+.case-meta-item {}
+.case-meta-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.case-meta-value { font-size: 0.88rem; color: var(--white); }
+
+.case-summary {
+  padding: 80px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 80px;
+  border-bottom: 1px solid var(--border);
+}
+.case-summary-block h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+.case-summary-block p { font-size: 0.84rem; color: var(--white-dim); line-height: 1.75; }
+
+.case-gallery { padding: 80px 48px; }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.gallery-item { overflow: hidden; }
+.gallery-item.full { grid-column: span 2; }
+.gallery-item.full.tall { aspect-ratio: 16/7; }
+.gallery-item img { width: 100%; display: block; object-fit: cover; transition: transform 0.6s var(--ease); }
+.gallery-item:hover img { transform: scale(1.02); }
+.gallery-item { aspect-ratio: 16/10; }
+
+.case-cta {
+  margin: 0 48px 80px;
+  padding: 80px;
+  background: var(--black-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* ─── ABOUT PAGE ─── */
+#about { padding-top: 72px; }
+.about-hero {
+  padding: 100px 48px 80px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.about-tools {
+  padding: 80px 48px;
+  border-bottom: 1px solid var(--border);
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  margin-top: 48px;
+}
+.tool-item {
+  background: var(--black-3);
+  padding: 28px 20px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  transition: all 0.2s;
+}
+.tool-item:hover { background: var(--gold-dim); color: var(--gold); }
+
+/* ─── CONTACT PAGE ─── */
+#contact { padding-top: 72px; }
+.contact-grid {
+  padding: 100px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  min-height: calc(100vh - 72px);
+  align-items: center;
+}
+.contact-info {}
+.contact-email {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 300;
+  color: var(--gold);
+  margin-top: 24px;
+  display: block;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.contact-email:hover { opacity: 0.75; }
+
+.contact-form { display: flex; flex-direction: column; gap: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.field input, .field textarea, .field select {
+  background: var(--black-2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  padding: 14px 18px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  resize: none;
+  -webkit-appearance: none;
+}
+.field input::placeholder, .field textarea::placeholder { color: rgba(246,241,233,0.25); }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold); background: var(--black-3); }
+.field select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8A96E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+.field select option { background: #1a1a1a; color: var(--white); }
+.field textarea { min-height: 140px; }
+.form-submit {
+  margin-top: 8px;
+  align-self: flex-start;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 44px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.footer-logo span { color: var(--gold); }
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: rgba(246,241,233,0.35);
+}
+.footer-links { display: flex; gap: 32px; }
+.footer-links a {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gold); }
+
+/* ─── DIVIDER ─── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 0 48px; }
+
+/* ─── BACK BTN ─── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  cursor: pointer;
+  padding: 24px 48px;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+  text-align: left;
+}
+.back-btn:hover { color: var(--gold); }
+
+/* ─── QUOTE BLOCK ─── */
+.quote-block {
+  padding: 100px 48px;
+  background: var(--black-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.quote-block::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.15em;
+  left: 48px;
+  font-family: var(--font-display);
+  font-size: 14rem;
+  font-weight: 300;
+  color: rgba(200,169,110,0.06);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+.quote-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.3;
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.quote-attr {
+  text-align: center;
+  margin-top: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  position: relative;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  section { padding: 80px 24px; }
+  .hero-inner { padding: 80px 24px 40px; }
+  .hero-scroll-indicator { padding: 20px 24px; }
+  .hero-stats { display: none; }
+  .work-grid { grid-template-columns: 1fr 1fr; }
+  .work-card:nth-child(n) { grid-column: span 2; }
+  .work-card:nth-child(3), .work-card:nth-child(4) { grid-column: span 1; }
+  .services-grid { grid-template-columns: 1fr; gap: 40px; }
+  .process-grid { grid-template-columns: 1fr 1fr; }
+  .case-meta-grid { grid-template-columns: 1fr 1fr; }
+  .case-summary { grid-template-columns: 1fr; gap: 40px; }
+  .gallery-grid { grid-template-columns: 1fr; }
+  .gallery-item.full { grid-column: span 1; }
+  .about-hero { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: repeat(3, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; padding: 60px 24px; }
+  .all-work-grid { grid-template-columns: 1fr 1fr; padding: 24px; }
+  .case-cover-content { left: 24px; right: 24px; bottom: 36px; }
+  .case-header, .case-summary, .case-gallery { padding: 60px 24px; }
+  .case-cta { flex-direction: column; padding: 48px 24px; margin: 0 24px 48px; }
+  footer { flex-direction: column; text-align: center; padding: 36px 24px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 580px) {
+  .all-work-grid { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: 1fr; }
+  .clients-strip { flex-direction: column; }
+  .nav-links { display: none; }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+}
+
+/* ─── LANG TOGGLE ─── */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+.lang-btn {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: var(--white-dim);
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.lang-btn.active {
+  background: var(--gold);
+  color: var(--black);
+}
+.lang-btn:not(.active):hover { color: var(--white); background: rgba(246,241,233,0.06); }
+.lang-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ─── HOVER TILT ─── */
+.tilt { transition: transform 0.4s var(--ease); will-change: transform; }
+
+/* ─── SUCCESS MSG ─── */
+.success-msg {
+  display: none;
+  background: var(--gold-dim);
+  border: 1px solid rgba(200,169,110,0.3);
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+/* ─── DSGVO COOKIE BANNER ─── */
+#cookie-banner {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: rgba(10,10,10,0.97);
+  border-top: 1px solid var(--border-hover);
+  backdrop-filter: blur(16px);
+  padding: 28px 40px;
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  transform: translateY(100%);
+  transition: transform 0.5s var(--ease);
+}
+#cookie-banner.visible { transform: translateY(0); }
+#cookie-banner .cookie-text {
+  flex: 1;
+}
+#cookie-banner .cookie-text h4 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 8px;
+}
+#cookie-banner .cookie-text p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  line-height: 1.6;
+  margin: 0;
+}
+#cookie-banner .cookie-text p a {
+  color: var(--gold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+#cookie-banner .cookie-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 180px;
+  justify-content: center;
+}
+#cookie-banner .cookie-actions button {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  transition: all 0.2s;
+}
+#cookie-banner .btn-accept-all {
+  background: var(--gold);
+  color: var(--black);
+}
+#cookie-banner .btn-accept-all:hover { background: #d4b87a; }
+#cookie-banner .btn-accept-essential {
+  background: transparent;
+  color: var(--white-dim);
+  border: 1px solid var(--border-hover) !important;
+}
+#cookie-banner .btn-accept-essential:hover { color: var(--white); border-color: rgba(246,241,233,0.4) !important; }
+#cookie-banner .btn-settings {
+  background: transparent;
+  color: rgba(246,241,233,0.35);
+  border: 1px solid var(--border) !important;
+  font-size: 0.62rem;
+}
+#cookie-banner .btn-settings:hover { color: var(--white-dim); }
+
+/* Cookie Settings Modal */
+#cookie-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+}
+#cookie-modal.open { display: flex; }
+#cookie-modal .modal-box {
+  background: var(--black-3);
+  border: 1px solid var(--border-hover);
+  max-width: 540px;
+  width: 90%;
+  padding: 40px;
+}
+#cookie-modal h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--white);
+  margin: 0 0 8px;
+}
+#cookie-modal .modal-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--white-dim);
+  letter-spacing: 0.1em;
+  margin: 0 0 32px;
+}
+.cookie-toggle-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 20px;
+}
+.cookie-toggle-row:last-of-type { border-bottom: none; }
+.cookie-toggle-info strong {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.cookie-toggle-info span {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  line-height: 1.5;
+}
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: rgba(246,241,233,0.1);
+  border: 1px solid var(--border-hover);
+  transition: 0.3s;
+}
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  height: 16px; width: 16px;
+  left: 3px; bottom: 3px;
+  background: var(--white-dim);
+  transition: 0.3s;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--gold); border-color: var(--gold); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); background: var(--black); }
+.toggle-switch input:disabled + .toggle-slider { opacity: 0.5; cursor: not-allowed; }
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+.modal-actions button {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.btn-save-settings {
+  background: var(--gold);
+  color: var(--black);
+  flex: 1;
+}
+.btn-save-settings:hover { background: #d4b87a; }
+.btn-modal-close {
+  background: transparent;
+  color: var(--white-dim);
+  border: 1px solid var(--border-hover) !important;
+}
+.btn-modal-close:hover { color: var(--white); }
+
+/* Datenschutz page */
+#privacy-page {
+  padding: 120px 48px 80px;
+  max-width: 740px;
+  margin: 0 auto;
+}
+#privacy-page h1 {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 300;
+  color: var(--white);
+  margin: 0 0 8px;
+}
+#privacy-page .label { margin-bottom: 40px; }
+#privacy-page h2 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 36px 0 10px;
+}
+#privacy-page p, #privacy-page li {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--white-dim);
+  line-height: 1.8;
+}
+#privacy-page ul { padding-left: 20px; }
+
+@media (max-width: 640px) {
+  #cookie-banner { flex-direction: column; padding: 24px 20px; gap: 20px; }
+  #cookie-banner .cookie-actions { flex-direction: row; flex-wrap: wrap; min-width: unset; }
+  #cookie-banner .cookie-actions button { flex: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ DSGVO COOKIE BANNER ═══════════════════════ -->
+<div id="cookie-banner" role="dialog" aria-label="Cookie-Einstellungen">
+  <div class="cookie-text">
+    <h4>Datenschutz & Cookies</h4>
+    <p>Wir verwenden Cookies, um die Website-Funktionalität sicherzustellen (notwendig) und — mit Ihrer Zustimmung — anonyme Nutzungsstatistiken zu erheben (Analyse). Weitere Informationen finden Sie in unserer <a onclick="showPrivacy()">Datenschutzerklärung</a>.</p>
+  </div>
+  <div class="cookie-actions">
+    <button class="btn-accept-all" onclick="cookieAcceptAll()">Alle akzeptieren</button>
+    <button class="btn-accept-essential" onclick="cookieAcceptEssential()">Nur notwendige</button>
+    <button class="btn-settings" onclick="cookieOpenSettings()">Einstellungen</button>
+  </div>
+</div>
+
+<!-- Cookie Settings Modal -->
+<div id="cookie-modal" role="dialog" aria-modal="true" aria-label="Cookie-Einstellungen">
+  <div class="modal-box">
+    <h3>Cookie-Einstellungen</h3>
+    <p class="modal-subtitle">Ihre Einwilligung gemäß DSGVO Art. 6 Abs. 1 lit. a</p>
+
+    <div class="cookie-toggle-row">
+      <div class="cookie-toggle-info">
+        <strong>Notwendige Cookies</strong>
+        <span>Technisch erforderlich für den Betrieb der Website. Können nicht deaktiviert werden.</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" checked disabled>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="cookie-toggle-row">
+      <div class="cookie-toggle-info">
+        <strong>Analyse-Cookies</strong>
+        <span>Helfen uns zu verstehen, wie Besucher die Website nutzen (z.B. Google Analytics). Alle Daten werden anonymisiert.</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle-analytics">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="cookie-toggle-row">
+      <div class="cookie-toggle-info">
+        <strong>Marketing-Cookies</strong>
+        <span>Ermöglichen personalisierte Werbung. Werden derzeit nicht eingesetzt.</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle-marketing">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-save-settings" onclick="cookieSaveSettings()">Einstellungen speichern</button>
+      <button class="btn-modal-close" onclick="cookieCloseModal()">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy Page -->
+<div id="privacy-page" class="page" style="display:none;">
+  <button class="back-btn" onclick="hidePrivacy()" style="margin-bottom:40px;">← Zurück</button>
+  <div class="label">Rechtliches</div>
+  <h1>Datenschutz&shy;erklärung</h1>
+
+  <h2>1. Verantwortlicher</h2>
+  <p>Zutic 3D Studio Solutions<br>
+  Kontakt: <a href="mailto:info@zutic3d.com" style="color:var(--gold);">info@zutic3d.com</a></p>
+
+  <h2>2. Erhobene Daten</h2>
+  <p>Diese Website erhebt beim Besuch technisch notwendige Daten (Server-Logfiles: IP-Adresse, Browsertyp, Datum/Uhrzeit des Zugriffs). Diese Daten werden nicht mit anderen Datenquellen zusammengeführt und nach spätestens 7 Tagen gelöscht.</p>
+
+  <h2>3. Cookies</h2>
+  <p>Wir setzen folgende Kategorien von Cookies ein:</p>
+  <ul>
+    <li><strong>Notwendige Cookies:</strong> Technisch erforderlich für den Betrieb der Website. Keine Einwilligung erforderlich (Art. 6 Abs. 1 lit. f DSGVO).</li>
+    <li><strong>Analyse-Cookies:</strong> Nur mit Ihrer ausdrücklichen Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Sie können Ihre Einwilligung jederzeit widerrufen.</li>
+  </ul>
+  <p>Ihre Cookie-Einstellungen können Sie jederzeit über den Link im Footer anpassen.</p>
+
+  <h2>4. Ihre Rechte</h2>
+  <p>Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Zur Ausübung Ihrer Rechte wenden Sie sich an uns per E-Mail.</p>
+
+  <h2>5. Beschwerderecht</h2>
+  <p>Sie haben das Recht, sich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren. In Deutschland ist dies der Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI).</p>
+
+  <h2>6. Änderungen</h2>
+  <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf zu aktualisieren. Stand: Februar 2026.</p>
+</div>
+
+<!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span><span style="font-weight:300;letter-spacing:0.08em;font-size:1rem;">3D STUDIO</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active" data-i18n="nav.home">Home</a></li>
+    <li><a onclick="showPage('work')" id="nav-work" data-i18n="nav.work">Work</a></li>
+    <li><a onclick="showPage('about')" id="nav-about" data-i18n="nav.studio">Studio</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <div class="lang-sep"></div>
+      <button class="lang-btn" id="btn-de" onclick="setLang('de')">DE</button>
+    </div>
+    <button class="nav-cta" onclick="showPage('contact')" data-i18n="nav.cta">Get a Quote</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════ HOME ═══════════════════════════════════ -->
+<div id="home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero" style="padding:0;">
+    <div class="hero-watermark">3D</div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="label" data-i18n="hero.eyebrow">3D Visualization Studio</span>
+      </div>
+      <h1 class="hero-headline">
+        <span data-i18n="hero.line1">High-end</span><br>
+        <em data-i18n="hero.line2">3D visuals</em><br>
+        <span data-i18n="hero.line3">that sell.</span>
+      </h1>
+      <p class="hero-subline" data-i18n="hero.sub">Retail concepts. Product renders. Interior spaces.<br>Fast iterations. Premium look. Reliable delivery.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('work')" data-i18n="hero.cta1">View Work →</button>
+        <button class="btn-ghost" onclick="showPage('contact')" data-i18n="hero.cta2">Book a Call</button>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <div class="scroll-line"></div>
+      <span style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--white-dim);" data-i18n="hero.scroll">Scroll to explore</span>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">4+yr</div>
+          <div class="stat-label">Experience</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">4K</div>
+          <div class="stat-label">Delivery</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED WORK -->
+  <section style="padding:96px 48px 112px;">
+    <div class="featured-header">
+      <div>
+        <div class="label" style="margin-bottom:12px;" data-i18n="work.label">Selected Work</div>
+        <h2 class="display-md" data-i18n="work.title">Featured Projects</h2>
+      </div>
+      <button class="btn-ghost" onclick="showPage('work')" data-i18n="work.all">All Projects →</button>
+    </div>
+    <div class="work-grid">
+
+      <!-- 1 — Top left LARGE: Red Bull Bar -->
+      <div class="work-card tilt" onclick="showCaseStudy('redbull-bar')">
+        <img src="img_07_redbull.png" alt="Red Bull Bar Concept" loading="lazy">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
+          <div class="work-card-title">Red Bull Bar Concept</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+      <!-- 2 — Top right: Gang Bang Studio Lounge -->
+      <div class="work-card tilt" onclick="showCaseStudy('gangbang-studio')">
+        <img src="img_08_lounge.png" alt="Gang Bang Studio" loading="lazy">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+          <div class="work-card-title">Gang Bang Studio</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+      <!-- 3 — Middle left: Restaurant Concept -->
+      <div class="work-card tilt" onclick="showCaseStudy('zutic-restaurant')">
+        <img src="img_02_restaurant.png" alt="Restaurant Concept" loading="lazy">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+          <div class="work-card-title">Restaurant Concept</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+      <!-- 4 — Middle center: Character CGI -->
+      <div class="work-card tilt" onclick="showCaseStudy('gangbang-studio')">
+        <img src="img_09_character.png" alt="Character CGI" loading="lazy" style="object-position:center 20%;">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">3D</span><span class="tag">Character</span></div>
+          <div class="work-card-title">Character CGI</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+      <!-- 5 — Middle right: Interior Privat -->
+      <div class="work-card tilt" onclick="showCaseStudy('ewa-apartment')">
+        <img src="img_06_sunset.png" alt="Interior Privat" loading="lazy">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Residential</span></div>
+          <div class="work-card-title">Interior Privat</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+      <!-- 6 — Full width bottom: Cheesecake Shop -->
+      <div class="work-card tilt" onclick="showCaseStudy('cheesecake-shop')">
+        <img src="img_11_cheesecake1.png" alt="Uglyfaces Cheesecake Shop" loading="lazy">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+          <div class="work-card-title">Uglyfaces — Cheesecake Shop</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services">
+    <div class="services-grid container">
+      <div>
+        <div class="label" style="margin-bottom:16px;" data-i18n="services.label">What We Do</div>
+        <h2 class="display-md" style="margin-bottom:24px;"><span data-i18n="services.title1">Turning concepts</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="services.title2">into reality</em></h2>
+        <p class="body-text" style="margin-bottom:32px;" data-i18n="services.intro">We specialize in high-end 3D visualization for brands that care about quality. From a single product render to a full spatial concept — we deliver visuals that close deals.</p>
+        <button class="btn-ghost" onclick="showPage('about')" data-i18n="services.about">About the Studio →</button>
+      </div>
+      <div class="services-list">
+        <div class="service-item">
+          <span class="service-num">01</span>
+          <div class="service-content">
+            <h3 data-i18n="s1.title">Retail Visuals</h3>
+            <p data-i18n="s1.desc">Shop-in-shop concepts, POS displays, brand activations and festival setups — photorealistic renders for presentations, approvals and marketing.</p>
+          </div>
+        </div>
+        <div class="service-item">
+          <span class="service-num">02</span>
+          <div class="service-content">
+            <h3 data-i18n="s2.title">Product Renders</h3>
+            <p data-i18n="s2.desc">Studio-quality product visualization with precise material, light and shadow. Packshots, hero shots, 360° turntables and lifestyle composites.</p>
+          </div>
+        </div>
+        <div class="service-item">
+          <span class="service-num">03</span>
+          <div class="service-content">
+            <h3 data-i18n="s3.title">Interior & Spatial Concepts</h3>
+            <p data-i18n="s3.desc">Full interior renderings for residential and commercial spaces — living rooms, offices, restaurants, showrooms. Includes floor plans and isometric views.</p>
+          </div>
+        </div>
+        <div class="service-item">
+          <span class="service-num">04</span>
+          <div class="service-content">
+            <h3 data-i18n="s4.title">Architectural Visualization</h3>
+            <p data-i18n="s4.desc">Exterior and concept renderings, aerial views, and walkthrough animations for architects, developers and planners.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section style="padding:96px 48px 112px;">
+    <div class="label" style="margin-bottom:16px;" data-i18n="process.label">How It Works</div>
+    <h2 class="display-md" style="margin-bottom:0;" data-i18n="process.title">Our Process</h2>
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="process-step-num">01</div>
+        <h4 data-i18n="p1.title">Brief & Scope</h4>
+        <p data-i18n="p1.desc">You share references, plans, and objectives. We align on deliverables, timeline and technical requirements before any pixel is touched.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">02</div>
+        <h4 data-i18n="p2.title">Concept & Modelling</h4>
+        <p data-i18n="p2.desc">We build the 3D scene — geometry, layout, materials. First preview within 48–72 hours so you can steer direction early.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">03</div>
+        <h4 data-i18n="p3.title">Render & Iteration</h4>
+        <p data-i18n="p3.desc">High-quality renders with lighting, camera and detail refinements. Up to 3 revision rounds included; feedback loops stay fast.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">04</div>
+        <h4 data-i18n="p4.title">Final Delivery</h4>
+        <p data-i18n="p4.desc">4K+ files in your required formats — JPEG, PNG, PSD, or EXR. Full source files available. Delivered on time, every time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <div class="quote-block">
+    <p class="quote-text" data-i18n="quote.text">"We don't just render spaces — we render <em>confidence</em> into every decision made around them."</p>
+    <p class="quote-attr" data-i18n="quote.attr">— Zutic 3D Studio Solutions</p>
+  </div>
+
+  <!-- CLIENTS -->
+  <section class="clients-section" style="padding:80px 48px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="label" style="margin-bottom:16px;" data-i18n="clients.label">Trusted By</div>
+    <div class="clients-strip">
+      <div class="client-item">Coca-Cola</div>
+      <div class="client-item">Gang Bang Studio</div>
+      <div class="client-item">EWA Living</div>
+      <div class="client-item">Your Brand</div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="label" style="margin-bottom:24px;" data-i18n="cta.label">Let's Work Together</div>
+    <h2><span data-i18n="cta.title1">Ready to make</span><br><em data-i18n="cta.title2">visuals that convert?</em></h2>
+    <p class="body-text" style="max-width:480px;margin:0 auto;" data-i18n="cta.desc">Tell us about your project. We'll respond within 24 hours with a clear scope and timeline.</p>
+    <div class="cta-actions">
+      <button class="btn-primary" onclick="showPage('contact')" data-i18n="cta.btn1">Book a Call →</button>
+      <button class="btn-ghost" onclick="showPage('contact')" data-i18n="cta.btn2">Get a Quote</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span>3D</div>
+    <div class="footer-copy">© 2026 Zutic 3D Studio Solutions. All rights reserved.</div>
+    <div class="footer-links">
+      <a onclick="showPage('work')">Work</a>
+      <a onclick="showPage('about')">Studio</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════════════════════════ WORK ═══════════════════════════════════ -->
+<div id="work" class="page">
+  <div class="work-header">
+    <div class="label" style="margin-bottom:14px;" data-i18n="work.label2">Portfolio</div>
+    <h1 class="display-lg" data-i18n="work.title2">All Work</h1>
+    <div class="work-filters" id="workFilters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="retail">Retail</button>
+      <button class="filter-btn" data-filter="product">Product</button>
+      <button class="filter-btn" data-filter="interior">Interior</button>
+      <button class="filter-btn" data-filter="residential">Residential</button>
+      <button class="filter-btn" data-filter="commercial">Commercial</button>
+      <button class="filter-btn" data-filter="brand">Brand</button>
+    </div>
+  </div>
+
+  <div class="all-work-grid" id="allWorkGrid">
+
+    <div class="all-work-card" data-tags="retail brand" onclick="showCaseStudy('redbull-bar')">
+      <img src="img_07_redbull.png" alt="Red Bull Bar" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
+        <div class="work-card-title">Red Bull Bar Concept</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('gangbang-studio')">
+      <img src="img_08_lounge.png" alt="Gang Bang Studio Lounge" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+        <div class="work-card-title">Gang Bang Studio — Lounge</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('gangbang-studio')">
+      <img src="img_09_character.png" alt="Character CGI" loading="lazy" style="object-position:center 20%;">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">3D</span><span class="tag">Character</span></div>
+        <div class="work-card-title">Character CGI</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior" onclick="showCaseStudy('zutic-restaurant')">
+      <img src="img_02_restaurant.png" alt="Restaurant Concept" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+        <div class="work-card-title">Restaurant Concept</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
+      <img src="img_03_interior.png" alt="Interior Privat" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Residential</span></div>
+        <div class="work-card-title">Interior Privat — Wohnküche</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
+      <img src="img_01_dining.png" alt="Interior Esstisch" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span></div>
+        <div class="work-card-title">Interior Privat — Esstisch</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
+      <img src="img_05_kitchen.png" alt="Interior Kücheninsel" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Residential</span></div>
+        <div class="work-card-title">Interior Privat — Kücheninsel</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
+      <img src="img_10_aerial.png" alt="Interior Vogelperspektive" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Residential</span></div>
+        <div class="work-card-title">Interior Privat — Vogelperspektive</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
+      <img src="img_06_sunset.png" alt="Interior Sunset View" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Residential</span></div>
+        <div class="work-card-title">Interior Privat — Sunset View</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
+      <img src="img_04_interior2.png" alt="Interior Abend" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span></div>
+        <div class="work-card-title">Interior Privat — Abendstimmung</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="retail brand" onclick="showCaseStudy('coca-cola-festival')">
+      <img src="img_13_coke_festival.png" alt="Coca-Cola Festival" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
+        <div class="work-card-title">Coca-Cola Festival Setup</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('cheesecake-shop')">
+      <img src="img_11_cheesecake1.png" alt="Uglyfaces Cheesecake Shop" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+        <div class="work-card-title">Uglyfaces — Cheesecake Shop</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+    <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('cheesecake-shop')">
+      <img src="img_12_cheesecake2.png" alt="Uglyfaces Top View" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Interior</span></div>
+        <div class="work-card-title">Uglyfaces — Isometrische Ansicht</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span>3D</div>
+    <div class="footer-copy">© 2026 Zutic 3D Studio Solutions. All rights reserved.</div>
+    <div class="footer-links">
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('about')">Studio</a>
+      <a onclick="showPage('contact')">Contact</a>
+      <a onclick="showPrivacy()" style="color:var(--white-dim);opacity:0.5;">Datenschutz</a>
+      <a onclick="cookieOpenSettings()" style="color:var(--white-dim);opacity:0.5;">Cookie-Einstellungen</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════ CASE STUDY ═══════════════════════════════════ -->
+<div id="case-study" class="page">
+  <button class="back-btn" onclick="showPage('work')">← Back to Work</button>
+  <div id="caseContent"></div>
+  <footer>
+    <div class="footer-logo">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span>3D</div>
+    <div class="footer-copy">© 2026 Zutic 3D Studio Solutions.</div>
+    <div class="footer-links">
+      <a onclick="showPage('work')">More Work</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════ ABOUT ═══════════════════════════════════ -->
+<div id="about" class="page">
+
+  <div class="about-hero">
+    <div>
+      <div class="label" style="margin-bottom:16px;" data-i18n="about.label">The Studio</div>
+      <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="about.title1">Built on</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="about.title2">precision.</em></h1>
+      <p class="body-text" style="margin-bottom:20px;" data-i18n="about.p1">Zutic 3D Studio Solutions is a specialized 3D visualization practice focused on retail architecture, product photography and interior space design. We work with brands, agencies and architects who need visuals that perform — not just impress.</p>
+      <p class="body-text" style="margin-bottom:40px;" data-i18n="about.p2">Our approach is direct: clean briefs, fast previews, precise execution. We've delivered over 50 projects across FMCG, hospitality, residential and commercial sectors.</p>
+      <button class="btn-primary" onclick="showPage('contact')" data-i18n="about.cta">Work With Us →</button>
+    </div>
+    <div style="background:var(--black-3);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
+      <div style="text-align:center;padding:48px;">
+        <div style="font-family:var(--font-display);font-size:5rem;font-weight:300;color:var(--gold);line-height:1;">50+</div>
+        <div class="label" style="margin-top:8px;" data-i18n="about.stat1">Completed Projects</div>
+        <div style="width:40px;height:1px;background:var(--border);margin:24px auto;"></div>
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:300;color:var(--white);">4+ Years</div>
+        <div class="label" style="margin-top:6px;" data-i18n="about.stat2">Industry Experience</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES DETAIL -->
+  <section style="padding:80px 48px;border-bottom:1px solid var(--border);">
+    <div class="label" style="margin-bottom:14px;" data-i18n="about.sLabel">Services</div>
+    <h2 class="display-md" style="margin-bottom:56px;" data-i18n="about.sTitle">What we offer</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:2px;">
+      <div style="background:var(--black-2);padding:48px 40px;border:1px solid var(--border);">
+        <div class="label" style="margin-bottom:20px;" data-i18n="as1.label">01 — Retail Visuals</div>
+        <p class="body-text" data-i18n="as1.desc">Shop-in-shop, POS, brand activations, trade fair booths, pop-up containers. We visualize the full brand experience before a single piece is built.</p>
+      </div>
+      <div style="background:var(--black-2);padding:48px 40px;border:1px solid var(--border);">
+        <div class="label" style="margin-bottom:20px;" data-i18n="as2.label">02 — Product Renders</div>
+        <p class="body-text" data-i18n="as2.desc">Packshots, lifestyle renders, hero images and 360° animations. We match any reference material with photorealistic accuracy.</p>
+      </div>
+      <div style="background:var(--black-2);padding:48px 40px;border:1px solid var(--border);">
+        <div class="label" style="margin-bottom:20px;" data-i18n="as3.label">03 — Interior & Space</div>
+        <p class="body-text" data-i18n="as3.desc">Residential and commercial interiors from concept to final render. Includes kitchen, living, dining, office and hospitality spaces.</p>
+      </div>
+      <div style="background:var(--black-2);padding:48px 40px;border:1px solid var(--border);">
+        <div class="label" style="margin-bottom:20px;" data-i18n="as4.label">04 — Architectural VIZ</div>
+        <p class="body-text" data-i18n="as4.desc">Exterior renderings, aerial views, isometric floor plans and flythrough animations for architects and property developers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="about-tools" style="padding:80px 48px;">
+    <div class="label" style="margin-bottom:14px;" data-i18n="about.toolLabel">Toolset</div>
+    <h2 class="display-md" style="margin-bottom:0;" data-i18n="about.toolTitle">Technology</h2>
+    <div class="tools-grid" style="grid-template-columns:repeat(6,1fr);">
+      <div class="tool-item">Blender</div>
+      <div class="tool-item">Cycles</div>
+      <div class="tool-item">Photoshop</div>
+      <div class="tool-item">After Effects</div>
+      <div class="tool-item">Substance</div>
+      <div class="tool-item">DaVinci</div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="label" style="margin-bottom:24px;">Availability</div>
+    <h2>Currently accepting<br><em>new projects.</em></h2>
+    <p class="body-text" style="max-width:400px;margin:20px auto 0;">Typical lead time: 5–10 business days. Rush projects available on request.</p>
+    <div class="cta-actions">
+      <button class="btn-primary" onclick="showPage('contact')">Start a Project →</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span>3D</div>
+    <div class="footer-copy">© 2026 Zutic 3D Studio Solutions. All rights reserved.</div>
+    <div class="footer-links">
+      <a onclick="showPage('work')">Work</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════ CONTACT ═══════════════════════════════════ -->
+<div id="contact" class="page">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="label" style="margin-bottom:14px;" data-i18n="contact.label">Get In Touch</div>
+      <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="contact.title1">Let's build</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="contact.title2">something<br>great.</em></h1>
+      <p class="body-text" style="margin-bottom:32px;" data-i18n="contact.desc">Whether you have a clear brief or just a rough idea — reach out. We'll help you scope and budget the project correctly from the start.</p>
+      <a href="/cdn-cgi/l/email-protection#8ee6ebe2e2e1cef4fbfae7eda3fdfafbeae7e1a0ede1e3" class="contact-email"><span class="__cf_email__" data-cfemail="8ae2efe6e6e5caf0fffee3e9a7f9feffeee3e5a4e9e5e7">[email&#160;protected]</span></a>
+      <div style="margin-top:48px;padding-top:40px;border-top:1px solid var(--border);">
+        <div class="label" style="margin-bottom:16px;" data-i18n="contact.rtLabel">Response Time</div>
+        <p class="body-text" data-i18n="contact.rtDesc">Within 24 hours on business days.<br>Project start: 5–10 business days.</p>
+      </div>
+      <div style="margin-top:36px;padding-top:36px;border-top:1px solid var(--border);">
+        <div class="label" style="margin-bottom:14px;" data-i18n="contact.locLabel">Based In</div>
+        <p class="body-text" data-i18n="contact.locDesc">Frankfurt am Main, Germany.<br>Working globally.</p>
+      </div>
+    </div>
+    <div>
+      <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="field">
+            <label data-i18n="form.name">Your Name *</label>
+            <input type="text" placeholder="Jane Smith" required>
+          </div>
+          <div class="field">
+            <label data-i18n="form.company">Company</label>
+            <input type="text" placeholder="Your Company">
+          </div>
+        </div>
+        <div class="field">
+          <label data-i18n="form.email">Email Address *</label>
+          <input type="email" placeholder="jane@company.com" required>
+        </div>
+        <div class="field">
+          <label data-i18n="form.type">Project Type</label>
+          <select>
+            <option value="" data-i18n="form.typePh">Select a service…</option>
+            <option data-i18n="form.t1">Retail Visuals</option>
+            <option data-i18n="form.t2">Product Renders</option>
+            <option data-i18n="form.t3">Interior / Spatial</option>
+            <option data-i18n="form.t4">Architectural VIZ</option>
+            <option data-i18n="form.t5">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="form.budget">Budget Range</label>
+          <select>
+            <option value="" data-i18n="form.budgetPh">Select a range…</option>
+            <option>< €500</option>
+            <option>€500 – €2,000</option>
+            <option>€2,000 – €5,000</option>
+            <option>€5,000 – €10,000</option>
+            <option>€10,000+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="form.msg">Tell Us About Your Project *</label>
+          <textarea placeholder="Describe your project, goals, timeline, and any references you have…" data-i18n-ph="form.msgPh" required></textarea>
+        </div>
+        <div class="success-msg" id="successMsg" data-i18n="form.success">✓ Message sent! We'll get back to you within 24 hours.</div>
+        <div class="form-submit">
+          <button type="submit" class="btn-primary" data-i18n="form.submit">Send Message →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span>3D</div>
+    <div class="footer-copy">© 2026 Zutic 3D Studio Solutions. All rights reserved.</div>
+    <div class="footer-links">
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('work')">Work</a>
+      <a onclick="showPage('about')">Studio</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════ JS ═══════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ─── CASE STUDY DATA ───
+const projects = {
+  'coca-cola-festival': {
+    title: 'Coca-Cola Festival Setup',
+    year: '2023',
+    client: 'Coca-Cola',
+    role: '3D Visualization, Scene Setup',
+    tools: 'Blender, Cycles, Photoshop',
+    timeline: '5 days',
+    tags: ['Retail', 'Brand'],
+    cover: 'img_13_coke_festival.png',
+    shortDesc: 'Full 3D concept for a modular container-based festival activation with oversized brand elements.',
+    problem: 'The client needed a compelling visual for internal sign-off on their festival booth concept — before any physical build started.',
+    goal: 'Produce a photorealistic render of a multi-container Coca-Cola activation with branded elements and complete spatial context.',
+    approach: 'We built the full scene in Blender from client sketches and CAD references. Modular containers were modelled accurately, branded, and placed within a realistic outdoor environment.',
+    deliverables: 'Full 4K exterior render, isometric overview, brand application variations.',
+    gallery: ['img_13_coke_festival.png', '20.png']
+  },
+  'cheesecake-shop': {
+    title: 'Uglyfaces — Cheesecake Shop',
+    year: '2024',
+    client: 'Uglyfaces',
+    role: '3D Interior Design & Full Visualization',
+    tools: 'Blender, Cycles, Photoshop',
+    timeline: '7 days',
+    tags: ['Interior', 'Commercial'],
+    cover: 'img_11_cheesecake1.png',
+    shortDesc: 'Playful, nature-inspired retail interior concept for a cheesecake shop brand with bold yellow accents and lush greenery.',
+    problem: 'Uglyfaces needed a distinctive store concept that stood out visually and communicated their fun, organic brand identity.',
+    goal: 'Design and render a full 3D interior that balances whimsy and functionality — bringing the brand to life before construction.',
+    approach: 'We created a complete interior scheme with custom green terrazzo floors, yellow wood panelling, neon signage and living plant walls. Two key perspectives — street-level and isometric — were delivered for stakeholder presentations.',
+    deliverables: 'Eye-level interior render, isometric top-down overview, brand signage mockups.',
+    gallery: ['img_11_cheesecake1.png', 'img_12_cheesecake2.png']
+  },
+  'gangbang-studio': {
+    title: 'Gang Bang Studio — Interior Documentation',
+    year: '2022',
+    client: 'Gang Bang Studio, Frankfurt',
+    role: 'Architectural Photography Support, Interior Visualization',
+    tools: '3ds Max, V-Ray, Photoshop',
+    timeline: '3 days',
+    tags: ['Interior', 'Commercial'],
+    cover: 'img_08_lounge.png',
+    shortDesc: 'High-end interior documentation and visualization for a luxury creative studio in Frankfurt.',
+    problem: 'Gang Bang Studio required polished visual documentation of their newly completed Frankfurt space for press and social media.',
+    goal: 'Deliver a complete visual package capturing the dramatic interior — concrete pillars, LED walls, glass partitions and neon accents.',
+    approach: 'A combination of on-site photography direction and 3D complementary renders. We aligned both mediums to create a seamless look.',
+    deliverables: 'Photography direction, 3D matching renders, retouched final assets.',
+    gallery: ['img_08_lounge.png', 'img_09_character.png']
+  },
+  'redbull-bar': {
+    title: 'Red Bull Bar Concept',
+    year: '2022',
+    client: 'Red Bull GmbH',
+    role: '3D Concept & Visualization',
+    tools: 'Cinema 4D, Corona Renderer',
+    timeline: '4 days',
+    tags: ['Retail', 'Brand'],
+    cover: 'img_07_redbull.png',
+    shortDesc: 'Photorealistic concept render of a branded Red Bull bar unit for event and hospitality use.',
+    problem: 'Red Bull needed a pre-production visual of their bar unit design to present to event partners and get stakeholder buy-in.',
+    goal: 'Create a compelling, realistic render that captures the brand identity, material quality and spatial footprint of the bar.',
+    approach: 'Working from 2D sketches and brand guidelines, we modelled the full bar unit, stocked it with product, and lit it with professional studio-style lighting.',
+    deliverables: 'Front and three-quarter renders at 4K, brand application variants.',
+    gallery: ['img_07_redbull.png']
+  },
+  'zutic-restaurant': {
+    title: 'Zutic — Restaurant Concept',
+    year: '2021',
+    client: 'Zutic 3D Studio Solutions',
+    role: '3D Interior Design & Full Visualization',
+    tools: 'Blender, Cycles, Substance Painter',
+    timeline: '10 days',
+    tags: ['Interior', 'Commercial'],
+    cover: 'img_02_restaurant.png',
+    shortDesc: 'Complete interior visualization package for a modern fast-casual restaurant concept.',
+    problem: 'The client was pitching a new restaurant format to investors and franchise partners — no physical space existed yet.',
+    goal: 'Render the complete interior with enough detail and atmosphere to make investors feel they are already inside.',
+    approach: 'Full interior modelling from architectural floor plan. Materials, lighting and props were all custom-built for the brand identity.',
+    deliverables: 'Six 4K interior renders from key perspectives, one isometric floor plan overview.',
+    gallery: ['img_02_restaurant.png', 'BACKLEFT_MID_FINAL_4K__1_.png', 'freank_grundriss_right.png']
+  },
+  'coca-cola-product': {
+    title: 'Coca-Cola Bottle — Packshot Series',
+    year: '2023',
+    client: 'Coca-Cola',
+    role: 'Product Visualization, Packshot',
+    tools: 'Blender, Cycles, Photoshop',
+    timeline: '2 days',
+    tags: ['Product', 'Brand'],
+    cover: '20.png',
+    shortDesc: 'High-end packshot series for the Coca-Cola glass bottle — white studio and dark dramatic variants.',
+    problem: 'Existing photography was outdated and not optimized for digital-first campaigns. CGI allowed unlimited reuse and variation.',
+    goal: 'Replace traditional photography with an identical-quality CGI packshot that can be adapted to any background, colour and scenario.',
+    approach: 'Ultra-precise modelling of the 250ml glass bottle with accurate caustics, refractive glass and liquid simulation.',
+    deliverables: 'White background studio shot, dark dramatic variant, PSD with isolated layers.',
+    gallery: ['20.png', '20.png']
+  },
+  'ewa-apartment': {
+    title: 'EWA — Wohnzimmer Full Render Suite',
+    year: '2024',
+    client: 'EWA Living / Private Client',
+    role: '3D Interior Design & Visualization',
+    tools: '3ds Max, V-Ray, Photoshop',
+    timeline: '7 days',
+    tags: ['Interior', 'Residential'],
+    cover: 'img_03_interior.png',
+    shortDesc: 'Complete residential visualization suite for a modern open-plan living, kitchen and dining space.',
+    problem: 'The client was renovating their apartment and needed realistic renders to make final decisions on layout, colours and furniture.',
+    goal: 'Produce a comprehensive set of renders from multiple angles so the client could fully experience the space before construction.',
+    approach: 'Full scene built from architectural drawings. Six key camera positions, two lighting scenarios (day/evening), and multiple furniture variants.',
+    deliverables: 'Six 4K renders, isometric floor plan, evening lighting variant set.',
+    gallery: ['img_03_interior.png', 'img_01_dining.png', 'img_04_interior2.png', 'img_05_kitchen.png', 'img_06_sunset.png', 'img_10_aerial.png']
+  }
+};
+
+// ─── PAGE ROUTING ───
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + (page === 'case-study' ? 'work' : page));
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── CASE STUDY ───
+let currentLang = 'en';
+
+function getCaseLabel(key) {
+  const labels = {
+    en: { client:'Client', role:'Role', tools:'Tools', timeline:'Timeline', summary:'Summary', problem:'Problem', goal:'Goal', approach:'Approach', deliverables:'Deliverables', gallery:'Gallery', nextStep:'Next Step', similar:'Want a similar result<br>for your project?', quote:'Get a Quote →', moreWork:'More Work' },
+    de: { client:'Kunde', role:'Rolle', tools:'Werkzeuge', timeline:'Zeitplan', summary:'Zusammenfassung', problem:'Problem', goal:'Ziel', approach:'Vorgehen', deliverables:'Lieferumfang', gallery:'Galerie', nextStep:'Nächster Schritt', similar:'Ähnliche Ergebnisse<br>für Ihr Projekt?', quote:'Angebot anfragen →', moreWork:'Mehr Projekte' }
+  };
+  return (labels[currentLang] || labels.en)[key] || key;
+}
+
+function showCaseStudy(slug) {
+  const p = projects[slug];
+  if (!p) return;
+
+  const galleryHtml = p.gallery.map((img, i) => {
+    const cls = i === 0 ? 'gallery-item full tall' : 'gallery-item';
+    return `<div class="${cls}"><img src="${img}" alt="${p.title}" loading="lazy"></div>`;
+  }).join('');
+
+  const el = document.getElementById('caseContent');
+  el._slug = slug;
+
+  el.innerHTML = `
+    <div class="case-cover">
+      <img src="${p.cover}" alt="${p.title}">
+      <div class="case-cover-content">
+        <div style="display:flex;gap:8px;margin-bottom:14px;">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <h1 class="display-lg">${p.title}</h1>
+      </div>
+    </div>
+
+    <div class="case-header">
+      <p style="font-size:1.05rem;color:var(--white-dim);max-width:680px;line-height:1.7;">${p.shortDesc}</p>
+      <div class="case-meta-grid">
+        <div class="case-meta-item"><div class="case-meta-label">${getCaseLabel('client')}</div><div class="case-meta-value">${p.client}</div></div>
+        <div class="case-meta-item"><div class="case-meta-label">${getCaseLabel('role')}</div><div class="case-meta-value">${p.role}</div></div>
+        <div class="case-meta-item"><div class="case-meta-label">${getCaseLabel('tools')}</div><div class="case-meta-value">${p.tools}</div></div>
+        <div class="case-meta-item"><div class="case-meta-label">${getCaseLabel('timeline')}</div><div class="case-meta-value">${p.timeline}</div></div>
+      </div>
+    </div>
+
+    <div class="case-summary">
+      <div>
+        <div class="label" style="margin-bottom:20px;">${getCaseLabel('summary')}</div>
+        <div style="display:flex;flex-direction:column;gap:32px;">
+          <div class="case-summary-block"><h4>${getCaseLabel('problem')}</h4><p>${p.problem}</p></div>
+          <div class="case-summary-block"><h4>${getCaseLabel('goal')}</h4><p>${p.goal}</p></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:32px;padding-top:44px;">
+        <div class="case-summary-block"><h4>${getCaseLabel('approach')}</h4><p>${p.approach}</p></div>
+        <div class="case-summary-block"><h4>${getCaseLabel('deliverables')}</h4><p>${p.deliverables}</p></div>
+      </div>
+    </div>
+
+    <div class="case-gallery">
+      <div class="label" style="margin-bottom:40px;">${getCaseLabel('gallery')}</div>
+      <div class="gallery-grid">${galleryHtml}</div>
+    </div>
+
+    <div class="case-cta">
+      <div>
+        <div class="label" style="margin-bottom:12px;">${getCaseLabel('nextStep')}</div>
+        <h3 style="font-family:var(--font-display);font-size:2rem;font-weight:300;">${getCaseLabel('similar')}</h3>
+      </div>
+      <div style="display:flex;gap:16px;flex-shrink:0;">
+        <button class="btn-primary" onclick="showPage('contact')">${getCaseLabel('quote')}</button>
+        <button class="btn-ghost" onclick="showPage('work')">${getCaseLabel('moreWork')}</button>
+      </div>
+    </div>
+  `;
+
+  showPage('case-study');
+}
+
+// ─── WORK FILTER ───
+document.getElementById('workFilters').addEventListener('click', e => {
+  if (!e.target.classList.contains('filter-btn')) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  const filter = e.target.dataset.filter;
+  document.querySelectorAll('.all-work-card').forEach(card => {
+    const tags = card.dataset.tags || '';
+    const show = filter === 'all' || tags.includes(filter);
+    card.style.display = show ? '' : 'none';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(10px)';
+    if (show) {
+      setTimeout(() => {
+        card.style.transition = 'opacity 0.4s, transform 0.4s';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 30);
+    }
+  });
+});
+
+// ─── CONTACT FORM ───
+function submitForm(e) {
+  e.preventDefault();
+  const msg = document.getElementById('successMsg');
+  msg.style.display = 'block';
+  e.target.querySelector('button[type=submit]').textContent = 'Sent ✓';
+  setTimeout(() => { msg.style.display = 'none'; e.target.reset(); e.target.querySelector('button[type=submit]').textContent = 'Send Message →'; }, 5000);
+}
+
+// ─── SUBTLE CARD TILT ───
+document.addEventListener('mousemove', e => {
+  const cards = document.querySelectorAll('.tilt');
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / rect.width;
+    const dy = (e.clientY - cy) / rect.height;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 0.8) {
+      card.style.transform = `perspective(1000px) rotateX(${-dy*3}deg) rotateY(${dx*3}deg)`;
+    } else {
+      card.style.transform = '';
+    }
+  });
+});
+
+// ─── IP-BASED AUTO LANGUAGE DETECTION ───
+(async function detectLang() {
+  try {
+    // Use ipapi.co — free, no key needed, returns JSON
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+    const data = await res.json();
+    const dachCountries = ['DE', 'AT', 'CH', 'LI']; // Germany, Austria, Switzerland, Liechtenstein
+    const lang = dachCountries.includes(data.country_code) ? 'de' : 'en';
+    setLang(lang);
+  } catch {
+    // Fallback: check browser language
+    const browserLang = navigator.language || navigator.userLanguage || '';
+    const lang = browserLang.startsWith('de') ? 'de' : 'en';
+    setLang(lang);
+  }
+})();
+
+// Respect reduced motion
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('.tilt').forEach(el => el.style.transition = 'none');
+}
+
+const translations = {
+  en: {
+    'nav.home': 'Home', 'nav.work': 'Work', 'nav.studio': 'Studio', 'nav.contact': 'Contact', 'nav.cta': 'Get a Quote',
+    'hero.eyebrow': '3D Visualization Studio',
+    'hero.line1': 'High-end', 'hero.line2': '3D visuals', 'hero.line3': 'that sell.',
+    'hero.sub': 'Retail concepts. Product renders. Interior spaces.<br>Fast iterations. Premium look. Reliable delivery.',
+    'hero.cta1': 'View Work →', 'hero.cta2': 'Book a Call', 'hero.scroll': 'Scroll to explore',
+    'work.label': 'Selected Work', 'work.title': 'Featured Projects', 'work.all': 'All Projects →',
+    'work.label2': 'Portfolio', 'work.title2': 'All Work',
+    'services.label': 'What We Do', 'services.title1': 'Turning concepts', 'services.title2': 'into reality',
+    'services.intro': 'We specialize in high-end 3D visualization for brands that care about quality. From a single product render to a full spatial concept — we deliver visuals that close deals.',
+    'services.about': 'About the Studio →',
+    's1.title': 'Retail Visuals', 's1.desc': 'Shop-in-shop concepts, POS displays, brand activations and festival setups — photorealistic renders for presentations, approvals and marketing.',
+    's2.title': 'Product Renders', 's2.desc': 'Studio-quality product visualization with precise material, light and shadow. Packshots, hero shots, 360° turntables and lifestyle composites.',
+    's3.title': 'Interior & Spatial Concepts', 's3.desc': 'Full interior renderings for residential and commercial spaces — living rooms, offices, restaurants, showrooms. Includes floor plans and isometric views.',
+    's4.title': 'Architectural Visualization', 's4.desc': 'Exterior and concept renderings, aerial views, and walkthrough animations for architects, developers and planners.',
+    'process.label': 'How It Works', 'process.title': 'Our Process',
+    'p1.title': 'Brief & Scope', 'p1.desc': 'You share references, plans, and objectives. We align on deliverables, timeline and technical requirements before any pixel is touched.',
+    'p2.title': 'Concept & Modelling', 'p2.desc': 'We build the 3D scene — geometry, layout, materials. First preview within 48–72 hours so you can steer direction early.',
+    'p3.title': 'Render & Iteration', 'p3.desc': 'High-quality renders with lighting, camera and detail refinements. Up to 3 revision rounds included; feedback loops stay fast.',
+    'p4.title': 'Final Delivery', 'p4.desc': '4K+ files in your required formats — JPEG, PNG, PSD, or EXR. Full source files available. Delivered on time, every time.',
+    'quote.text': '"We don\'t just render spaces — we render <em>confidence</em> into every decision made around them."',
+    'quote.attr': '— Zutic 3D Studio Solutions',
+    'clients.label': 'Trusted By',
+    'cta.label': "Let's Work Together", 'cta.title1': 'Ready to make', 'cta.title2': 'visuals that convert?',
+    'cta.desc': "Tell us about your project. We'll respond within 24 hours with a clear scope and timeline.",
+    'cta.btn1': 'Book a Call →', 'cta.btn2': 'Get a Quote',
+    'about.label': 'The Studio', 'about.title1': 'Built on', 'about.title2': 'precision.',
+    'about.p1': 'Zutic 3D Studio Solutions is a specialized 3D visualization practice focused on retail architecture, product photography and interior space design. We work with brands, agencies and architects who need visuals that perform — not just impress.',
+    'about.p2': "Our approach is direct: clean briefs, fast previews, precise execution. We've delivered over 50 projects across FMCG, hospitality, residential and commercial sectors.",
+    'about.cta': 'Work With Us →', 'about.stat1': 'Completed Projects', 'about.stat2': 'Industry Experience',
+    'about.sLabel': 'Services', 'about.sTitle': 'What we offer',
+    'as1.label': '01 — Retail Visuals', 'as1.desc': 'Shop-in-shop, POS, brand activations, trade fair booths, pop-up containers. We visualize the full brand experience before a single piece is built.',
+    'as2.label': '02 — Product Renders', 'as2.desc': 'Packshots, lifestyle renders, hero images and 360° animations. We match any reference material with photorealistic accuracy.',
+    'as3.label': '03 — Interior & Space', 'as3.desc': 'Residential and commercial interiors from concept to final render. Includes kitchen, living, dining, office and hospitality spaces.',
+    'as4.label': '04 — Architectural VIZ', 'as4.desc': 'Exterior renderings, aerial views, isometric floor plans and flythrough animations for architects and property developers.',
+    'about.toolLabel': 'Toolset', 'about.toolTitle': 'Technology',
+    'about.avLabel': 'Availability', 'about.avTitle1': 'Currently accepting', 'about.avTitle2': 'new projects.',
+    'about.avDesc': 'Typical lead time: 5–10 business days. Rush projects available on request.',
+    'about.avCta': 'Start a Project →',
+    'contact.label': 'Get In Touch', 'contact.title1': "Let's build", 'contact.title2': 'something<br>great.',
+    'contact.desc': 'Whether you have a clear brief or just a rough idea — reach out. We\'ll help you scope and budget the project correctly from the start.',
+    'contact.rtLabel': 'Response Time', 'contact.rtDesc': 'Within 24 hours on business days.<br>Project start: 5–10 business days.',
+    'contact.locLabel': 'Based In', 'contact.locDesc': 'Frankfurt am Main, Germany.<br>Working globally.',
+    'form.name': 'Your Name *', 'form.company': 'Company', 'form.email': 'Email Address *',
+    'form.type': 'Project Type', 'form.typePh': 'Select a service…',
+    'form.t1': 'Retail Visuals', 'form.t2': 'Product Renders', 'form.t3': 'Interior / Spatial', 'form.t4': 'Architectural VIZ', 'form.t5': 'Other',
+    'form.budget': 'Budget Range', 'form.budgetPh': 'Select a range…',
+    'form.msg': 'Tell Us About Your Project *', 'form.msgPh': 'Describe your project, goals, timeline, and any references you have…',
+    'form.success': '✓ Message sent! We\'ll get back to you within 24 hours.', 'form.submit': 'Send Message →',
+  },
+  de: {
+    'nav.home': 'Start', 'nav.work': 'Projekte', 'nav.studio': 'Studio', 'nav.contact': 'Kontakt', 'nav.cta': 'Angebot anfragen',
+    'hero.eyebrow': '3D Visualisierungsstudio',
+    'hero.line1': 'Hochwertige', 'hero.line2': '3D Visuals', 'hero.line3': 'die verkaufen.',
+    'hero.sub': 'Retail-Konzepte. Produktvisualisierung. Innenräume.<br>Schnelle Iterationen. Premium-Look. Zuverlässige Lieferung.',
+    'hero.cta1': 'Projekte ansehen →', 'hero.cta2': 'Termin buchen', 'hero.scroll': 'Scrollen zum Entdecken',
+    'work.label': 'Ausgewählte Projekte', 'work.title': 'Featured Projekte', 'work.all': 'Alle Projekte →',
+    'work.label2': 'Portfolio', 'work.title2': 'Alle Projekte',
+    'services.label': 'Leistungen', 'services.title1': 'Ideen werden', 'services.title2': 'Realität',
+    'services.intro': 'Wir sind spezialisiert auf hochwertige 3D-Visualisierung für Marken, denen Qualität wichtig ist. Vom einzelnen Produktrender bis zum vollständigen Raumkonzept — wir liefern Visuals, die überzeugen.',
+    'services.about': 'Über das Studio →',
+    's1.title': 'Retail Visuals', 's1.desc': 'Shop-in-Shop-Konzepte, POS-Displays, Markenaktivierungen und Festivalaufbauten — fotorealistische Renders für Präsentationen, Freigaben und Marketing.',
+    's2.title': 'Produktvisualisierung', 's2.desc': 'Studioqualität mit präzisen Materialien, Licht und Schatten. Packshots, Hero-Shots, 360°-Drehteller und Lifestyle-Composites.',
+    's3.title': 'Innenraum & Raumkonzepte', 's3.desc': 'Vollständige Innenraumrenderings für Wohn- und Gewerberäume — Wohnzimmer, Büros, Restaurants, Showrooms. Inklusive Grundrisse und isometrische Ansichten.',
+    's4.title': 'Architekturvisualisierung', 's4.desc': 'Außenansichten und Konzeptrenderings, Luftaufnahmen und Walkthrough-Animationen für Architekten, Entwickler und Planer.',
+    'process.label': 'Ablauf', 'process.title': 'Unser Prozess',
+    'p1.title': 'Briefing & Umfang', 'p1.desc': 'Sie teilen Referenzen, Pläne und Ziele. Wir klären Lieferumfang, Zeitplan und technische Anforderungen — bevor ein einziges Pixel entsteht.',
+    'p2.title': 'Konzept & Modellierung', 'p2.desc': 'Wir bauen die 3D-Szene — Geometrie, Layout, Materialien. Erste Vorschau innerhalb von 48–72 Stunden, damit Sie früh steuern können.',
+    'p3.title': 'Rendering & Iteration', 'p3.desc': 'Hochwertige Renders mit Beleuchtungs-, Kamera- und Detailverfeinerungen. Bis zu 3 Überarbeitungsrunden inklusive; Feedback-Schleifen bleiben schnell.',
+    'p4.title': 'Finale Lieferung', 'p4.desc': '4K+ Dateien in Ihren gewünschten Formaten — JPEG, PNG, PSD oder EXR. Quelldateien verfügbar. Pünktlich geliefert, immer.',
+    'quote.text': '„Wir rendern nicht nur Räume — wir rendern <em>Vertrauen</em> in jede Entscheidung, die um sie herum getroffen wird."',
+    'quote.attr': '— Zutic 3D Studio Solutions',
+    'clients.label': 'Unsere Kunden',
+    'cta.label': 'Zusammenarbeiten', 'cta.title1': 'Bereit für', 'cta.title2': 'Visuals die wirken?',
+    'cta.desc': 'Erzählen Sie uns von Ihrem Projekt. Wir antworten innerhalb von 24 Stunden mit einem klaren Umfang und Zeitplan.',
+    'cta.btn1': 'Termin buchen →', 'cta.btn2': 'Angebot anfragen',
+    'about.label': 'Das Studio', 'about.title1': 'Gebaut auf', 'about.title2': 'Präzision.',
+    'about.p1': 'Zutic 3D Studio Solutions ist ein spezialisiertes 3D-Visualisierungsstudio mit Fokus auf Retail-Architektur, Produktfotografie und Innenraumgestaltung. Wir arbeiten mit Marken, Agenturen und Architekten, die Visuals brauchen, die performen — nicht nur beeindrucken.',
+    'about.p2': 'Unser Ansatz ist direkt: klare Briefings, schnelle Vorschauen, präzise Ausführung. Wir haben über 50 Projekte in den Bereichen FMCG, Gastronomie, Wohnen und Gewerbe realisiert.',
+    'about.cta': 'Mit uns arbeiten →', 'about.stat1': 'Abgeschlossene Projekte', 'about.stat2': 'Berufserfahrung',
+    'about.sLabel': 'Leistungen', 'about.sTitle': 'Was wir anbieten',
+    'as1.label': '01 — Retail Visuals', 'as1.desc': 'Shop-in-Shop, POS, Markenaktivierungen, Messeauftritte, Pop-up-Container. Wir visualisieren das vollständige Markenerlebnis, bevor ein Stück gebaut wird.',
+    'as2.label': '02 — Produktvisualisierung', 'as2.desc': 'Packshots, Lifestyle-Renders, Hero-Images und 360°-Animationen. Wir treffen jedes Referenzmaterial mit fotorealistischer Genauigkeit.',
+    'as3.label': '03 — Innenraum & Raum', 'as3.desc': 'Wohn- und Gewerbeinnenräume vom Konzept bis zum finalen Render. Küche, Wohnen, Essen, Büro und Gastronomie.',
+    'as4.label': '04 — Architektur VIZ', 'as4.desc': 'Außenrenderings, Luftansichten, isometrische Grundrisse und Flythrough-Animationen für Architekten und Projektentwickler.',
+    'about.toolLabel': 'Werkzeuge', 'about.toolTitle': 'Technologie',
+    'about.avLabel': 'Verfügbarkeit', 'about.avTitle1': 'Aktuell offen für', 'about.avTitle2': 'neue Projekte.',
+    'about.avDesc': 'Typische Vorlaufzeit: 5–10 Werktage. Express-Projekte auf Anfrage.',
+    'about.avCta': 'Projekt starten →',
+    'contact.label': 'Kontakt aufnehmen', 'contact.title1': 'Lass uns', 'contact.title2': 'etwas Großes<br>bauen.',
+    'contact.desc': 'Ob klares Briefing oder erste Idee — melden Sie sich. Wir helfen Ihnen, das Projekt von Anfang an richtig zu planen und zu budgetieren.',
+    'contact.rtLabel': 'Reaktionszeit', 'contact.rtDesc': 'Innerhalb von 24 Stunden an Werktagen.<br>Projektstart: 5–10 Werktage.',
+    'contact.locLabel': 'Standort', 'contact.locDesc': 'Frankfurt am Main, Deutschland.<br>Weltweit tätig.',
+    'form.name': 'Ihr Name *', 'form.company': 'Unternehmen', 'form.email': 'E-Mail-Adresse *',
+    'form.type': 'Projektart', 'form.typePh': 'Leistung auswählen…',
+    'form.t1': 'Retail Visuals', 'form.t2': 'Produktvisualisierung', 'form.t3': 'Innenraum / Raum', 'form.t4': 'Architektur VIZ', 'form.t5': 'Sonstiges',
+    'form.budget': 'Budgetrahmen', 'form.budgetPh': 'Bereich auswählen…',
+    'form.msg': 'Ihr Projekt *', 'form.msgPh': 'Beschreiben Sie Ihr Projekt, Ziele, Zeitplan und vorhandene Referenzen…',
+    'form.success': '✓ Nachricht gesendet! Wir melden uns innerhalb von 24 Stunden.', 'form.submit': 'Nachricht senden →',
+  }
+};
+
+
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+
+  // Toggle button states
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-de').classList.toggle('active', lang === 'de');
+
+  // Update all data-i18n elements (innerHTML to support <em> tags)
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // Update placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.dataset.i18nPh;
+    if (t[key] !== undefined) el.setAttribute('placeholder', t[key]);
+  });
+
+  // Update html lang attribute
+  document.documentElement.lang = lang;
+
+  // Re-render case study if open (to update labels)
+  const caseContent = document.getElementById('caseContent');
+  if (document.getElementById('case-study').classList.contains('active') && caseContent._slug) {
+    showCaseStudy(caseContent._slug);
+  }
+}
+
+// ─── AUTO LANGUAGE DETECTION ───
+(async function detectLang() {
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+    const data = await res.json();
+    const dachCountries = ['DE', 'AT', 'CH', 'LI'];
+    const lang = dachCountries.includes(data.country_code) ? 'de' : 'en';
+    setLang(lang);
+  } catch {
+    const browserLang = navigator.language || navigator.userLanguage || '';
+    setLang(browserLang.startsWith('de') ? 'de' : 'en');
+  }
+})();
+
+// Respect reduced motion
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('.tilt').forEach(el => el.style.transition = 'none');
+}
+
+// ─── DSGVO COOKIE CONSENT ───
+(function() {
+  const CONSENT_KEY = 'zutic_cookie_consent';
+  const banner = document.getElementById('cookie-banner');
+
+  function getConsent() {
+    try { return JSON.parse(localStorage.getItem(CONSENT_KEY)); } catch { return null; }
+  }
+  function saveConsent(data) {
+    data.date = new Date().toISOString();
+    localStorage.setItem(CONSENT_KEY, JSON.stringify(data));
+    hideBanner();
+    cookieCloseModal();
+    applyConsent(data);
+  }
+  function applyConsent(data) {
+    if (data.analytics) { /* insert GA snippet here if needed */ }
+  }
+  function hideBanner() { banner.classList.remove('visible'); }
+
+  const existing = getConsent();
+  if (!existing) {
+    setTimeout(() => banner.classList.add('visible'), 600);
+  } else {
+    applyConsent(existing);
+  }
+
+  window.cookieAcceptAll = function() {
+    saveConsent({ essential: true, analytics: true, marketing: true });
+  };
+  window.cookieAcceptEssential = function() {
+    saveConsent({ essential: true, analytics: false, marketing: false });
+  };
+  window.cookieOpenSettings = function() {
+    const c = getConsent() || {};
+    document.getElementById('toggle-analytics').checked = !!c.analytics;
+    document.getElementById('toggle-marketing').checked = !!c.marketing;
+    document.getElementById('cookie-modal').classList.add('open');
+  };
+  window.cookieCloseModal = function() {
+    document.getElementById('cookie-modal').classList.remove('open');
+  };
+  window.cookieSaveSettings = function() {
+    saveConsent({
+      essential: true,
+      analytics: document.getElementById('toggle-analytics').checked,
+      marketing: document.getElementById('toggle-marketing').checked
+    });
+  };
+  window.showPrivacy = function() {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.getElementById('privacy-page').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  window.hidePrivacy = function() {
+    document.getElementById('privacy-page').style.display = 'none';
+    showPage('home');
+  };
+  document.getElementById('cookie-modal').addEventListener('click', function(e) {
+    if (e.target === this) cookieCloseModal();
+  });
+})();
+</script>
+</body>
+</html>
