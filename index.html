@@ -787,9 +787,10 @@ footer {
   border-top: 1px solid var(--border);
   padding: 44px 48px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  text-align: center;
+  gap: 12px;
 }
 .footer-logo {
   font-family: var(--font-display);
@@ -805,7 +806,7 @@ footer {
   letter-spacing: 0.12em;
   color: rgba(246,241,233,0.35);
 }
-.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.footer-links { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
 .footer-links a {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -888,6 +889,7 @@ footer {
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
+  .hide-mobile { display: none !important; }
   nav { padding: 0 24px; }
   section { padding: 80px 24px; }
   .hero-inner { padding: 80px 24px 40px; }
@@ -919,6 +921,21 @@ footer {
   .clients-strip { flex-direction: column; }
   .nav-links { display: none; }
   .hero-actions { flex-direction: column; align-items: flex-start; }
+  /* Work grid: alle Karten full-width außer 3+4 nebeneinander */
+  .work-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .work-card:nth-child(n) { grid-column: span 2; aspect-ratio: 3/2; }
+  .work-card:nth-child(3) { grid-column: span 1; aspect-ratio: 1/1; }
+  .work-card:nth-child(4) { grid-column: span 1; aspect-ratio: 1/1; }
+  .work-card-title { font-size: clamp(0.85rem, 3.5vw, 1.1rem); }
+  .work-card:nth-child(3) .work-card-title,
+  .work-card:nth-child(4) .work-card-title { font-size: clamp(0.7rem, 3vw, 0.9rem); }
+  .work-card-overlay { padding: 14px; }
+  .work-card:nth-child(3) .work-card-overlay,
+  .work-card:nth-child(4) .work-card-overlay { padding: 8px; }
+  .tag { font-size: 0.5rem; padding: 3px 6px; }
+  .work-card-arrow { width: 28px; height: 28px; top: 12px; right: 12px; }
+  /* Section padding */
+  section[style*="padding:96px"] { padding: 60px 20px 72px !important; }
 }
 
 /* ─── LANG TOGGLE ─── */
@@ -1416,19 +1433,9 @@ footer {
         <div class="work-card-arrow">↗</div>
       </div>
 
-      <!-- 2 — Top right: Red Bull Bar -->
-      <div class="work-card tilt" onclick="showCaseStudy('redbull-bar')">
-        <img src="img_07_redbull.png" alt="Red Bull Bar Concept" loading="lazy">
-        <div class="work-card-overlay">
-          <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
-          <div class="work-card-title">Red Bull Bar Concept</div>
-        </div>
-        <div class="work-card-arrow">↗</div>
-      </div>
-
-      <!-- 3 — Middle left: Restaurant Concept -->
+      <!-- 2 — Top right: Restaurant 2 -->
       <div class="work-card tilt" onclick="showCaseStudy('zutic-restaurant')">
-        <img src="img_02_restaurant.png" alt="Restaurant Concept" loading="lazy">
+        <img src="img_14_restaurant2.png" alt="Restaurant Concept" loading="lazy">
         <div class="work-card-overlay">
           <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
           <div class="work-card-title">Restaurant Concept</div>
@@ -1436,22 +1443,32 @@ footer {
         <div class="work-card-arrow">↗</div>
       </div>
 
-      <!-- 4 — Middle center: Gang Bang Studio -->
-      <div class="work-card tilt" onclick="showCaseStudy('gangbang-studio')">
-        <img src="img_08_lounge.png" alt="Gang Bang Studio" loading="lazy">
+      <!-- 3 — Middle left: Coca-Cola Festival -->
+      <div class="work-card tilt" onclick="showCaseStudy('coca-cola-festival')">
+        <img src="img_13_coke_festival.png" alt="Coca-Cola Festival" loading="lazy">
         <div class="work-card-overlay">
-          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
-          <div class="work-card-title">Gang Bang Studio</div>
+          <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
+          <div class="work-card-title">Coca-Cola Festival</div>
         </div>
         <div class="work-card-arrow">↗</div>
       </div>
 
-      <!-- 5 — Middle right: Character CGI -->
+      <!-- 4 — Middle center: Tattoo Studio -->
       <div class="work-card tilt" onclick="showCaseStudy('gangbang-studio')">
-        <img src="img_09_character.png" alt="Character CGI" loading="lazy" style="object-position:center 20%;">
+        <img src="img_08_lounge.png" alt="Tattoo Studio" loading="lazy">
         <div class="work-card-overlay">
-          <div class="work-card-tags"><span class="tag">3D</span><span class="tag">Character</span></div>
-          <div class="work-card-title">Character CGI</div>
+          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+          <div class="work-card-title">Tattoo Studio</div>
+        </div>
+        <div class="work-card-arrow">↗</div>
+      </div>
+
+      <!-- 5 — Cheesecake top view: sichtbar nur auf Desktop -->
+      <div class="work-card tilt hide-mobile" onclick="showCaseStudy('cheesecake-shop')">
+        <img src="img_12_cheesecake2.png" alt="Cheesecake Shop" loading="lazy">
+        <div class="work-card-overlay">
+          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
+          <div class="work-card-title">Cheesecake Shop</div>
         </div>
         <div class="work-card-arrow">↗</div>
       </div>
@@ -1513,28 +1530,68 @@ footer {
 
   <!-- PROCESS -->
   <section style="padding:96px 48px 112px;">
-    <div class="label" style="margin-bottom:16px;" data-i18n="process.label">How It Works</div>
-    <h2 class="display-md" style="margin-bottom:0;" data-i18n="process.title">Our Process</h2>
-    <div class="process-grid">
-      <div class="process-step">
-        <div class="process-step-num">01</div>
-        <h4 data-i18n="p1.title">Brief & Scope</h4>
-        <p data-i18n="p1.desc">You share references, plans, and objectives. We align on deliverables, timeline and technical requirements before any pixel is touched.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:64px;">
+      <div>
+        <div class="label" style="margin-bottom:20px;" data-i18n="process.label">Unser Prozess</div>
+        <h2 class="display-md" style="margin-bottom:0;" data-i18n="process.title">Kein Raten.<br><em style="color:var(--gold);font-style:italic;">Kein Warten.</em></h2>
       </div>
-      <div class="process-step">
-        <div class="process-step-num">02</div>
-        <h4 data-i18n="p2.title">Concept & Modelling</h4>
-        <p data-i18n="p2.desc">We build the 3D scene — geometry, layout, materials. First preview within 48–72 hours so you can steer direction early.</p>
+      <p class="body-text" style="margin-top:auto;padding-top:8px;" data-i18n="process.intro">Jedes Projekt folgt demselben strukturierten Ablauf. Sie wissen zu jedem Zeitpunkt, was als nächstes passiert — und wann.</p>
+    </div>
+
+    <!-- Steps grid -->
+    <div style="background:var(--black-2);border:1px solid var(--border);padding:48px;display:grid;grid-template-columns:repeat(6,1fr);gap:0;">
+
+      <div style="padding:0 28px 0 0;border-right:1px solid var(--border);">
+        <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 01</div>
+        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">B</div>
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p1.title">Briefing</h4>
+        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p1.desc">Pläne, Referenzen, Kamerawinkel, Materialien und Deadline — strukturiert erfasst in unserem Briefing-Dokument. Kein Informationsverlust im E-Mail-Pingpong.</p>
       </div>
-      <div class="process-step">
-        <div class="process-step-num">03</div>
-        <h4 data-i18n="p3.title">Render & Iteration</h4>
-        <p data-i18n="p3.desc">High-quality renders with lighting, camera and detail refinements. Up to 3 revision rounds included; feedback loops stay fast.</p>
+
+      <div style="padding:0 28px;border-right:1px solid var(--border);">
+        <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 02</div>
+        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">K</div>
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="pk.title">Konzeptionierung</h4>
+        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="pk.desc">Auf Basis des Briefings entwickeln wir ein Designkonzept — Raumstruktur, Materialpalette, Lichtstimmung. Erst wenn das Konzept steht, beginnt die Produktion.</p>
       </div>
-      <div class="process-step">
-        <div class="process-step-num">04</div>
-        <h4 data-i18n="p4.title">Final Delivery</h4>
-        <p data-i18n="p4.desc">4K+ files in your required formats — JPEG, PNG, PSD, or EXR. Full source files available. Delivered on time, every time.</p>
+
+      <div style="padding:0 28px;border-right:1px solid var(--border);">
+        <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 03</div>
+        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">P</div>
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p2.title">Preview</h4>
+        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p2.desc">Grobversion zur Freigabe von Perspektive, Raumaufteilung und Gesamtkomposition. Korrekturen sind hier noch kosteneffizient.</p>
+      </div>
+
+      <div style="padding:0 28px;border-right:1px solid var(--border);">
+        <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 04</div>
+        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">PF</div>
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p3.title">Pre-Final</h4>
+        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p3.desc">Vollständig ausgearbeiteter Render mit Texturen, Materialien und Beleuchtung. Letzte Details werden besprochen — bevor alles finalisiert wird.</p>
+      </div>
+
+      <div style="padding:0 28px;border-right:1px solid var(--border);">
+        <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 05</div>
+        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">F</div>
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p4.title">Final</h4>
+        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p4.desc">Hochaufgelöste Enddateien in allen vereinbarten Formaten (JPG, PNG, TIFF). Präsentationsreif, markenkonsistent, termintreu geliefert.</p>
+      </div>
+
+      <div style="padding:0 0 0 28px;">
+        <div class="label" style="margin-bottom:24px;font-size:0.55rem;" data-i18n="p5.label">Optional</div>
+        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">R</div>
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p5.title">Revisionen</h4>
+        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p5.desc">Definierte Revisionsrunden pro Phase — transparent im Angebot ausgewiesen. Keine versteckten Zusatzkosten für vereinbarte Änderungen.</p>
+      </div>
+    </div>
+
+    <!-- Quote + bullets -->
+    <div style="background:var(--black-2);border:1px solid var(--border);border-top:none;padding:40px 48px;display:flex;align-items:center;gap:64px;flex-wrap:wrap;">
+      <p style="font-family:var(--font-display);font-size:1.4rem;font-weight:300;font-style:italic;color:var(--white);flex:1;min-width:240px;" data-i18n="process.quote">„Kein Projekt endet mit Überraschungen."</p>
+      <div style="display:flex;gap:32px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-body);font-size:0.78rem;color:var(--white-dim);"><span style="color:var(--gold);">•</span><span data-i18n="pb1">Termingerechte Lieferung</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-body);font-size:0.78rem;color:var(--white-dim);"><span style="color:var(--gold);">•</span><span data-i18n="pb2">Revisionen vorab definiert</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-body);font-size:0.78rem;color:var(--white-dim);"><span style="color:var(--gold);">•</span><span data-i18n="pb3">Kommunikation auf allen Stufen</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-body);font-size:0.78rem;color:var(--white-dim);"><span style="color:var(--gold);">•</span><span data-i18n="pb4">Express-Option verfügbar</span></div>
       </div>
     </div>
   </section>
@@ -1546,16 +1603,6 @@ footer {
   </div>
 
   <!-- CLIENTS -->
-  <section class="clients-section" style="padding:80px 48px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-    <div class="label" style="margin-bottom:16px;" data-i18n="clients.label">Trusted By</div>
-    <div class="clients-strip">
-      <div class="client-item">Coca-Cola</div>
-      <div class="client-item">Gang Bang Studio</div>
-      <div class="client-item">EWA Living</div>
-      <div class="client-item">Your Brand</div>
-    </div>
-  </section>
-
   <!-- CTA -->
   <section class="cta-section">
     <div class="label" style="margin-bottom:24px;" data-i18n="cta.label">Let's Work Together</div>
@@ -1574,6 +1621,9 @@ footer {
       <a onclick="showPage('work')">Work</a>
       <a onclick="showPage('about')">Studio</a>
       <a onclick="showPage('contact')">Contact</a>
+      <a onclick="showImpressum()" >Impressum</a>
+      <a onclick="showPrivacy()" >Datenschutz</a>
+      <a onclick="cookieOpenSettings()" >Cookies</a>
     </div>
   </footer>
 
@@ -1723,9 +1773,9 @@ footer {
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('about')">Studio</a>
       <a onclick="showPage('contact')">Contact</a>
-      <a onclick="showImpressum()" style="color:var(--white-dim);opacity:0.5;">Impressum</a>
-      <a onclick="showPrivacy()" style="color:var(--white-dim);opacity:0.5;">Datenschutz</a>
-      <a onclick="cookieOpenSettings()" style="color:var(--white-dim);opacity:0.5;">Cookie-Einstellungen</a>
+      <a onclick="showImpressum()" >Impressum</a>
+      <a onclick="showPrivacy()" >Datenschutz</a>
+      <a onclick="cookieOpenSettings()" >Cookie-Einstellungen</a>
     </div>
   </footer>
 </div>
@@ -2173,11 +2223,15 @@ const translations = {
     's2.title': 'Product Renders', 's2.desc': 'Studio-quality product visualization with precise material, light and shadow. Packshots, hero shots, 360° turntables and lifestyle composites.',
     's3.title': 'Interior & Spatial Concepts', 's3.desc': 'Full interior renderings for residential and commercial spaces — living rooms, offices, restaurants, showrooms. Includes floor plans and isometric views.',
     's4.title': 'Architectural Visualization', 's4.desc': 'Exterior and concept renderings, aerial views, and walkthrough animations for architects, developers and planners.',
-    'process.label': 'How It Works', 'process.title': 'Our Process',
-    'p1.title': 'Brief & Scope', 'p1.desc': 'You share references, plans, and objectives. We align on deliverables, timeline and technical requirements before any pixel is touched.',
-    'p2.title': 'Concept & Modelling', 'p2.desc': 'We build the 3D scene — geometry, layout, materials. First preview within 48–72 hours so you can steer direction early.',
-    'p3.title': 'Render & Iteration', 'p3.desc': 'High-quality renders with lighting, camera and detail refinements. Up to 3 revision rounds included; feedback loops stay fast.',
-    'p4.title': 'Final Delivery', 'p4.desc': '4K+ files in your required formats — JPEG, PNG, PSD, or EXR. Full source files available. Delivered on time, every time.',
+    'process.label': 'Our Process', 'process.title': 'No Guessing.<br><em style="color:var(--gold);font-style:italic;">No Waiting.</em>', 'process.intro': 'Every project follows the same structured workflow. You know exactly what happens next — and when.',
+    'process.quote': '"No project ends with surprises."',
+    'p1.title': 'Briefing', 'p1.desc': 'Plans, references, camera angles, materials and deadline — captured in our structured briefing document. No information lost in email back-and-forth.',
+    'pk.title': 'Conceptualisation', 'pk.desc': 'Based on the briefing, we develop a design concept — spatial structure, material palette, lighting mood. Production only starts once the concept is approved.',
+    'p2.title': 'Preview', 'p2.desc': 'A rough version for approving perspective, layout and overall composition. Corrections at this stage are still cost-efficient.', 'p2.tag': 'Day 2–3 · First Review',
+    'p3.title': 'Pre-Final', 'p3.desc': 'Fully developed render with textures, materials and lighting. Final details are discussed — before everything is locked in.', 'p3.tag': 'Day 4–6 · Detail Review',
+    'p4.title': 'Final', 'p4.desc': 'High-resolution output files in all agreed formats (JPG, PNG, TIFF). Presentation-ready, brand-consistent, delivered on time.', 'p4.tag': 'From Day 7 · Delivery',
+    'p5.label': 'Optional', 'p5.title': 'Revisions', 'p5.desc': 'Defined revision rounds per phase — transparently outlined in the quote. No hidden costs for agreed changes.', 'p5.tag': 'By Agreement · Clearly defined',
+    'pb1': 'On-time delivery', 'pb2': 'Revisions defined upfront', 'pb3': 'Communication at every stage', 'pb4': 'Express option available',
     'quote.text': '"We don\'t just render spaces — we render <em>confidence</em> into every decision made around them."',
     'quote.attr': '— Zutic 3D Studio Solutions',
     'clients.label': 'Trusted By',
@@ -2224,10 +2278,15 @@ const translations = {
     's3.title': 'Innenraum & Raumkonzepte', 's3.desc': 'Vollständige Innenraumrenderings für Wohn- und Gewerberäume — Wohnzimmer, Büros, Restaurants, Showrooms. Inklusive Grundrisse und isometrische Ansichten.',
     's4.title': 'Architekturvisualisierung', 's4.desc': 'Außenansichten und Konzeptrenderings, Luftaufnahmen und Walkthrough-Animationen für Architekten, Entwickler und Planer.',
     'process.label': 'Ablauf', 'process.title': 'Unser Prozess',
-    'p1.title': 'Briefing & Umfang', 'p1.desc': 'Sie teilen Referenzen, Pläne und Ziele. Wir klären Lieferumfang, Zeitplan und technische Anforderungen — bevor ein einziges Pixel entsteht.',
-    'p2.title': 'Konzept & Modellierung', 'p2.desc': 'Wir bauen die 3D-Szene — Geometrie, Layout, Materialien. Erste Vorschau innerhalb von 48–72 Stunden, damit Sie früh steuern können.',
-    'p3.title': 'Rendering & Iteration', 'p3.desc': 'Hochwertige Renders mit Beleuchtungs-, Kamera- und Detailverfeinerungen. Bis zu 3 Überarbeitungsrunden inklusive; Feedback-Schleifen bleiben schnell.',
-    'p4.title': 'Finale Lieferung', 'p4.desc': '4K+ Dateien in Ihren gewünschten Formaten — JPEG, PNG, PSD oder EXR. Quelldateien verfügbar. Pünktlich geliefert, immer.',
+    'process.label': 'Unser Prozess', 'process.title': 'Kein Raten.<br><em style="color:var(--gold);font-style:italic;">Kein Warten.</em>', 'process.intro': 'Jedes Projekt folgt demselben strukturierten Ablauf. Sie wissen zu jedem Zeitpunkt, was als nächstes passiert — und wann.',
+    'process.quote': '„Kein Projekt endet mit Überraschungen."',
+    'p1.title': 'Briefing', 'p1.desc': 'Pläne, Referenzen, Kamerawinkel, Materialien und Deadline — strukturiert erfasst in unserem Briefing-Dokument. Kein Informationsverlust im E-Mail-Pingpong.',
+    'pk.title': 'Konzeptionierung', 'pk.desc': 'Auf Basis des Briefings entwickeln wir ein Designkonzept — Raumstruktur, Materialpalette, Lichtstimmung. Erst wenn das Konzept steht, beginnt die Produktion.', 'p1.tag': 'Tag 1 · Kickoff',
+    'p2.title': 'Preview', 'p2.desc': 'Grobversion zur Freigabe von Perspektive, Raumaufteilung und Gesamtkomposition. Korrekturen sind hier noch kosteneffizient.', 'p2.tag': 'Tag 2–3 · Erste Abstimmung',
+    'p3.title': 'Pre-Final', 'p3.desc': 'Vollständig ausgearbeiteter Render mit Texturen, Materialien und Beleuchtung. Letzte Details werden besprochen — bevor alles finalisiert wird.', 'p3.tag': 'Tag 4–6 · Detailabstimmung',
+    'p4.title': 'Final', 'p4.desc': 'Hochaufgelöste Enddateien in allen vereinbarten Formaten (JPG, PNG, TIFF). Präsentationsreif, markenkonsistent, termintreu geliefert.', 'p4.tag': 'Ab Tag 7 · Lieferung',
+    'p5.label': 'Optional', 'p5.title': 'Revisionen', 'p5.desc': 'Definierte Revisionsrunden pro Phase — transparent im Angebot ausgewiesen. Keine versteckten Zusatzkosten für vereinbarte Änderungen.', 'p5.tag': 'Nach Absprache · Klar definiert',
+    'pb1': 'Termingerechte Lieferung', 'pb2': 'Revisionen vorab definiert', 'pb3': 'Kommunikation auf allen Stufen', 'pb4': 'Express-Option verfügbar',
     'quote.text': '„Wir rendern nicht nur Räume — wir rendern <em>Vertrauen</em> in jede Entscheidung, die um sie herum getroffen wird."',
     'quote.attr': '— Zutic 3D Studio Solutions',
     'clients.label': 'Unsere Kunden',
