@@ -296,10 +296,25 @@ section { padding: 120px 48px; }
   padding: 16px 36px;
   border: none;
   cursor: pointer;
-  transition: all 0.25s var(--ease);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
-.btn-primary:hover { background: var(--white); transform: translateY(-2px); }
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover {
+  background: #d9bc83;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200,169,110,0.35), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-primary:hover::before { left: 100%; }
 
 .btn-ghost {
   display: inline-flex;
@@ -310,14 +325,49 @@ section { padding: 120px 48px; }
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--white-dim);
-  background: none;
+  background: rgba(255,255,255,0.02);
   border: 1px solid var(--border);
   padding: 15px 32px;
   cursor: pointer;
-  transition: all 0.25s var(--ease);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
-.btn-ghost:hover { border-color: var(--border-hover); color: var(--white); }
+.btn-ghost::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.btn-ghost::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,169,110,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border-color: rgba(246,241,233,0.15);
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(200,169,110,0.2);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(255,255,255,0.04),
+    0 8px 32px rgba(0,0,0,0.4),
+    0 2px 8px rgba(200,169,110,0.08);
+}
+.btn-ghost:hover::before,
+.btn-ghost:hover::after { opacity: 1; }
 
 .hero-scroll-indicator {
   padding: 28px 48px;
@@ -456,10 +506,45 @@ section { padding: 120px 48px; }
   display: flex;
   gap: 28px;
   align-items: flex-start;
-  transition: background 0.3s;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: default;
+  position: relative;
+  border-radius: 2px;
 }
 .service-item:first-child { border-top: 1px solid var(--border); }
+.service-item:hover {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(255,255,255,0.04),
+    0 8px 32px rgba(0,0,0,0.4),
+    0 2px 8px rgba(200,169,110,0.08);
+  transform: translateY(-2px);
+}
+.service-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.service-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,169,110,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.service-item:hover::before,
+.service-item:hover::after { opacity: 1; }
+.service-item:hover .service-num { text-shadow: 0 0 12px rgba(200,169,110,0.4); }
+.service-item:hover .service-content h3 { color: var(--gold); text-shadow: 0 0 20px rgba(200,169,110,0.2); }
 .service-num {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -490,6 +575,122 @@ section { padding: 120px 48px; }
   border-left: 2px solid transparent;
 }
 .process-step:hover { background: var(--black-2); border-left-color: var(--gold); }
+
+/* New process steps hover */
+.proc-step {
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+  cursor: default;
+  position: relative;
+}
+.proc-step:hover { background: rgba(200,169,110,0.04); }
+.proc-step:hover .proc-letter {
+  color: rgba(200,169,110,0.18);
+  transform: translateY(-4px);
+}
+.proc-step:hover .proc-title { color: var(--gold); }
+.proc-step:hover .proc-border { background: var(--gold); opacity: 0.5; }
+.proc-letter {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: rgba(246,241,233,0.08);
+  line-height: 1;
+  margin-bottom: 20px;
+  transition: color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.proc-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 12px;
+  transition: color 0.3s var(--ease);
+}
+.proc-desc {
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+}
+.proc-border {
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px;
+  height: 100%;
+  background: transparent;
+  transition: background 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+/* ps-col hover (process steps) */
+.ps-col {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: default;
+  border-radius: 2px;
+}
+.ps-col:hover {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(255,255,255,0.04),
+    0 8px 32px rgba(0,0,0,0.4),
+    0 2px 8px rgba(200,169,110,0.08);
+  transform: translateY(-2px);
+}
+.ps-col:hover .ps-letter {
+  color: rgba(200,169,110,0.22);
+  transform: translateY(-6px) scale(1.04);
+  text-shadow: 0 0 40px rgba(200,169,110,0.15);
+}
+.ps-col:hover .ps-title {
+  color: #F6F1E9;
+  text-shadow: 0 0 20px rgba(200,169,110,0.4);
+}
+.ps-col:hover .ps-desc { color: rgba(246,241,233,0.7); }
+.ps-col::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: 2px 2px 0 0;
+}
+.ps-col::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,169,110,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.ps-col:hover::before,
+.ps-col:hover::after { opacity: 1; }
+.ps-letter {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: rgba(246,241,233,0.08);
+  line-height: 1;
+  margin-bottom: 20px;
+  transition: color 0.4s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), text-shadow 0.4s ease;
+}
+.ps-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 12px;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.ps-desc {
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+  transition: color 0.3s ease;
+}
 .process-step-num {
   font-family: var(--font-display);
   font-size: 5rem;
@@ -505,6 +706,49 @@ section { padding: 120px 48px; }
   margin-bottom: 12px;
 }
 .process-step p { font-size: 0.82rem; color: var(--white-dim); line-height: 1.65; }
+
+/* ─── PROCESS STEPS NEW ─── */
+.ps-col {
+  position: relative;
+  cursor: default;
+  transition: background 0.3s ease;
+}
+.ps-col::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.ps-col:hover { background: rgba(200,169,110,0.04); }
+.ps-col:hover::after { transform: scaleX(1); }
+.ps-col:hover .ps-letter { color: rgba(200,169,110,0.18); }
+.ps-col:hover .ps-title { color: var(--gold); }
+.ps-letter {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: rgba(246,241,233,0.08);
+  line-height: 1;
+  margin-bottom: 20px;
+  transition: color 0.3s ease;
+}
+.ps-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+.ps-desc {
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  line-height: 1.7;
+}
 
 /* ─── CLIENTS ─── */
 .clients-section { }
@@ -534,7 +778,7 @@ section { padding: 120px 48px; }
 /* ─── CTA SECTION ─── */
 .cta-section {
   text-align: center;
-  padding: 140px 48px;
+  padding: 200px 48px;
   position: relative;
   overflow: hidden;
   border-top: 1px solid var(--border);
@@ -552,15 +796,15 @@ section { padding: 120px 48px; }
   font-family: var(--font-display);
   font-size: clamp(3rem, 6vw, 7rem);
   font-weight: 300;
-  line-height: 0.95;
-  margin-bottom: 0;
+  line-height: 1.05;
+  margin-bottom: 69px;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
 }
 .cta-section h2 em { font-style: italic; color: var(--gold); }
-.cta-section .body-text { margin-top: 28px; }
-.cta-actions { display: flex; gap: 16px; justify-content: center; margin-top: 44px; }
+.cta-section .body-text { margin-top: 0; }
+.cta-actions { display: flex; gap: 16px; justify-content: center; margin-top: 56px; }
 
 /* ─── WORK PAGE ─── */
 #work { padding-top: 72px; }
@@ -728,9 +972,9 @@ section { padding: 120px 48px; }
   grid-template-columns: 1fr 1.3fr;
   gap: 80px;
   min-height: calc(100vh - 72px);
-  align-items: center;
+  align-items: start;
 }
-.contact-info {}
+.contact-info { padding-top: 8px; }
 .contact-email {
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 2.5vw, 2.2rem);
@@ -776,7 +1020,35 @@ section { padding: 120px 48px; }
   background-position: right 16px center;
 }
 .field select option { background: #1a1a1a; color: var(--white); }
-.field textarea { min-height: 140px; }
+.field-note {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(246,241,233,0.3);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.check-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 2px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--white-dim);
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: var(--black-2);
+  transition: all 0.25s ease;
+}
+.check-item:hover { border-color: rgba(200,169,110,0.4); color: var(--white); }
+.check-item input[type="checkbox"] { accent-color: var(--gold); width: 14px; height: 14px; flex-shrink: 0; }
+
 .form-submit {
   margin-top: 8px;
   align-self: flex-start;
@@ -1283,7 +1555,7 @@ footer {
   Zutic 3D Studio Solutions<br>
   Thomas-Mann-Straße 22a<br>
   63477 Maintal<br>
-  Kontakt: <a href="mailto:aleks@zutic.de" style="color:var(--gold);">aleks@zutic.de</a></p>
+  Kontakt: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
 
   <h2>2. Erhobene Daten</h2>
   <p>Diese Website erhebt beim Besuch technisch notwendige Daten (Server-Logfiles: IP-Adresse, Browsertyp, Datum/Uhrzeit des Zugriffs). Diese Daten werden nicht mit anderen Datenquellen zusammengeführt und nach spätestens 7 Tagen gelöscht.</p>
@@ -1323,7 +1595,7 @@ footer {
 
   <h2>Kontakt</h2>
   <p>
-    E-Mail: <a href="mailto:aleks@zutic.de" style="color:var(--gold);">aleks@zutic.de</a>
+    E-Mail: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a>
   </p>
 
   <h2>Umsatzsteuer-Identifikationsnummer</h2>
@@ -1490,38 +1762,38 @@ footer {
   <section class="services">
     <div class="services-grid container">
       <div>
-        <div class="label" style="margin-bottom:16px;" data-i18n="services.label">What We Do</div>
-        <h2 class="display-md" style="margin-bottom:24px;"><span data-i18n="services.title1">Turning concepts</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="services.title2">into reality</em></h2>
-        <p class="body-text" style="margin-bottom:32px;" data-i18n="services.intro">We specialize in high-end 3D visualization for brands that care about quality. From a single product render to a full spatial concept — we deliver visuals that close deals.</p>
-        <button class="btn-ghost" onclick="showPage('about')" data-i18n="services.about">About the Studio →</button>
+        <div class="label" style="margin-bottom:16px;" data-i18n="services.label">What We Deliver</div>
+        <h2 class="display-md" style="margin-bottom:24px;"><span data-i18n="services.title1">Visuals, die</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="services.title2">Projekte voranbringen</em></h2>
+        <p class="body-text" style="margin-bottom:32px;" data-i18n="services.intro">Wir liefern 3D-Visualisierung in Studioqualität – vom einzelnen Produktrender bis zum kompletten Raumkonzept. Bilder, die Abstimmungen beschleunigen, Freigaben erleichtern und Projekte sicher voranbringen.</p>
+        <button class="btn-ghost" onclick="showPage('about')" data-i18n="services.about">Über das Studio →</button>
       </div>
       <div class="services-list">
         <div class="service-item">
           <span class="service-num">01</span>
           <div class="service-content">
             <h3 data-i18n="s1.title">Retail Visuals</h3>
-            <p data-i18n="s1.desc">Shop-in-shop concepts, POS displays, brand activations and festival setups — photorealistic renders for presentations, approvals and marketing.</p>
+            <p data-i18n="s1.desc">Shop-in-Shop, POS-Displays, Markenaktivierungen, Messestände und Promotionflächen – fotorealistische Renderings für Pitch, Freigabe und Marketing.</p>
           </div>
         </div>
         <div class="service-item">
           <span class="service-num">02</span>
           <div class="service-content">
-            <h3 data-i18n="s2.title">Product Renders</h3>
-            <p data-i18n="s2.desc">Studio-quality product visualization with precise material, light and shadow. Packshots, hero shots, 360° turntables and lifestyle composites.</p>
+            <h3 data-i18n="s2.title">Produktvisualisierung</h3>
+            <p data-i18n="s2.desc">Material, Licht und Schatten präzise gesetzt. Packshots, Hero-Shots, 360°-Drehteller und Lifestyle-Composites (Produkt in Szene).</p>
           </div>
         </div>
         <div class="service-item">
           <span class="service-num">03</span>
           <div class="service-content">
-            <h3 data-i18n="s3.title">Interior & Spatial Concepts</h3>
-            <p data-i18n="s3.desc">Full interior renderings for residential and commercial spaces — living rooms, offices, restaurants, showrooms. Includes floor plans and isometric views.</p>
+            <h3 data-i18n="s3.title">Innenausbau & Raumkonzepte</h3>
+            <p data-i18n="s3.desc">Innenräume für Wohnen und Gewerbe – von Showrooms bis Restaurants. Inklusive Grundrissen und isometrischen Ansichten (klar von oben).</p>
           </div>
         </div>
         <div class="service-item">
           <span class="service-num">04</span>
           <div class="service-content">
-            <h3 data-i18n="s4.title">Architectural Visualization</h3>
-            <p data-i18n="s4.desc">Exterior and concept renderings, aerial views, and walkthrough animations for architects, developers and planners.</p>
+            <h3 data-i18n="s4.title">Architekturvisualisierung</h3>
+            <p data-i18n="s4.desc">Außenansichten und Konzeptbilder, Luftperspektiven und Walkthrough-Animationen (animierte Rundgänge) für Architekten, Entwickler und Planer.</p>
           </div>
         </div>
       </div>
@@ -1541,46 +1813,46 @@ footer {
     <!-- Steps grid -->
     <div style="background:var(--black-2);border:1px solid var(--border);padding:48px;display:grid;grid-template-columns:repeat(6,1fr);gap:0;">
 
-      <div style="padding:0 28px 0 0;border-right:1px solid var(--border);">
+      <div class="ps-col" style="padding:0 28px 0 0;border-right:1px solid var(--border);">
         <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 01</div>
-        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">B</div>
-        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p1.title">Briefing</h4>
-        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p1.desc">Pläne, Referenzen, Kamerawinkel, Materialien und Deadline — strukturiert erfasst in unserem Briefing-Dokument. Kein Informationsverlust im E-Mail-Pingpong.</p>
+        <div class="ps-letter">B</div>
+        <h4 class="ps-title" data-i18n="p1.title">Briefing</h4>
+        <p class="ps-desc" data-i18n="p1.desc">Pläne, Referenzen, Kamerawinkel, Materialien und Deadline — strukturiert erfasst in unserem Briefing-Dokument. Kein Informationsverlust im E-Mail-Pingpong.</p>
       </div>
 
-      <div style="padding:0 28px;border-right:1px solid var(--border);">
+      <div class="ps-col" style="padding:0 28px;border-right:1px solid var(--border);">
         <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 02</div>
-        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">K</div>
-        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="pk.title">Konzeptionierung</h4>
-        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="pk.desc">Auf Basis des Briefings entwickeln wir ein Designkonzept — Raumstruktur, Materialpalette, Lichtstimmung. Erst wenn das Konzept steht, beginnt die Produktion.</p>
+        <div class="ps-letter">C</div>
+        <h4 class="ps-title" data-i18n="pk.title">Concept</h4>
+        <p class="ps-desc" data-i18n="pk.desc">Auf Basis des Briefings entwickeln wir ein Designkonzept — Raumstruktur, Materialpalette, Lichtstimmung. Erst wenn das Konzept steht, beginnt die Produktion.</p>
       </div>
 
-      <div style="padding:0 28px;border-right:1px solid var(--border);">
+      <div class="ps-col" style="padding:0 28px;border-right:1px solid var(--border);">
         <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 03</div>
-        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">P</div>
-        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p2.title">Preview</h4>
-        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p2.desc">Grobversion zur Freigabe von Perspektive, Raumaufteilung und Gesamtkomposition. Korrekturen sind hier noch kosteneffizient.</p>
+        <div class="ps-letter">P</div>
+        <h4 class="ps-title" data-i18n="p2.title">Preview</h4>
+        <p class="ps-desc" data-i18n="p2.desc">Grobversion zur Freigabe von Perspektive, Raumaufteilung und Gesamtkomposition. Korrekturen sind hier noch kosteneffizient.</p>
       </div>
 
-      <div style="padding:0 28px;border-right:1px solid var(--border);">
+      <div class="ps-col" style="padding:0 28px;border-right:1px solid var(--border);">
         <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 04</div>
-        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">PF</div>
-        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p3.title">Pre-Final</h4>
-        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p3.desc">Vollständig ausgearbeiteter Render mit Texturen, Materialien und Beleuchtung. Letzte Details werden besprochen — bevor alles finalisiert wird.</p>
+        <div class="ps-letter">PF</div>
+        <h4 class="ps-title" data-i18n="p3.title">Pre-Final</h4>
+        <p class="ps-desc" data-i18n="p3.desc">Vollständig ausgearbeiteter Render mit Texturen, Materialien und Beleuchtung. Letzte Details werden besprochen — bevor alles finalisiert wird.</p>
       </div>
 
-      <div style="padding:0 28px;border-right:1px solid var(--border);">
+      <div class="ps-col" style="padding:0 28px;border-right:1px solid var(--border);">
         <div class="label" style="margin-bottom:24px;font-size:0.55rem;">Schritt 05</div>
-        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">F</div>
-        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p4.title">Final</h4>
-        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p4.desc">Hochaufgelöste Enddateien in allen vereinbarten Formaten (JPG, PNG, TIFF). Präsentationsreif, markenkonsistent, termintreu geliefert.</p>
+        <div class="ps-letter">F</div>
+        <h4 class="ps-title" data-i18n="p4.title">Final</h4>
+        <p class="ps-desc" data-i18n="p4.desc">Hochaufgelöste Enddateien in allen vereinbarten Formaten (JPG, PNG, TIFF). Präsentationsreif, markenkonsistent, termintreu geliefert.</p>
       </div>
 
-      <div style="padding:0 0 0 28px;">
+      <div class="ps-col" style="padding:0 0 0 28px;">
         <div class="label" style="margin-bottom:24px;font-size:0.55rem;" data-i18n="p5.label">Optional</div>
-        <div style="font-family:var(--font-display);font-size:3.5rem;font-weight:300;color:rgba(246,241,233,0.08);line-height:1;margin-bottom:20px;">R</div>
-        <h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:12px;" data-i18n="p5.title">Revisionen</h4>
-        <p style="font-size:0.75rem;color:var(--white-dim);line-height:1.7;" data-i18n="p5.desc">Definierte Revisionsrunden pro Phase — transparent im Angebot ausgewiesen. Keine versteckten Zusatzkosten für vereinbarte Änderungen.</p>
+        <div class="ps-letter">R</div>
+        <h4 class="ps-title" data-i18n="p5.title">Revisionen</h4>
+        <p class="ps-desc" data-i18n="p5.desc">Definierte Revisionsrunden pro Phase — transparent im Angebot ausgewiesen. Keine versteckten Zusatzkosten für vereinbarte Änderungen.</p>
       </div>
     </div>
 
@@ -1598,19 +1870,19 @@ footer {
 
   <!-- QUOTE -->
   <div class="quote-block">
-    <p class="quote-text" data-i18n="quote.text">"We don't just render spaces — we render <em>confidence</em> into every decision made around them."</p>
+    <p class="quote-text" data-i18n="quote.text">"With precise visuals, feedback loops shrink, decisions come faster, and execution runs smoother—and more secure."</p>
     <p class="quote-attr" data-i18n="quote.attr">— Zutic 3D Studio Solutions</p>
   </div>
 
   <!-- CLIENTS -->
   <!-- CTA -->
   <section class="cta-section">
-    <div class="label" style="margin-bottom:24px;" data-i18n="cta.label">Let's Work Together</div>
-    <h2><span data-i18n="cta.title1">Ready to make</span><br><em data-i18n="cta.title2">visuals that convert?</em></h2>
-    <p class="body-text" style="max-width:480px;margin:0 auto;" data-i18n="cta.desc">Tell us about your project. We'll respond within 24 hours with a clear scope and timeline.</p>
+    <div class="label" style="margin-bottom:34px;" data-i18n="cta.label">Zusammenarbeiten</div>
+    <h2><span data-i18n="cta.title1">Bereit für Visuals, die</span><br><em data-i18n="cta.title2">Entscheidungen erleichtern?</em></h2>
+    <p class="body-text" style="max-width:480px;margin:0 auto;" data-i18n="cta.desc">Erzählen Sie uns kurz von Ihrem Projekt. Wir melden uns innerhalb von 24 Stunden mit Umfang und Zeitplan.</p>
     <div class="cta-actions">
-      <button class="btn-primary" onclick="showPage('contact')" data-i18n="cta.btn1">Book a Call →</button>
-      <button class="btn-ghost" onclick="showPage('contact')" data-i18n="cta.btn2">Get a Quote</button>
+      <button class="btn-primary" onclick="showPage('contact')" data-i18n="cta.btn1">Erstgespräch buchen →</button>
+      <button class="btn-ghost" onclick="showPage('contact')" data-i18n="cta.btn2">Angebot anfragen</button>
     </div>
   </section>
 
@@ -1801,8 +2073,8 @@ footer {
     <div>
       <div class="label" style="margin-bottom:16px;" data-i18n="about.label">The Studio</div>
       <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="about.title1">Built on</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="about.title2">precision.</em></h1>
-      <p class="body-text" style="margin-bottom:20px;" data-i18n="about.p1">Zutic 3D Studio Solutions is a specialized 3D visualization practice focused on retail architecture, product photography and interior space design. We work with brands, agencies and architects who need visuals that perform — not just impress.</p>
-      <p class="body-text" style="margin-bottom:40px;" data-i18n="about.p2">Our approach is direct: clean briefs, fast previews, precise execution. We've delivered over 50 projects across FMCG, hospitality, residential and commercial sectors.</p>
+      <p class="body-text" style="margin-bottom:20px;" data-i18n="about.p1">Zutic 3D Studio Solutions is a specialized 3D visualization studio for <span style="color:var(--gold);font-style:italic;">retail spaces</span>, <span style="color:var(--gold);font-style:italic;">interior fit-outs</span>, <span style="color:var(--gold);font-style:italic;">trade fair and promotional areas</span>, and <span style="color:var(--gold);font-style:italic;">brand environments</span>. We create CGI renderings — photorealistic 3D images that represent form, material and light so clearly that decisions become easier and alignment faster. The visuals help make concepts tangible — internally, with clients, or during execution.</p>
+      <p class="body-text" style="margin-bottom:40px;" data-i18n="about.p2">Our process stays lean and reliable: we clarify the brief, deliver previews quickly, and then execute with precision. Open points are addressed early. Feedback flows directly into the next versions — keeping revision rounds short and results predictable. With 50+ completed projects and 4+ years of experience across FMCG, hospitality, residential and commercial sectors, we know where details matter — and how to make them visible.</p>
       <button class="btn-primary" onclick="showPage('contact')" data-i18n="about.cta">Work With Us →</button>
     </div>
     <div style="background:var(--black-3);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
@@ -1843,11 +2115,11 @@ footer {
   <!-- TOOLS -->
   <!-- CTA -->
   <div class="cta-section">
-    <div class="label" style="margin-bottom:24px;">Availability</div>
-    <h2>Currently accepting<br><em>new projects.</em></h2>
-    <p class="body-text" style="max-width:400px;margin:20px auto 0;">Typical lead time: 5–10 business days. Rush projects available on request.</p>
+    <div class="label" style="margin-bottom:24px;" data-i18n="about.avLabel">Availability</div>
+    <h2><span data-i18n="about.avTitle1">Currently accepting</span><br><em data-i18n="about.avTitle2">new projects.</em></h2>
+    <p class="body-text" style="max-width:400px;margin:20px auto 0;" data-i18n="about.avDesc">Typical lead time: 5–10 business days. Rush projects available on request.</p>
     <div class="cta-actions">
-      <button class="btn-primary" onclick="showPage('contact')">Start a Project →</button>
+      <button class="btn-primary" onclick="showPage('contact')" data-i18n="about.avCta">Start a Project →</button>
     </div>
   </div>
 
@@ -1868,7 +2140,7 @@ footer {
       <div class="label" style="margin-bottom:14px;" data-i18n="contact.label">Get In Touch</div>
       <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="contact.title1">Let's build</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="contact.title2">something<br>great.</em></h1>
       <p class="body-text" style="margin-bottom:32px;" data-i18n="contact.desc">Whether you have a clear brief or just a rough idea — reach out. We'll help you scope and budget the project correctly from the start.</p>
-      <a href="mailto:aleks@zutic.de" class="contact-email">aleks@zutic.de</a>
+      <a href="mailto:info@zutic.de" class="contact-email">info@zutic.de</a>
       <div style="margin-top:48px;padding-top:40px;border-top:1px solid var(--border);">
         <div class="label" style="margin-bottom:14px;" data-i18n="contact.locLabel">Based In</div>
         <p class="body-text" data-i18n="contact.locDesc">Frankfurt am Main, Germany.<br>Working globally.</p>
@@ -1876,49 +2148,91 @@ footer {
     </div>
     <div>
       <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+
+        <!-- 1+2: Name & Email -->
         <div class="form-row">
           <div class="field">
-            <label data-i18n="form.name">Your Name *</label>
+            <label data-i18n="form.name">Name *</label>
             <input type="text" placeholder="Jane Smith" required>
           </div>
           <div class="field">
-            <label data-i18n="form.company">Company</label>
-            <input type="text" placeholder="Your Company">
+            <label data-i18n="form.email">E-Mail *</label>
+            <input type="email" placeholder="jane@company.com" required>
           </div>
         </div>
+
+        <!-- 3: Company -->
         <div class="field">
-          <label data-i18n="form.email">Email Address *</label>
-          <input type="email" placeholder="jane@company.com" required>
+          <label data-i18n="form.company">Unternehmen <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
+          <input type="text" data-i18n-ph="form.companyPh" placeholder="Firma / Agentur">
         </div>
+
+        <!-- 4: Project Type -->
         <div class="field">
-          <label data-i18n="form.type">Project Type</label>
-          <select>
-            <option value="" data-i18n="form.typePh">Select a service…</option>
-            <option data-i18n="form.t1">Retail Visuals</option>
-            <option data-i18n="form.t2">Product Renders</option>
-            <option data-i18n="form.t3">Interior / Spatial</option>
-            <option data-i18n="form.t4">Architectural VIZ</option>
-            <option data-i18n="form.t5">Other</option>
+          <label data-i18n="form.type">Worum geht's? *</label>
+          <select required>
+            <option value="" data-i18n="form.typePh">Projektart auswählen…</option>
+            <option data-i18n="form.t1">Messe-/Standvisualisierung</option>
+            <option data-i18n="form.t2">Innenausbau / Ladenbau</option>
+            <option data-i18n="form.t3">Architektur / Interior</option>
+            <option data-i18n="form.t4">Promostand / Brand Activation</option>
+            <option data-i18n="form.t5">Sonstiges</option>
           </select>
+          <span class="field-note" data-i18n="form.typeNote">Hilft uns, direkt die richtigen Fragen zu stellen.</span>
         </div>
+
+        <!-- 5: Timing -->
         <div class="field">
-          <label data-i18n="form.budget">Budget Range</label>
+          <label data-i18n="form.timing">Timing <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
           <select>
-            <option value="" data-i18n="form.budgetPh">Select a range…</option>
-            <option>< €500</option>
-            <option>€500 – €2,000</option>
-            <option>€2,000 – €5,000</option>
-            <option>€5,000 – €10,000</option>
-            <option>€10,000+</option>
+            <option value="" data-i18n="form.timingPh">Wann wird es benötigt?</option>
+            <option data-i18n="form.ti1">ASAP (1–3 Tage)</option>
+            <option data-i18n="form.ti2">1–2 Wochen</option>
+            <option data-i18n="form.ti3">3–4 Wochen</option>
+            <option data-i18n="form.ti4">1–2 Monate</option>
+            <option data-i18n="form.ti5">Flexibel / offen</option>
           </select>
+          <span class="field-note" data-i18n="form.timingNote">Damit wir realistisch planen können.</span>
         </div>
+
+        <!-- 6: Checkboxes -->
         <div class="field">
-          <label data-i18n="form.msg">Tell Us About Your Project *</label>
-          <textarea placeholder="Describe your project, goals, timeline, and any references you have…" data-i18n-ph="form.msgPh" required></textarea>
+          <label data-i18n="form.scope">Was brauchen Sie? <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
+          <div class="check-group">
+            <label class="check-item"><input type="checkbox"><span data-i18n="form.c1">1–3 Renderings</span></label>
+            <label class="check-item"><input type="checkbox"><span data-i18n="form.c2">4–8 Renderings</span></label>
+            <label class="check-item"><input type="checkbox"><span data-i18n="form.c3">Varianten (Material/Farbe/Branding)</span></label>
+            <label class="check-item"><input type="checkbox"><span data-i18n="form.c4">Animation / Kamerafahrt</span></label>
+            <label class="check-item"><input type="checkbox"><span data-i18n="form.c5">360° / Panorama</span></label>
+            <label class="check-item"><input type="checkbox"><span data-i18n="form.c6">Nur Konzept / Look & Feel</span></label>
+          </div>
+          <span class="field-note" data-i18n="form.scopeNote">Sie müssen noch nicht alles wissen.</span>
         </div>
-        <div class="success-msg" id="successMsg" data-i18n="form.success">✓ Message sent! We'll get back to you within 24 hours.</div>
+
+        <!-- 7: Description -->
+        <div class="field">
+          <label data-i18n="form.msg">Kurzbeschreibung *</label>
+          <textarea placeholder="Ziel, Fläche/Standgröße, gewünschte Perspektiven, Referenzen/Links, Deadline…" data-i18n-ph="form.msgPh" required></textarea>
+        </div>
+
+        <!-- 8: Budget -->
+        <div class="field">
+          <label data-i18n="form.budget">Budgetrahmen <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
+          <select>
+            <option value="" data-i18n="form.budgetPh">Einschätzung wählen…</option>
+            <option data-i18n="form.b1">Noch offen / brauche Einschätzung</option>
+            <option data-i18n="form.b2">&lt; 1.000 €</option>
+            <option data-i18n="form.b3">1.000 – 2.500 €</option>
+            <option data-i18n="form.b4">2.500 – 5.000 €</option>
+            <option data-i18n="form.b5">5.000 – 10.000 €</option>
+            <option data-i18n="form.b6">10.000 €+</option>
+          </select>
+          <span class="field-note" data-i18n="form.budgetNote">Nur zur Orientierung – wir schlagen das passende Paket vor.</span>
+        </div>
+
+        <div class="success-msg" id="successMsg" data-i18n="form.success">✓ Anfrage gesendet! Wir melden uns innerhalb von 24 Stunden.</div>
         <div class="form-submit">
-          <button type="submit" class="btn-primary" data-i18n="form.submit">Send Message →</button>
+          <button type="submit" class="btn-primary" data-i18n="form.submit">Anfrage senden →</button>
         </div>
       </form>
     </div>
@@ -2216,8 +2530,8 @@ const translations = {
     'hero.cta1': 'View Work →', 'hero.cta2': 'Book a Call', 'hero.scroll': 'Scroll to explore',
     'work.label': 'Selected Work', 'work.title': 'Featured Projects', 'work.all': 'All Projects →',
     'work.label2': 'Portfolio', 'work.title2': 'All Work',
-    'services.label': 'What We Do', 'services.title1': 'Turning concepts', 'services.title2': 'into reality',
-    'services.intro': 'We specialize in high-end 3D visualization for brands that care about quality. From a single product render to a full spatial concept — we deliver visuals that close deals.',
+    'services.label': 'What We Deliver', 'services.title1': 'Visuals that', 'services.title2': 'move projects forward',
+    'services.intro': 'We deliver studio-quality 3D visualization — from a single product render to a complete spatial concept. Visuals that accelerate alignment, simplify approvals and move projects forward.',
     'services.about': 'About the Studio →',
     's1.title': 'Retail Visuals', 's1.desc': 'Shop-in-shop concepts, POS displays, brand activations and festival setups — photorealistic renders for presentations, approvals and marketing.',
     's2.title': 'Product Renders', 's2.desc': 'Studio-quality product visualization with precise material, light and shadow. Packshots, hero shots, 360° turntables and lifestyle composites.',
@@ -2232,18 +2546,21 @@ const translations = {
     'p4.title': 'Final', 'p4.desc': 'High-resolution output files in all agreed formats (JPG, PNG, TIFF). Presentation-ready, brand-consistent, delivered on time.', 'p4.tag': 'From Day 7 · Delivery',
     'p5.label': 'Optional', 'p5.title': 'Revisions', 'p5.desc': 'Defined revision rounds per phase — transparently outlined in the quote. No hidden costs for agreed changes.', 'p5.tag': 'By Agreement · Clearly defined',
     'pb1': 'On-time delivery', 'pb2': 'Revisions defined upfront', 'pb3': 'Communication at every stage', 'pb4': 'Express option available',
-    'quote.text': '"We don\'t just render spaces — we render <em>confidence</em> into every decision made around them."',
+    'quote.text': '"With precise visuals, feedback loops shrink, decisions come faster, and execution runs smoother—and more secure."',
     'quote.attr': '— Zutic 3D Studio Solutions',
     'clients.label': 'Trusted By',
-    'cta.label': "Let's Work Together", 'cta.title1': 'Ready to make', 'cta.title2': 'visuals that convert?',
-    'cta.desc': "Tell us about your project. We'll respond within 24 hours with a clear scope and timeline.",
-    'cta.btn1': 'Book a Call →', 'cta.btn2': 'Get a Quote',
+    'cta.label': "Let's Work Together", 'cta.title1': 'Ready for visuals that', 'cta.title2': 'make decisions easier?',
+    'cta.desc': "Tell us briefly about your project. We'll get back to you within 24 hours with scope and timeline.",
+    'cta.btn1': 'Book Initial Call →', 'cta.btn2': 'Request a Quote',
     'about.label': 'The Studio', 'about.title1': 'Built on', 'about.title2': 'precision.',
-    'about.p1': 'Zutic 3D Studio Solutions is a specialized 3D visualization practice focused on retail architecture, product photography and interior space design. We work with brands, agencies and architects who need visuals that perform — not just impress.',
-    'about.p2': "Our approach is direct: clean briefs, fast previews, precise execution. We've delivered over 50 projects across FMCG, hospitality, residential and commercial sectors.",
+    'about.p1': 'Zutic 3D Studio Solutions is a specialized 3D visualization studio for <span style="color:var(--gold);font-style:italic;">retail spaces</span>, <span style="color:var(--gold);font-style:italic;">interior fit-outs</span>, <span style="color:var(--gold);font-style:italic;">trade fair and promotional areas</span>, and <span style="color:var(--gold);font-style:italic;">brand environments</span>. We create CGI renderings — photorealistic 3D images that represent form, material and light so clearly that decisions become easier and alignment faster. The visuals help make concepts tangible — internally, with clients, or during execution.',
+    'about.p2': 'Our process stays lean and reliable: we clarify the brief, deliver previews quickly, and then execute with precision. Open points are addressed early. Feedback flows directly into the next versions — keeping revision rounds short and results predictable. With 50+ completed projects and 4+ years of experience across FMCG, hospitality, residential and commercial sectors, we know where details matter — and how to make them visible.',
     'about.cta': 'Work With Us →', 'about.stat1': 'Completed Projects', 'about.stat2': 'Industry Experience',
-    'about.sLabel': 'Services', 'about.sTitle': 'What we offer',
-    'as1.label': '01 — Retail Visuals', 'as1.desc': 'Shop-in-shop, POS, brand activations, trade fair booths, pop-up containers. We visualize the full brand experience before a single piece is built.',
+    'about.sLabel': 'What We Deliver', 'about.sTitle': 'What we deliver',
+    'as1.label': '01 — 3D Visuals for Retail & Interior', 'as1.desc': 'Shop-in-shop concepts, POS displays, brand activations and festival setups — photorealistic renders for presentations, approvals and marketing.',
+    'as2.label': '02 — Trade Fair & Promotional Renderings', 'as2.desc': 'Studio-quality with precise materials, light and shadow. Packshots, hero shots, 360° turntables and lifestyle composites.',
+    'as3.label': '03 — Spatial & Architectural Visualization', 'as3.desc': 'Full interior renderings for residential and commercial spaces for planning and approval — living rooms, offices, restaurants, showrooms.',
+    'as4.label': '04 — Fast Previews + Precise Final Renders', 'as4.desc': 'For presentation and execution: exterior views, concept renderings, aerial shots and walkthrough animations for architects, developers and planners.',
     'as2.label': '02 — Product Renders', 'as2.desc': 'Packshots, lifestyle renders, hero images and 360° animations. We match any reference material with photorealistic accuracy.',
     'as3.label': '03 — Interior & Space', 'as3.desc': 'Residential and commercial interiors from concept to final render. Includes kitchen, living, dining, office and hospitality spaces.',
     'as4.label': '04 — Architectural VIZ', 'as4.desc': 'Exterior renderings, aerial views, isometric floor plans and flythrough animations for architects and property developers.',
@@ -2255,10 +2572,21 @@ const translations = {
     'contact.desc': 'Whether you have a clear brief or just a rough idea — reach out. We\'ll help you scope and budget the project correctly from the start.',
     'contact.rtLabel': 'Response Time', 'contact.rtDesc': 'Within 24 hours on business days.<br>Project start: 5–10 business days.',
     'contact.locLabel': 'Based In', 'contact.locDesc': 'Frankfurt am Main, Germany.<br>Working globally.',
-    'form.name': 'Your Name *', 'form.company': 'Company', 'form.email': 'Email Address *',
+    'form.name': 'Name *', 'form.company': 'Company (optional)', 'form.companyPh': 'Company / Agency', 'form.email': 'Email *',
+    'form.type': "What's it about? *", 'form.typePh': 'Select project type…', 'form.typeNote': 'Helps us ask the right questions straight away.',
+    'form.t1': 'Trade Fair / Stand Visualization', 'form.t2': 'Interior Fit-out / Retail', 'form.t3': 'Architecture / Interior', 'form.t4': 'Promo Stand / Brand Activation', 'form.t5': 'Other',
+    'form.timing': 'Timing (optional)', 'form.timingPh': 'When is it needed?', 'form.timingNote': 'So we can plan realistically.',
+    'form.ti1': 'ASAP (1–3 days)', 'form.ti2': '1–2 weeks', 'form.ti3': '3–4 weeks', 'form.ti4': '1–2 months', 'form.ti5': 'Flexible / open',
+    'form.scope': 'What do you need? (optional)', 'form.scopeNote': "You don't need to know everything yet.",
+    'form.c1': '1–3 Renderings', 'form.c2': '4–8 Renderings', 'form.c3': 'Variants (material/colour/branding)', 'form.c4': 'Animation / Camera fly-through', 'form.c5': '360° / Panorama', 'form.c6': 'Concept / Look & Feel only',
+    'form.msg': 'Brief Description *', 'form.msgPh': 'Goal, floor/stand size, desired perspectives, references/links, deadline…',
+    'form.budget': 'Budget Range (optional)', 'form.budgetPh': 'Select a range…', 'form.budgetNote': 'For orientation only — we will suggest the right package.',
+    'form.b1': 'Still open / need an estimate', 'form.b2': '< 1,000 €', 'form.b3': '1,000 – 2,500 €', 'form.b4': '2,500 – 5,000 €', 'form.b5': '5,000 – 10,000 €', 'form.b6': '10,000 €+',
+    'form.submit': 'Send Request →', 'form.success': '✓ Request sent! We\'ll get back to you within 24 hours.',
     'form.type': 'Project Type', 'form.typePh': 'Select a service…',
-    'form.t1': 'Retail Visuals', 'form.t2': 'Product Renders', 'form.t3': 'Interior / Spatial', 'form.t4': 'Architectural VIZ', 'form.t5': 'Other',
+    'form.t1': 'Retail Spaces', 'form.t2': 'Interior Fit-out', 'form.t3': 'Trade Fair & Promotional', 'form.t4': 'Brand Environments', 'form.t5': 'Other',
     'form.budget': 'Budget Range', 'form.budgetPh': 'Select a range…',
+    'form.b1': 'Open / Need an estimate', 'form.b2': '< €1,000 (Mini-Visual / 1 Shot)', 'form.b3': '€1,000 – €2,500 (2–3 Shots)', 'form.b4': '€2,500 – €5,000 (4–6 Shots / Variants)', 'form.b5': '€5,000 – €10,000 (Larger projects / multiple areas)', 'form.b6': '€10,000+ (Rollout / High-end / Animation)',
     'form.msg': 'Tell Us About Your Project *', 'form.msgPh': 'Describe your project, goals, timeline, and any references you have…',
     'form.success': '✓ Message sent! We\'ll get back to you within 24 hours.', 'form.submit': 'Send Message →',
   },
@@ -2270,8 +2598,12 @@ const translations = {
     'hero.cta1': 'Projekte ansehen →', 'hero.cta2': 'Termin buchen', 'hero.scroll': 'Scrollen zum Entdecken',
     'work.label': 'Ausgewählte Projekte', 'work.title': 'Featured Projekte', 'work.all': 'Alle Projekte →',
     'work.label2': 'Portfolio', 'work.title2': 'Alle Projekte',
-    'services.label': 'Leistungen', 'services.title1': 'Ideen werden', 'services.title2': 'Realität',
-    'services.intro': 'Wir sind spezialisiert auf hochwertige 3D-Visualisierung für Marken, denen Qualität wichtig ist. Vom einzelnen Produktrender bis zum vollständigen Raumkonzept — wir liefern Visuals, die überzeugen.',
+    'services.label': 'Was wir liefern', 'services.title1': 'Visuals, die', 'services.title2': 'Projekte voranbringen',
+    'services.intro': 'Wir liefern 3D-Visualisierung in Studioqualität – vom einzelnen Produktrender bis zum kompletten Raumkonzept. Bilder, die Abstimmungen beschleunigen, Freigaben erleichtern und Projekte sicher voranbringen.',
+    's1.title': 'Retail Visuals', 's1.desc': 'Shop-in-Shop, POS-Displays, Markenaktivierungen, Messestände und Promotionflächen – fotorealistische Renderings für Pitch, Freigabe und Marketing.',
+    's2.title': 'Produktvisualisierung', 's2.desc': 'Material, Licht und Schatten präzise gesetzt. Packshots, Hero-Shots, 360°-Drehteller und Lifestyle-Composites (Produkt in Szene).',
+    's3.title': 'Innenausbau & Raumkonzepte', 's3.desc': 'Innenräume für Wohnen und Gewerbe – von Showrooms bis Restaurants. Inklusive Grundrissen und isometrischen Ansichten (klar von oben).',
+    's4.title': 'Architekturvisualisierung', 's4.desc': 'Außenansichten und Konzeptbilder, Luftperspektiven und Walkthrough-Animationen (animierte Rundgänge) für Architekten, Entwickler und Planer.',
     'services.about': 'Über das Studio →',
     's1.title': 'Retail Visuals', 's1.desc': 'Shop-in-Shop-Konzepte, POS-Displays, Markenaktivierungen und Festivalaufbauten — fotorealistische Renders für Präsentationen, Freigaben und Marketing.',
     's2.title': 'Produktvisualisierung', 's2.desc': 'Studioqualität mit präzisen Materialien, Licht und Schatten. Packshots, Hero-Shots, 360°-Drehteller und Lifestyle-Composites.',
@@ -2281,27 +2613,27 @@ const translations = {
     'process.label': 'Unser Prozess', 'process.title': 'Kein Raten.<br><em style="color:var(--gold);font-style:italic;">Kein Warten.</em>', 'process.intro': 'Jedes Projekt folgt demselben strukturierten Ablauf. Sie wissen zu jedem Zeitpunkt, was als nächstes passiert — und wann.',
     'process.quote': '„Kein Projekt endet mit Überraschungen."',
     'p1.title': 'Briefing', 'p1.desc': 'Pläne, Referenzen, Kamerawinkel, Materialien und Deadline — strukturiert erfasst in unserem Briefing-Dokument. Kein Informationsverlust im E-Mail-Pingpong.',
-    'pk.title': 'Konzeptionierung', 'pk.desc': 'Auf Basis des Briefings entwickeln wir ein Designkonzept — Raumstruktur, Materialpalette, Lichtstimmung. Erst wenn das Konzept steht, beginnt die Produktion.', 'p1.tag': 'Tag 1 · Kickoff',
+    'pk.title': 'Concept', 'pk.desc': 'Auf Basis des Briefings entwickeln wir ein Designkonzept — Raumstruktur, Materialpalette, Lichtstimmung. Erst wenn das Konzept steht, beginnt die Produktion.', 'p1.tag': 'Tag 1 · Kickoff',
     'p2.title': 'Preview', 'p2.desc': 'Grobversion zur Freigabe von Perspektive, Raumaufteilung und Gesamtkomposition. Korrekturen sind hier noch kosteneffizient.', 'p2.tag': 'Tag 2–3 · Erste Abstimmung',
     'p3.title': 'Pre-Final', 'p3.desc': 'Vollständig ausgearbeiteter Render mit Texturen, Materialien und Beleuchtung. Letzte Details werden besprochen — bevor alles finalisiert wird.', 'p3.tag': 'Tag 4–6 · Detailabstimmung',
     'p4.title': 'Final', 'p4.desc': 'Hochaufgelöste Enddateien in allen vereinbarten Formaten (JPG, PNG, TIFF). Präsentationsreif, markenkonsistent, termintreu geliefert.', 'p4.tag': 'Ab Tag 7 · Lieferung',
     'p5.label': 'Optional', 'p5.title': 'Revisionen', 'p5.desc': 'Definierte Revisionsrunden pro Phase — transparent im Angebot ausgewiesen. Keine versteckten Zusatzkosten für vereinbarte Änderungen.', 'p5.tag': 'Nach Absprache · Klar definiert',
     'pb1': 'Termingerechte Lieferung', 'pb2': 'Revisionen vorab definiert', 'pb3': 'Kommunikation auf allen Stufen', 'pb4': 'Express-Option verfügbar',
-    'quote.text': '„Wir rendern nicht nur Räume — wir rendern <em>Vertrauen</em> in jede Entscheidung, die um sie herum getroffen wird."',
+    'quote.text': '„Mit präzisen Bildern werden Feedbackschleifen kürzer, Entscheidungen schneller und die Umsetzung läuft reibungsloser – und sicherer."',
     'quote.attr': '— Zutic 3D Studio Solutions',
     'clients.label': 'Unsere Kunden',
-    'cta.label': 'Zusammenarbeiten', 'cta.title1': 'Bereit für', 'cta.title2': 'Visuals die wirken?',
-    'cta.desc': 'Erzählen Sie uns von Ihrem Projekt. Wir antworten innerhalb von 24 Stunden mit einem klaren Umfang und Zeitplan.',
-    'cta.btn1': 'Termin buchen →', 'cta.btn2': 'Angebot anfragen',
+    'cta.label': 'Zusammenarbeiten', 'cta.title1': 'Bereit für Visuals, die', 'cta.title2': 'Entscheidungen erleichtern?',
+    'cta.desc': 'Erzählen Sie uns kurz von Ihrem Projekt. Wir melden uns innerhalb von 24 Stunden mit Umfang und Zeitplan.',
+    'cta.btn1': 'Erstgespräch buchen →', 'cta.btn2': 'Angebot anfragen',
     'about.label': 'Das Studio', 'about.title1': 'Gebaut auf', 'about.title2': 'Präzision.',
-    'about.p1': 'Zutic 3D Studio Solutions ist ein spezialisiertes 3D-Visualisierungsstudio mit Fokus auf Retail-Architektur, Produktfotografie und Innenraumgestaltung. Wir arbeiten mit Marken, Agenturen und Architekten, die Visuals brauchen, die performen — nicht nur beeindrucken.',
-    'about.p2': 'Unser Ansatz ist direkt: klare Briefings, schnelle Vorschauen, präzise Ausführung. Wir haben über 50 Projekte in den Bereichen FMCG, Gastronomie, Wohnen und Gewerbe realisiert.',
+    'about.p1': 'Zutic 3D Studio Solutions ist ein spezialisiertes 3D-Visualisierungsstudio für <span style="color:var(--gold);font-style:italic;">Verkaufsräume</span>, <span style="color:var(--gold);font-style:italic;">Innenausbau</span>, <span style="color:var(--gold);font-style:italic;">Messe- und Promotionflächen</span> sowie <span style="color:var(--gold);font-style:italic;">Markenräume</span>. Wir erstellen CGI-Renderings — fotorealistische 3D-Bilder, die Form, Material und Licht so klar abbilden, dass Entscheidungen leichter fallen und Abstimmungen schneller laufen. Die Visuals helfen, Konzepte greifbar zu machen – intern, mit Kund:innen oder in der Umsetzung.',
+    'about.p2': 'Unser Prozess bleibt schlank und verlässlich: Wir klären das Briefing, liefern zügig Previews und setzen danach präzise um. Offene Punkte sprechen wir früh an. Feedback fließt direkt in die nächsten Versionen. So bleiben Korrekturschleifen kurz und Ergebnisse planbar. Mit 50+ abgeschlossenen Projekten und 4+ Jahren Berufserfahrung in FMCG, Gastronomie, Wohnen und Gewerbe wissen wir, wo Details zählen – und wie man sie sichtbar macht.',
     'about.cta': 'Mit uns arbeiten →', 'about.stat1': 'Abgeschlossene Projekte', 'about.stat2': 'Berufserfahrung',
-    'about.sLabel': 'Leistungen', 'about.sTitle': 'Was wir anbieten',
-    'as1.label': '01 — Retail Visuals', 'as1.desc': 'Shop-in-Shop, POS, Markenaktivierungen, Messeauftritte, Pop-up-Container. Wir visualisieren das vollständige Markenerlebnis, bevor ein Stück gebaut wird.',
-    'as2.label': '02 — Produktvisualisierung', 'as2.desc': 'Packshots, Lifestyle-Renders, Hero-Images und 360°-Animationen. Wir treffen jedes Referenzmaterial mit fotorealistischer Genauigkeit.',
-    'as3.label': '03 — Innenraum & Raum', 'as3.desc': 'Wohn- und Gewerbeinnenräume vom Konzept bis zum finalen Render. Küche, Wohnen, Essen, Büro und Gastronomie.',
-    'as4.label': '04 — Architektur VIZ', 'as4.desc': 'Außenrenderings, Luftansichten, isometrische Grundrisse und Flythrough-Animationen für Architekten und Projektentwickler.',
+    'about.sLabel': 'Was wir liefern', 'about.sTitle': 'Was wir liefern',
+    'as1.label': '01 — 3D-Visuals für Verkaufsräume und Innenausbau', 'as1.desc': 'Shop-in-Shop-Konzepte, POS-Displays, Markenaktivierungen und Festivalaufbauten — fotorealistische Renders für Präsentationen, Freigaben und Marketing.',
+    'as2.label': '02 — Renderings für Messe- und Promotionflächen', 'as2.desc': 'Studioqualität mit präzisen Materialien, Licht und Schatten. Packshots, Hero-Shots, 360°-Drehteller und Lifestyle-Composites.',
+    'as3.label': '03 — Raum- und Architektur-Visualisierungen', 'as3.desc': 'Vollständige Innenraumrenderings für Wohn- und Gewerberäume zur Planung und Freigabe — Wohnzimmer, Büros, Restaurants, Showrooms.',
+    'as4.label': '04 — Schnelle Previews + präzise Final-Renderings', 'as4.desc': 'Für Präsentation und Umsetzung: Außenansichten, Konzeptrenderings, Luftaufnahmen und Walkthrough-Animationen für Architekten, Entwickler und Planer.',
     'about.toolLabel': 'Werkzeuge', 'about.toolTitle': 'Technologie',
     'about.avLabel': 'Verfügbarkeit', 'about.avTitle1': 'Aktuell offen für', 'about.avTitle2': 'neue Projekte.',
     'about.avDesc': 'Typische Vorlaufzeit: 5–10 Werktage. Express-Projekte auf Anfrage.',
@@ -2310,10 +2642,21 @@ const translations = {
     'contact.desc': 'Ob klares Briefing oder erste Idee — melden Sie sich. Wir helfen Ihnen, das Projekt von Anfang an richtig zu planen und zu budgetieren.',
     'contact.rtLabel': 'Reaktionszeit', 'contact.rtDesc': 'Innerhalb von 24 Stunden an Werktagen.<br>Projektstart: 5–10 Werktage.',
     'contact.locLabel': 'Standort', 'contact.locDesc': 'Frankfurt am Main, Deutschland.<br>Weltweit tätig.',
-    'form.name': 'Ihr Name *', 'form.company': 'Unternehmen', 'form.email': 'E-Mail-Adresse *',
+    'form.name': 'Name *', 'form.company': 'Unternehmen (optional)', 'form.companyPh': 'Firma / Agentur', 'form.email': 'E-Mail *',
+    'form.type': 'Worum geht\'s? *', 'form.typePh': 'Projektart auswählen…', 'form.typeNote': 'Hilft uns, direkt die richtigen Fragen zu stellen.',
+    'form.t1': 'Messe-/Standvisualisierung', 'form.t2': 'Innenausbau / Ladenbau', 'form.t3': 'Architektur / Interior', 'form.t4': 'Promostand / Brand Activation', 'form.t5': 'Sonstiges',
+    'form.timing': 'Timing (optional)', 'form.timingPh': 'Wann wird es benötigt?', 'form.timingNote': 'Damit wir realistisch planen können.',
+    'form.ti1': 'ASAP (1–3 Tage)', 'form.ti2': '1–2 Wochen', 'form.ti3': '3–4 Wochen', 'form.ti4': '1–2 Monate', 'form.ti5': 'Flexibel / offen',
+    'form.scope': 'Was brauchen Sie? (optional)', 'form.scopeNote': 'Sie müssen noch nicht alles wissen.',
+    'form.c1': '1–3 Renderings', 'form.c2': '4–8 Renderings', 'form.c3': 'Varianten (Material/Farbe/Branding)', 'form.c4': 'Animation / Kamerafahrt', 'form.c5': '360° / Panorama', 'form.c6': 'Nur Konzept / Look & Feel',
+    'form.msg': 'Kurzbeschreibung *', 'form.msgPh': 'Ziel, Fläche/Standgröße, gewünschte Perspektiven, Referenzen/Links, Deadline…',
+    'form.budget': 'Budgetrahmen (optional)', 'form.budgetPh': 'Einschätzung wählen…', 'form.budgetNote': 'Nur zur Orientierung – wir schlagen das passende Paket vor.',
+    'form.b1': 'Noch offen / brauche Einschätzung', 'form.b2': '< 1.000 €', 'form.b3': '1.000 – 2.500 €', 'form.b4': '2.500 – 5.000 €', 'form.b5': '5.000 – 10.000 €', 'form.b6': '10.000 €+',
+    'form.submit': 'Anfrage senden →', 'form.success': '✓ Anfrage gesendet! Wir melden uns innerhalb von 24 Stunden.',
     'form.type': 'Projektart', 'form.typePh': 'Leistung auswählen…',
-    'form.t1': 'Retail Visuals', 'form.t2': 'Produktvisualisierung', 'form.t3': 'Innenraum / Raum', 'form.t4': 'Architektur VIZ', 'form.t5': 'Sonstiges',
+    'form.t1': 'Verkaufsräume', 'form.t2': 'Innenausbau', 'form.t3': 'Messe- & Promotionflächen', 'form.t4': 'Markenräume', 'form.t5': 'Sonstiges',
     'form.budget': 'Budgetrahmen', 'form.budgetPh': 'Bereich auswählen…',
+    'form.b1': 'Noch offen / brauche Einschätzung', 'form.b2': '< 1.000 € (Mini-Visual / 1 Shot)', 'form.b3': '1.000 – 2.500 € (2–3 Shots)', 'form.b4': '2.500 – 5.000 € (4–6 Shots / Varianten)', 'form.b5': '5.000 – 10.000 € (größere Projekte / mehrere Bereiche)', 'form.b6': '10.000 €+ (Rollout / High-end / Animation)',
     'form.msg': 'Ihr Projekt *', 'form.msgPh': 'Beschreiben Sie Ihr Projekt, Ziele, Zeitplan und vorhandene Referenzen…',
     'form.success': '✓ Nachricht gesendet! Wir melden uns innerhalb von 24 Stunden.', 'form.submit': 'Nachricht senden →',
   }
