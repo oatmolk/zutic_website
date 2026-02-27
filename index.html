@@ -367,7 +367,6 @@ section { padding: 120px 48px; }
 .work-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: auto auto auto;
   gap: 16px;
 }
 
@@ -377,8 +376,8 @@ section { padding: 120px 48px; }
   cursor: pointer;
   background: var(--black-3);
 }
-.work-card:nth-child(1) { grid-column: span 7; grid-row: 1; min-height: 480px; }
-.work-card:nth-child(2) { grid-column: span 5; grid-row: 1; min-height: 480px; }
+.work-card:nth-child(1) { grid-column: span 7; aspect-ratio: 16/10; }
+.work-card:nth-child(2) { grid-column: span 5; aspect-ratio: 16/10; }
 .work-card:nth-child(3) { grid-column: span 4; aspect-ratio: 4/3; }
 .work-card:nth-child(4) { grid-column: span 4; aspect-ratio: 4/3; }
 .work-card:nth-child(5) { grid-column: span 4; aspect-ratio: 4/3; }
@@ -919,10 +918,6 @@ footer {
   .clients-strip { flex-direction: column; }
   .nav-links { display: none; }
   .hero-actions { flex-direction: column; align-items: flex-start; }
-  .work-card-title { font-size: 1rem; line-height: 1.2; }
-  .work-card-overlay { padding: 16px; }
-  .tag { font-size: 0.55rem; padding: 4px 8px; }
-  .work-card-arrow { width: 28px; height: 28px; top: 12px; right: 12px; font-size: 0.7rem; }
 }
 
 /* ─── LANG TOGGLE ─── */
