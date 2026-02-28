@@ -2894,6 +2894,20 @@ if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
       transform: scale(0.97) translateY(2px) !important;
       transition: transform 0.18s ease-in !important;
     }
+    .ps-col.btn-pop {
+      transform: scale(1.03) translateY(-2px) !important;
+      box-shadow: 0 8px 28px rgba(200,169,110,0.18) !important;
+      border-color: rgba(200,169,110,0.35) !important;
+    }
+    .ps-col.btn-settle {
+      transform: scale(0.985) translateY(2px) !important;
+    }
+    .ps-col {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease !important;
+      will-change: transform;
+    }
   `;
   document.head.appendChild(popStyle);
 
@@ -2913,6 +2927,7 @@ if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
   }, { threshold: 0.65, rootMargin: '0px 0px -10px 0px' });
 
   document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => popObserver.observe(btn));
+  document.querySelectorAll('.ps-col').forEach(col => popObserver.observe(col));
 }
 </script>
 </body>
