@@ -1163,6 +1163,70 @@ footer {
 }
 
 /* ─── RESPONSIVE ─── */
+/* ─── MOBILE TOUCH ACTIVE STATES ─── */
+@media (hover: none) and (pointer: coarse) {
+
+  /* Work Cards */
+  .work-card:active {
+    transform: scale(0.98);
+  }
+  .work-card:active .work-card-overlay {
+    background: linear-gradient(to top, rgba(6,6,6,0.96) 0%, rgba(6,6,6,0.6) 50%, rgba(6,6,6,0.15) 100%);
+  }
+  .work-card:active .work-card-title {
+    color: var(--gold);
+  }
+  .work-card:active .work-card-arrow {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(200,169,110,0.12);
+  }
+
+  /* Service Items */
+  .service-item:active {
+    background: rgba(200,169,110,0.06);
+    border-color: rgba(200,169,110,0.35);
+    transform: translateX(4px);
+  }
+  .service-item:active .service-num {
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(200,169,110,0.5);
+  }
+  .service-item:active h3 {
+    color: var(--gold);
+  }
+
+  /* Process Steps */
+  .ps-col:active {
+    background: rgba(200,169,110,0.06);
+    border-color: rgba(200,169,110,0.3) !important;
+  }
+  .ps-col:active .ps-letter {
+    color: rgba(200,169,110,0.25);
+  }
+  .ps-col:active .ps-title {
+    color: var(--gold);
+  }
+
+  /* All Buttons */
+  .btn-primary:active {
+    transform: scale(0.97);
+    opacity: 0.85;
+    box-shadow: 0 0 20px rgba(200,169,110,0.35);
+  }
+  .btn-ghost:active {
+    background: rgba(200,169,110,0.1);
+    border-color: rgba(200,169,110,0.5);
+    color: var(--gold);
+    transform: scale(0.97);
+  }
+  .nav-cta:active,
+  button:active {
+    transform: scale(0.97);
+    opacity: 0.8;
+  }
+}
+
 @media (max-width: 900px) {
   .hide-mobile { display: none !important; }
   .nav-cta { display: none !important; }
