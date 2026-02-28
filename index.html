@@ -2870,6 +2870,50 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     if (e.target === this) cookieCloseModal();
   });
 })();
+
+// ─── SCROLL POP BUTTONS (TOUCH ONLY) ───
+if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+  const popStyle = document.createElement('style');
+  popStyle.textContent = `
+    .btn-primary, .btn-ghost {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity 0.25s ease,
+                  box-shadow 0.3s ease !important;
+      will-change: transform;
+    }
+    .btn-pop {
+      transform: scale(1.06) translateY(-3px) !important;
+    }
+    .btn-pop.btn-primary {
+      box-shadow: 0 8px 32px rgba(200,169,110,0.45) !important;
+    }
+    .btn-pop.btn-ghost {
+      box-shadow: 0 8px 24px rgba(200,169,110,0.2) !important;
+    }
+    .btn-settle {
+      transform: scale(0.97) translateY(2px) !important;
+      transition: transform 0.18s ease-in !important;
+    }
+  `;
+  document.head.appendChild(popStyle);
+
+  const popObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const btn = entry.target;
+      if (entry.isIntersecting) {
+        btn.classList.add('btn-pop');
+        btn.classList.remove('btn-settle');
+        setTimeout(() => {
+          btn.classList.remove('btn-pop');
+          btn.classList.add('btn-settle');
+          setTimeout(() => btn.classList.remove('btn-settle'), 180);
+        }, 340);
+      }
+    });
+  }, { threshold: 0.65, rootMargin: '0px 0px -10px 0px' });
+
+  document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => popObserver.observe(btn));
+}
 </script>
 </body>
 </html>
