@@ -1,13 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZUTIC 3D STUDIO SOLUTIONS — High-End 3D Visualization</title>
-<meta name="description" content="Premium 3D visualization studio specializing in retail, product and interior concepts.">
+<meta name="description" content="Fotorealistische 3D Visualisierungen für Retail, Messe, Innenausbau und Architektur. Premium CGI Renderings aus Frankfurt – schnell, präzise, 4K.">
+<meta name="keywords" content="3D Visualisierung Frankfurt, CGI Rendering, Retail Visualization, Messebau 3D, Innenausbau Rendering, Architektur Visualisierung, fotorealistisch, 3D Studio Deutschland">
+<link rel="canonical" href="https://www.zutic.de/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.zutic.de/">
+<meta property="og:title" content="ZUTIC 3D Studio — High-End 3D Visualisierungen">
+<meta property="og:description" content="Fotorealistische 3D Visualisierungen für Retail, Messe, Innenausbau und Architektur. Premium CGI Renderings aus Frankfurt.">
+<meta property="og:image" content="https://www.zutic.de/img_06_sunset.png">
+<meta property="og:locale" content="de_DE">
+<meta property="og:locale:alternate" content="en_GB">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ZUTIC 3D Studio — High-End 3D Visualisierungen">
+<meta name="twitter:description" content="Fotorealistische 3D Visualisierungen für Retail, Messe, Innenausbau und Architektur.">
+<meta name="twitter:image" content="https://www.zutic.de/img_06_sunset.png">
+
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('Tkk2OqnJ1yn6nGwyc');</script>
 <!-- Fonts werden lokal geladen – kein externer Dienst, vollständig DSGVO-konform -->
 <style>
 @font-face {
@@ -2355,24 +2377,24 @@ footer {
         <div class="form-row">
           <div class="field">
             <label data-i18n="form.name">Name *</label>
-            <input type="text" placeholder="Jane Smith" required>
+            <input type="text" name="from_name" placeholder="Jane Smith" required>
           </div>
           <div class="field">
             <label data-i18n="form.email">E-Mail *</label>
-            <input type="email" placeholder="jane@company.com" required>
+            <input type="email" name="from_email" placeholder="jane@company.com" required>
           </div>
         </div>
 
         <!-- 3: Company -->
         <div class="field">
           <label data-i18n="form.company">Unternehmen <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
-          <input type="text" data-i18n-ph="form.companyPh" placeholder="Firma / Agentur">
+          <input type="text" name="company" data-i18n-ph="form.companyPh" placeholder="Firma / Agentur">
         </div>
 
         <!-- 4: Project Type -->
         <div class="field">
           <label data-i18n="form.type">Worum geht's? *</label>
-          <select required>
+          <select name="project_type" required>
             <option value="" data-i18n="form.typePh">Projektart auswählen…</option>
             <option data-i18n="form.t1">Messe-/Standvisualisierung</option>
             <option data-i18n="form.t2">Innenausbau / Ladenbau</option>
@@ -2386,7 +2408,7 @@ footer {
         <!-- 5: Timing -->
         <div class="field">
           <label data-i18n="form.timing">Timing <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
-          <select>
+          <select name="timing">
             <option value="" data-i18n="form.timingPh">Wann wird es benötigt?</option>
             <option data-i18n="form.ti1">ASAP (1–3 Tage)</option>
             <option data-i18n="form.ti2">1–2 Wochen</option>
@@ -2414,7 +2436,7 @@ footer {
         <!-- 7: Description -->
         <div class="field">
           <label data-i18n="form.msg">Kurzbriefing *</label>
-          <textarea placeholder="Worum geht's? (Innenausbau / Messe / Architektur)&#10;Ziel (Pitch / Freigabe / Marketing)&#10;Deadline + gewünschte Anzahl Shots&#10;Pläne / Referenzen / Links (falls vorhanden)" data-i18n-ph="form.msgPh" required></textarea>
+          <textarea name="message" placeholder="Worum geht's? (Innenausbau / Messe / Architektur)&#10;Ziel (Pitch / Freigabe / Marketing)&#10;Deadline + gewünschte Anzahl Shots&#10;Pläne / Referenzen / Links (falls vorhanden)" data-i18n-ph="form.msgPh" required></textarea>
           <span class="field-note" data-i18n="form.scopeNote">Kein Problem, wenn noch nicht alles feststeht – wir helfen beim Strukturieren.</span>
         </div>
 
@@ -2680,10 +2702,38 @@ document.getElementById('workFilters').addEventListener('click', e => {
 // ─── CONTACT FORM ───
 function submitForm(e) {
   e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('button[type=submit]');
   const msg = document.getElementById('successMsg');
-  msg.style.display = 'block';
-  e.target.querySelector('button[type=submit]').textContent = 'Sent ✓';
-  setTimeout(() => { msg.style.display = 'none'; e.target.reset(); e.target.querySelector('button[type=submit]').textContent = 'Send Message →'; }, 5000);
+
+  // Collect checkboxes
+  const checked = [...form.querySelectorAll('.check-group input:checked')]
+    .map(cb => cb.closest('label').querySelector('span').textContent).join(', ');
+
+  const templateParams = {
+    from_name:    form.from_name.value,
+    from_email:   form.from_email.value,
+    company:      form.company.value || '—',
+    project_type: form.project_type.value,
+    timing:       form.timing.value || '—',
+    scope:        checked || '—',
+    message:      form.message.value,
+  };
+
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  emailjs.send('service_dnqahos', 'template_wnloz4t', templateParams)
+    .then(() => {
+      msg.style.display = 'block';
+      form.reset();
+      btn.textContent = '✓ Gesendet';
+      setTimeout(() => { msg.style.display = 'none'; btn.textContent = 'Anfrage senden →'; btn.disabled = false; }, 5000);
+    })
+    .catch(() => {
+      btn.textContent = 'Fehler – bitte erneut versuchen';
+      btn.disabled = false;
+    });
 }
 
 // ─── SUBTLE CARD TILT ───
@@ -2875,7 +2925,7 @@ function setLang(lang) {
   });
 
   // Update html lang attribute
-  document.documentElement.lang = lang;
+  document.documentElement.lang = lang === 'de' ? 'de' : 'en';
 
   // Re-render case study if open (to update labels)
   const caseContent = document.getElementById('caseContent');
