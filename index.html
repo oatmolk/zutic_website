@@ -2,13 +2,75 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMGEwYTBhIi8+CiAgPHRleHQgeD0iMTYiIHk9IjI0IiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjQwMCIgCiAgICAgICAgZmlsbD0iI0M4QTk2RSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAiPlo8L3RleHQ+Cjwvc3ZnPg==">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZUTIC 3D STUDIO SOLUTIONS — High-End 3D Visualization</title>
 <meta name="description" content="Premium 3D visualization studio specializing in retail, product and interior concepts.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Fonts werden lokal geladen – kein externer Dienst, vollständig DSGVO-konform -->
+<style>
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('cormorant-garamond-v21-latin-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('cormorant-garamond-v21-latin-300italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('cormorant-garamond-v21-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('cormorant-garamond-v21-latin-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('barlow-v13-latin-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('barlow-v13-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('barlow-v13-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('dm-mono-v16-latin-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('dm-mono-v16-latin-regular.woff2') format('woff2');
+}
+</style>
 
 <style>
 :root {
@@ -1579,8 +1641,8 @@ footer {
     <p>Wir verwenden Cookies, um die Website-Funktionalität sicherzustellen (notwendig) und — mit Ihrer Zustimmung — anonyme Nutzungsstatistiken zu erheben (Analyse). Weitere Informationen finden Sie in unserer <a onclick="showPrivacy()">Datenschutzerklärung</a>.</p>
   </div>
   <div class="cookie-actions">
-    <button class="btn-accept-all" onclick="cookieAcceptAll()">Alle akzeptieren</button>
     <button class="btn-accept-essential" onclick="cookieAcceptEssential()">Nur notwendige</button>
+    <button class="btn-accept-all" onclick="cookieAcceptAll()">Alle akzeptieren</button>
     <button class="btn-settings" onclick="cookieOpenSettings()">Einstellungen</button>
   </div>
 </div>
@@ -1642,39 +1704,29 @@ footer {
   Zutic 3D Studio Solutions<br>
   Thomas-Mann-Straße 22a<br>
   63477 Maintal<br>
-  E-Mail: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
+  Deutschland<br>
+  Kontakt: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
 
-  <h2>2. Grundsätze der Datenverarbeitung</h2>
-  <p>Wir verarbeiten personenbezogene Daten nur, soweit dies zur Bereitstellung unserer Website und Leistungen erforderlich ist. Rechtsgrundlagen sind Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung), Art. 6 Abs. 1 lit. f DSGVO (berechtigte Interessen) sowie — wo angegeben — Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).</p>
+  <h2>2. Erhobene Daten beim Websitebesuch</h2>
+  <p>Beim Aufruf dieser Website werden durch den Hosting-Anbieter automatisch Server-Logfiles erfasst: IP-Adresse, Browsertyp und -version, Datum und Uhrzeit des Zugriffs sowie die aufgerufene URL. Diese Daten dienen ausschließlich der technischen Bereitstellung der Website und werden nicht mit anderen Datenquellen zusammengeführt. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren und fehlerfreien Bereitstellung). Die Speicherdauer beträgt maximal 7 Tage.</p>
 
-  <h2>3. Kontaktformular und Kontaktaufnahme per E-Mail</h2>
-  <p>Wenn Sie uns über das Kontaktformular oder per E-Mail kontaktieren, werden die von Ihnen übermittelten Daten (z. B. Name, E-Mail-Adresse, Projektbeschreibung) bei uns gespeichert, um Ihre Anfrage zu bearbeiten und zu beantworten.</p>
-  <p><strong>Erhobene Daten:</strong> Name, E-Mail-Adresse, Unternehmen (optional), Projektart, Timing (optional), gewünschte Leistungen (optional), Kurzbeschreibung des Projekts, Budgetrahmen (optional).</p>
-  <p><strong>Zweck:</strong> Ausschließlich zur Bearbeitung und Beantwortung Ihrer Anfrage sowie zur Kontaktaufnahme im Rahmen der Projektanbahnung.</p>
-  <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).</p>
-  <p><strong>Speicherdauer:</strong> Die Daten werden gelöscht, sobald die Anfrage abschließend bearbeitet wurde und keine weiteren gesetzlichen Aufbewahrungspflichten bestehen — in der Regel nach spätestens 6 Monaten. Kommt es zu einem Vertragsverhältnis, gelten die gesetzlichen Aufbewahrungsfristen (bis zu 10 Jahre gemäß HGB/AO).</p>
-  <p><strong>Weitergabe:</strong> Ihre Daten werden nicht an Dritte weitergegeben. Die Formulardaten werden ausschließlich per verschlüsselter HTTPS-Verbindung übertragen.</p>
-  <p>Die Angabe Ihrer Daten im Kontaktformular erfolgt freiwillig. Pflichtfelder (mit * gekennzeichnet) sind nur insoweit erforderlich, als sie zur Bearbeitung Ihrer Anfrage zwingend benötigt werden.</p>
+  <h2>3. Kontaktformular</h2>
+  <p>Wenn Sie das Kontaktformular nutzen, werden Ihre Angaben (Name, E-Mail-Adresse, Unternehmen, Projektbeschreibung) zur Bearbeitung Ihrer Anfrage und für Rückfragen gespeichert. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung) sowie Ihre ausdrückliche Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Die Daten werden nach vollständiger Bearbeitung der Anfrage gelöscht, spätestens nach 2 Jahren, sofern keine vertragliche Beziehung entstanden ist. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen (per E-Mail an uns).</p>
 
-  <h2>4. Server-Logfiles</h2>
-  <p>Beim Besuch dieser Website werden automatisch technische Zugriffsdaten erfasst und in Server-Logfiles gespeichert: IP-Adresse (anonymisiert), Browsertyp und -version, Betriebssystem, Referrer-URL, Datum und Uhrzeit des Zugriffs. Diese Daten sind keiner bestimmten Person zuordenbar, werden nicht mit anderen Datenquellen zusammengeführt und nach spätestens 7 Tagen gelöscht. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</p>
+  <h2>4. Schriftarten</h2>
+  <p>Diese Website verwendet ausschließlich lokal eingebundene Schriftarten (Cormorant Garamond, Barlow, DM Mono). Es erfolgt keine Verbindung zu externen Servern (z.B. Google Fonts). Beim Laden der Schriftarten werden keine personenbezogenen Daten an Dritte übertragen.</p>
 
-  <h2>5. Hosting</h2>
-  <p>Diese Website wird bei Netlify Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, USA gehostet. Netlify verarbeitet dabei technisch notwendige Verbindungsdaten. Es besteht ein Auftragsverarbeitungsvertrag (DPA) mit Netlify. Die Datenübertragung in die USA erfolgt auf Basis der EU-Standardvertragsklauseln gemäß Art. 46 Abs. 2 lit. c DSGVO. Weitere Informationen: <a href="https://www.netlify.com/privacy/" target="_blank" style="color:var(--gold);">netlify.com/privacy</a></p>
-
-  <h2>6. Google Fonts</h2>
-  <p>Diese Website verwendet Google Fonts (Anbieter: Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Die Schriftarten werden beim Laden der Seite von Google-Servern abgerufen, wobei Ihre IP-Adresse übertragen wird. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einheitlicher Darstellung). Weitere Informationen: <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--gold);">policies.google.com/privacy</a></p>
-
-  <h2>7. Cookies</h2>
+  <h2>5. Cookies</h2>
   <p>Wir setzen folgende Kategorien von Cookies ein:</p>
   <ul>
-    <li><strong>Notwendige Cookies:</strong> Technisch erforderlich für den Betrieb der Website (z. B. Cookie-Einwilligung speichern). Keine gesonderte Einwilligung erforderlich — Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</li>
-    <li><strong>Analyse-Cookies:</strong> Nur mit Ihrer ausdrücklichen Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.</li>
+    <li><strong>Notwendige Cookies:</strong> Technisch erforderlich für den Betrieb der Website, insbesondere zum Speichern Ihrer Cookie-Einstellungen (localStorage). Keine Einwilligung erforderlich (Art. 6 Abs. 1 lit. f DSGVO).</li>
+    <li><strong>Analyse-Cookies:</strong> Nur mit Ihrer ausdrücklichen Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Sie können Ihre Einwilligung jederzeit widerrufen.</li>
+    <li><strong>Marketing-Cookies:</strong> Derzeit nicht im Einsatz.</li>
   </ul>
-  <p>Ihre Cookie-Einstellungen können Sie jederzeit über den Link „Cookie-Einstellungen" im Footer anpassen.</p>
+  <p>Ihre Cookie-Einstellungen können Sie jederzeit über den Link im Footer anpassen oder widerrufen.</p>
 
-  <h2>8. Ihre Rechte als betroffene Person</h2>
-  <p>Sie haben gegenüber uns folgende Rechte hinsichtlich der Sie betreffenden personenbezogenen Daten:</p>
+  <h2>6. Ihre Rechte</h2>
+  <p>Sie haben gegenüber uns folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
   <ul>
     <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
     <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
@@ -1682,18 +1734,15 @@ footer {
     <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
     <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
     <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
-    <li>Recht auf Widerruf einer erteilten Einwilligung (Art. 7 Abs. 3 DSGVO)</li>
+    <li>Recht auf Widerruf einer erteilten Einwilligung jederzeit mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>
   </ul>
-  <p>Zur Ausübung Ihrer Rechte wenden Sie sich bitte per E-Mail an: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
+  <p>Zur Ausübung Ihrer Rechte wenden Sie sich per E-Mail an: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
 
-  <h2>9. Beschwerderecht bei der Aufsichtsbehörde</h2>
-  <p>Sie haben das Recht, sich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren. Für Hessen ist dies der Hessische Beauftragte für Datenschutz und Informationsfreiheit (HBDI), Postfach 3163, 65021 Wiesbaden, <a href="https://datenschutz.hessen.de" target="_blank" style="color:var(--gold);">datenschutz.hessen.de</a></p>
+  <h2>7. Beschwerderecht</h2>
+  <p>Sie haben das Recht, sich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren. Die zuständige Behörde für Hessen ist der <a href="https://datenschutz.hessen.de" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">Hessische Beauftragte für Datenschutz und Informationsfreiheit (HBDI)</a>.</p>
 
-  <h2>10. Datensicherheit</h2>
-  <p>Diese Website nutzt aus Sicherheitsgründen und zum Schutz der Übertragung personenbezogener Daten eine SSL-/TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt.</p>
-
-  <h2>11. Aktualität und Änderung dieser Datenschutzerklärung</h2>
-  <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, um sie stets den aktuellen rechtlichen Anforderungen zu entsprechen. <strong>Stand: März 2026.</strong></p>
+  <h2>8. Änderungen dieser Datenschutzerklärung</h2>
+  <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf zu aktualisieren. Stand: März 2026.</p>
 </div>
 
 <!-- ═══════════════════════════════════ IMPRESSUM ═══════════════════════════════════ -->
@@ -1713,7 +1762,7 @@ footer {
 
   <h2>Kontakt</h2>
   <p>
-    E-Mail: <a href="/cdn-cgi/l/email-protection#83eaede5ecc3f9f6f7eae0ade7e6" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="3f565159507f454a4b565c115b5a">[email&#160;protected]</span></a>
+    E-Mail: <a href="/cdn-cgi/l/email-protection#7b12151d143b010e0f1218551f1e" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="432a2d252c033936372a206d2726">[email&#160;protected]</span></a>
   </p>
 
   <h2>Umsatzsteuer-Identifikationsnummer</h2>
@@ -2180,6 +2229,9 @@ footer {
     <div class="footer-links">
       <a onclick="showPage('work')">More Work</a>
       <a onclick="showPage('contact')">Contact</a>
+      <a onclick="showImpressum()">Impressum</a>
+      <a onclick="showPrivacy()">Datenschutz</a>
+      <a onclick="cookieOpenSettings()">Cookies</a>
     </div>
   </footer>
 </div>
@@ -2258,7 +2310,7 @@ footer {
       <div class="label" style="margin-bottom:14px;" data-i18n="contact.label">Get In Touch</div>
       <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="contact.title1">Let's build</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="contact.title2">something<br>great.</em></h1>
       <p class="body-text" style="margin-bottom:32px;" data-i18n="contact.desc">Whether you have a clear brief or just a rough idea — reach out. We'll help you scope and budget the project correctly from the start.</p>
-      <a href="/cdn-cgi/l/email-protection#335a5d555c734946475a501d5756" class="contact-email"><span class="__cf_email__" data-cfemail="5e373038311e242b2a373d703a3b">[email&#160;protected]</span></a>
+      <a href="/cdn-cgi/l/email-protection#046d6a626b447e71706d672a6061" class="contact-email"><span class="__cf_email__" data-cfemail="f49d9a929bb48e81809d97da9091">[email&#160;protected]</span></a>
       <div style="margin-top:48px;padding-top:40px;border-top:1px solid var(--border);">
         <div class="label" style="margin-bottom:14px;" data-i18n="contact.locLabel">Based In</div>
         <p class="body-text" data-i18n="contact.locDesc">Frankfurt am Main, Germany.<br>Working globally.</p>
@@ -2333,29 +2385,21 @@ footer {
           <textarea placeholder="Ziel, Fläche/Standgröße, gewünschte Perspektiven, Referenzen/Links, Deadline…" data-i18n-ph="form.msgPh" required></textarea>
         </div>
 
-        <!-- 8: Budget -->
-        <div class="field">
-          <label data-i18n="form.budget">Budgetrahmen <span style="opacity:0.4;font-size:0.9em;">(optional)</span></label>
-          <select>
-            <option value="" data-i18n="form.budgetPh">Einschätzung wählen…</option>
-            <option data-i18n="form.b1">Noch offen / brauche Einschätzung</option>
-            <option data-i18n="form.b2">&lt; 1.000 €</option>
-            <option data-i18n="form.b3">1.000 – 2.500 €</option>
-            <option data-i18n="form.b4">2.500 – 5.000 €</option>
-            <option data-i18n="form.b5">5.000 – 10.000 €</option>
-            <option data-i18n="form.b6">10.000 €+</option>
-          </select>
-          <span class="field-note" data-i18n="form.budgetNote">Nur zur Orientierung – wir schlagen das passende Paket vor.</span>
+        <div class="success-msg" id="successMsg" data-i18n="form.success">✓ Anfrage gesendet! Wir melden uns innerhalb von 24 Stunden.</div>
+
+        <!-- DSGVO Einwilligung -->
+        <div style="margin-top:4px;">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;line-height:1.5;">
+            <input type="checkbox" id="dsgvo-consent" required style="margin-top:3px;flex-shrink:0;accent-color:var(--gold);width:13px;height:13px;">
+            <span style="font-family:var(--font-body);font-size:0.75rem;color:var(--white-dim);text-transform:none;letter-spacing:0;font-weight:300;">
+              Ich habe die <a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;text-decoration:underline;">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. *
+            </span>
+          </label>
         </div>
 
-        <div class="success-msg" id="successMsg" data-i18n="form.success">✓ Anfrage gesendet! Wir melden uns innerhalb von 24 Stunden.</div>
         <div class="form-submit">
           <button type="submit" class="btn-primary" data-i18n="form.submit">Anfrage senden →</button>
         </div>
-        <p style="font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.06em;color:rgba(246,241,233,0.28);margin-top:16px;line-height:1.7;">
-          Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten zur Bearbeitung Ihrer Anfrage zu.<br>
-          Weitere Informationen finden Sie in unserer <a onclick="showPrivacy()" style="color:rgba(200,169,110,0.7);cursor:pointer;text-decoration:underline;">Datenschutzerklärung</a>.
-        </p>
       </form>
     </div>
   </div>
@@ -2367,6 +2411,9 @@ footer {
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('work')">Work</a>
       <a onclick="showPage('about')">Studio</a>
+      <a onclick="showImpressum()">Impressum</a>
+      <a onclick="showPrivacy()">Datenschutz</a>
+      <a onclick="cookieOpenSettings()">Cookies</a>
     </div>
   </footer>
 </div>
@@ -2490,7 +2537,7 @@ const projects = {
 };
 
 // ─── PAGE ROUTING ───
-function showPage(page) {
+window.showPage = function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(page).classList.add('active');
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
@@ -2620,23 +2667,6 @@ document.addEventListener('mousemove', e => {
     }
   });
 });
-
-// ─── IP-BASED AUTO LANGUAGE DETECTION ───
-(async function detectLang() {
-  try {
-    // Use ipapi.co — free, no key needed, returns JSON
-    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
-    const data = await res.json();
-    const dachCountries = ['DE', 'AT', 'CH', 'LI']; // Germany, Austria, Switzerland, Liechtenstein
-    const lang = dachCountries.includes(data.country_code) ? 'de' : 'en';
-    setLang(lang);
-  } catch {
-    // Fallback: check browser language
-    const browserLang = navigator.language || navigator.userLanguage || '';
-    const lang = browserLang.startsWith('de') ? 'de' : 'en';
-    setLang(lang);
-  }
-})();
 
 // Respect reduced motion
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -2816,18 +2846,10 @@ function setLang(lang) {
   }
 }
 
-// ─── AUTO LANGUAGE DETECTION ───
-(async function detectLang() {
-  try {
-    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
-    const data = await res.json();
-    const dachCountries = ['DE', 'AT', 'CH', 'LI'];
-    const lang = dachCountries.includes(data.country_code) ? 'de' : 'en';
-    setLang(lang);
-  } catch {
-    const browserLang = navigator.language || navigator.userLanguage || '';
-    setLang(browserLang.startsWith('de') ? 'de' : 'en');
-  }
+// ─── AUTO LANGUAGE DETECTION (DSGVO-konform) ───
+(function detectLang() {
+  const browserLang = navigator.language || navigator.userLanguage || '';
+  setLang(browserLang.startsWith('de') ? 'de' : 'en');
 })();
 
 // Respect reduced motion
@@ -2851,7 +2873,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     applyConsent(data);
   }
   function applyConsent(data) {
-    if (data.analytics) { /* insert GA snippet here if needed */ }
+    if (data.analytics) { /* Analytics hier aktivieren falls benötigt */ }
   }
   function hideBanner() { banner.classList.remove('visible'); }
 
@@ -2953,4 +2975,27 @@ if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
       if (entry.isIntersecting) {
         btn.classList.add('btn-pop');
         btn.classList.remove('btn-settle');
+      } else {
+        btn.classList.remove('btn-pop');
+      }
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('.btn-primary, .btn-ghost, .ps-col').forEach(btn => {
+    popObserver.observe(btn);
+  });
+
+  document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => {
+    btn.addEventListener('touchstart', () => {
+      btn.classList.add('btn-settle');
+      btn.classList.remove('btn-pop');
+    }, { passive: true });
+    btn.addEventListener('touchend', () => {
+      setTimeout(() => btn.classList.remove('btn-settle'), 300);
+    }, { passive: true });
+  });
+}
+</script>
+</body>
+</html>
       
