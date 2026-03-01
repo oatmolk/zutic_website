@@ -324,11 +324,11 @@ section { padding: 120px 48px; }
 
 .hero-headline {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 7.5vw, 9.5rem);
+  font-size: clamp(2rem, 4.2vw, 6rem);
   font-weight: 300;
-  line-height: 0.92;
+  line-height: 1.05;
   letter-spacing: -0.025em;
-  max-width: 860px;
+  white-space: nowrap;
 }
 .hero-headline em {
   font-style: italic;
@@ -1113,7 +1113,33 @@ section { padding: 120px 48px; }
   transition: all 0.25s ease;
 }
 .check-item:hover { border-color: rgba(200,169,110,0.4); color: var(--white); }
-.check-item input[type="checkbox"] { accent-color: var(--gold); width: 14px; height: 14px; flex-shrink: 0; }
+.check-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border: 1px solid rgba(246,241,233,0.25);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.check-item input[type="checkbox"]:checked {
+  border-color: var(--gold);
+}
+.check-item input[type="checkbox"]:checked::after {
+  content: 'Z';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+}
 
 .form-submit {
   margin-top: 8px;
@@ -2299,6 +2325,9 @@ footer {
     <div class="footer-links">
       <a onclick="showPage('work')">Work</a>
       <a onclick="showPage('contact')">Contact</a>
+      <a onclick="showImpressum()">Impressum</a>
+      <a onclick="showPrivacy()">Datenschutz</a>
+      <a onclick="cookieOpenSettings()">Cookies</a>
     </div>
   </footer>
 </div>
@@ -2383,6 +2412,7 @@ footer {
         <div class="field">
           <label data-i18n="form.msg">Kurzbeschreibung *</label>
           <textarea placeholder="Ziel, Fläche/Standgröße, gewünschte Perspektiven, Referenzen/Links, Deadline…" data-i18n-ph="form.msgPh" required></textarea>
+          <span class="field-note" data-i18n="form.scopeNote">Kein Problem, wenn noch nicht alles feststeht – wir helfen beim Strukturieren.</span>
         </div>
 
         <div class="success-msg" id="successMsg" data-i18n="form.success">✓ Anfrage gesendet! Wir melden uns innerhalb von 24 Stunden.</div>
@@ -2397,8 +2427,11 @@ footer {
           </label>
         </div>
 
-        <div class="form-submit">
-          <button type="submit" class="btn-primary" data-i18n="form.submit">Anfrage senden →</button>
+        <div class="form-submit" style="margin-top:40px;">
+          <div>
+            <button type="submit" class="btn-primary" data-i18n="form.submit">Anfrage senden →</button>
+            <p style="margin-top:16px;font-family:var(--font-body);font-size:0.75rem;color:var(--white-dim);font-weight:300;line-height:1.8;" data-i18n="form.trustNote">Wir melden uns innerhalb von 24h (werktags) —<br>mit Rückfragen und einer klaren nächsten Empfehlung.</p>
+          </div>
         </div>
       </form>
     </div>
@@ -2735,6 +2768,7 @@ const translations = {
     'form.budget': 'Budget Range (optional)', 'form.budgetPh': 'Select a range…', 'form.budgetNote': 'For orientation only — we will suggest the right package.',
     'form.b1': 'Still open / need an estimate', 'form.b2': '< 1,000 €', 'form.b3': '1,000 – 2,500 €', 'form.b4': '2,500 – 5,000 €', 'form.b5': '5,000 – 10,000 €', 'form.b6': '10,000 €+',
     'form.submit': 'Send Request →', 'form.success': '✓ Request sent! We\'ll get back to you within 24 hours.',
+    'form.trustNote': 'We\'ll get back to you within 24h (business days) with questions and a clear next recommendation.',
     'form.type': 'Project Type', 'form.typePh': 'Select a service…',
     'form.t1': 'Retail Spaces', 'form.t2': 'Interior Fit-out', 'form.t3': 'Trade Fair & Promotional', 'form.t4': 'Brand Environments', 'form.t5': 'Other',
     'form.budget': 'Budget Range', 'form.budgetPh': 'Select a range…',
@@ -2799,12 +2833,13 @@ const translations = {
     'form.t1': 'Messe-/Standvisualisierung', 'form.t2': 'Innenausbau / Ladenbau', 'form.t3': 'Architektur / Interior', 'form.t4': 'Promostand / Brand Activation', 'form.t5': 'Sonstiges',
     'form.timing': 'Timing (optional)', 'form.timingPh': 'Wann wird es benötigt?', 'form.timingNote': 'Damit wir realistisch planen können.',
     'form.ti1': 'ASAP (1–3 Tage)', 'form.ti2': '1–2 Wochen', 'form.ti3': '3–4 Wochen', 'form.ti4': '1–2 Monate', 'form.ti5': 'Flexibel / offen',
-    'form.scope': 'Was brauchen Sie? (optional)', 'form.scopeNote': 'Sie müssen noch nicht alles wissen.',
-    'form.c1': '1–3 Renderings', 'form.c2': '4–8 Renderings', 'form.c3': 'Varianten (Material/Farbe/Branding)', 'form.c4': 'Animation / Kamerafahrt', 'form.c5': '360° / Panorama', 'form.c6': 'Nur Konzept / Look & Feel',
-    'form.msg': 'Kurzbeschreibung *', 'form.msgPh': 'Ziel, Fläche/Standgröße, gewünschte Perspektiven, Referenzen/Links, Deadline…',
+    'form.scope': 'Was sollen wir liefern? (optional)', 'form.scopeNote': 'Kein Problem, wenn noch nicht alles feststeht – wir helfen beim Strukturieren.',
+    'form.c1': '1–3 Renderings', 'form.c2': '4–8 Renderings', 'form.c3': 'Varianten (Material/Farbe/Branding)', 'form.c4': 'Animation (Kamerafahrt)', 'form.c5': '360° (Panorama/VR)', 'form.c6': 'Nur Konzept (ohne Final-Render)',
+    'form.msg': 'Kurzbriefing *', 'form.msgPh': 'Worum geht\'s? (Innenausbau / Messe / Architektur)\nZiel (Pitch / Freigabe / Marketing)\nDeadline + gewünschte Anzahl Shots\nPläne / Referenzen / Links (falls vorhanden)',
     'form.budget': 'Budgetrahmen (optional)', 'form.budgetPh': 'Einschätzung wählen…', 'form.budgetNote': 'Nur zur Orientierung – wir schlagen das passende Paket vor.',
     'form.b1': 'Noch offen / brauche Einschätzung', 'form.b2': '< 1.000 €', 'form.b3': '1.000 – 2.500 €', 'form.b4': '2.500 – 5.000 €', 'form.b5': '5.000 – 10.000 €', 'form.b6': '10.000 €+',
     'form.submit': 'Anfrage senden →', 'form.success': '✓ Anfrage gesendet! Wir melden uns innerhalb von 24 Stunden.',
+    'form.trustNote': 'Wir melden uns innerhalb von 24h (werktags) mit Rückfragen + einer klaren nächsten Empfehlung.',
     'form.type': 'Projektart', 'form.typePh': 'Leistung auswählen…',
     'form.t1': 'Verkaufsräume', 'form.t2': 'Innenausbau', 'form.t3': 'Messe- & Promotionflächen', 'form.t4': 'Markenräume', 'form.t5': 'Sonstiges',
     'form.budget': 'Budgetrahmen', 'form.budgetPh': 'Bereich auswählen…',
