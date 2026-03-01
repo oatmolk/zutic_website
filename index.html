@@ -1756,7 +1756,7 @@ footer {
   Thomas-Mann-Straße 22a<br>
   63477 Maintal<br>
   Deutschland<br>
-  Kontakt: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
+  Kontakt: <a href="#" id="privacy-email-link" style="color:var(--gold);">info@zutic.de</a></p>
 
   <h2>2. Erhobene Daten beim Websitebesuch</h2>
   <p>Beim Aufruf dieser Website werden durch den Hosting-Anbieter automatisch Server-Logfiles erfasst: IP-Adresse, Browsertyp und -version, Datum und Uhrzeit des Zugriffs sowie die aufgerufene URL. Diese Daten dienen ausschließlich der technischen Bereitstellung der Website und werden nicht mit anderen Datenquellen zusammengeführt. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren und fehlerfreien Bereitstellung). Die Speicherdauer beträgt maximal 7 Tage.</p>
@@ -1787,7 +1787,7 @@ footer {
     <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
     <li>Recht auf Widerruf einer erteilten Einwilligung jederzeit mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>
   </ul>
-  <p>Zur Ausübung Ihrer Rechte wenden Sie sich per E-Mail an: <a href="mailto:info@zutic.de" style="color:var(--gold);">info@zutic.de</a></p>
+  <p>Zur Ausübung Ihrer Rechte wenden Sie sich per E-Mail an: <a href="#" id="rights-email-link" style="color:var(--gold);">info@zutic.de</a></p>
 
   <h2>7. Beschwerderecht</h2>
   <p>Sie haben das Recht, sich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren. Die zuständige Behörde für Hessen ist der <a href="https://datenschutz.hessen.de" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">Hessische Beauftragte für Datenschutz und Informationsfreiheit (HBDI)</a>.</p>
@@ -2364,7 +2364,7 @@ footer {
       <div class="label" style="margin-bottom:14px;" data-i18n="contact.label">Get In Touch</div>
       <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="contact.title1">Let's build</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="contact.title2">something<br>great.</em></h1>
       <p class="body-text" style="margin-bottom:32px;" data-i18n="contact.desc">Whether you have a clear brief or just a rough idea — reach out. We'll help you scope and budget the project correctly from the start.</p>
-      <a href="/cdn-cgi/l/email-protection#046d6a626b447e71706d672a6061" class="contact-email"><span class="__cf_email__" data-cfemail="f49d9a929bb48e81809d97da9091">[email&#160;protected]</span></a>
+      <a href="#" class="contact-email" id="contact-email-link">info@zutic.de</a>
       <div style="margin-top:48px;padding-top:40px;border-top:1px solid var(--border);">
         <div class="label" style="margin-bottom:14px;" data-i18n="contact.locLabel">Based In</div>
         <p class="body-text" data-i18n="contact.locDesc">Frankfurt am Main, Germany.<br>Working globally.</p>
@@ -2736,7 +2736,16 @@ function submitForm(e) {
     });
 }
 
-// ─── SUBTLE CARD TILT ───
+// ─── EMAIL PROTECTION ───
+(function() {
+  const u = 'info';
+  const d = 'zutic.de';
+  const mailto = 'mailto:' + u + '@' + d;
+  ['contact-email-link','privacy-email-link','rights-email-link'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.href = mailto;
+  });
+})();
 document.addEventListener('mousemove', e => {
   const cards = document.querySelectorAll('.tilt');
   cards.forEach(card => {
