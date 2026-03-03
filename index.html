@@ -184,6 +184,9 @@ nav {
   color: var(--white);
   cursor: pointer;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  padding: 8px 0;
 }
 .nav-logo span { color: var(--gold); }
 
@@ -1745,7 +1748,7 @@ footer {
 </div>
 
 <!-- Privacy Page -->
-<div id="privacy-page" class="page" style="display:none;">
+<div id="privacy-page" class="page">
   <button class="back-btn" onclick="hidePrivacy()" style="margin-bottom:40px;">← Zurück</button>
   <div class="label">Rechtliches</div>
   <h1>Datenschutz&shy;erklärung</h1>
@@ -1756,7 +1759,7 @@ footer {
   Thomas-Mann-Straße 22a<br>
   63477 Maintal<br>
   Deutschland<br>
-  Kontakt: <a href="#" id="privacy-email-link" style="color:var(--gold);">info@zutic.de</a></p>
+  Kontakt: <a href="#" id="privacy-email-link" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="4e272028210e343b3a272d602a2b">[email&#160;protected]</span></a></p>
 
   <h2>2. Erhobene Daten beim Websitebesuch</h2>
   <p>Beim Aufruf dieser Website werden durch den Hosting-Anbieter automatisch Server-Logfiles erfasst: IP-Adresse, Browsertyp und -version, Datum und Uhrzeit des Zugriffs sowie die aufgerufene URL. Diese Daten dienen ausschließlich der technischen Bereitstellung der Website und werden nicht mit anderen Datenquellen zusammengeführt. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren und fehlerfreien Bereitstellung). Die Speicherdauer beträgt maximal 7 Tage.</p>
@@ -1787,7 +1790,7 @@ footer {
     <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
     <li>Recht auf Widerruf einer erteilten Einwilligung jederzeit mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>
   </ul>
-  <p>Zur Ausübung Ihrer Rechte wenden Sie sich per E-Mail an: <a href="#" id="rights-email-link" style="color:var(--gold);">info@zutic.de</a></p>
+  <p>Zur Ausübung Ihrer Rechte wenden Sie sich per E-Mail an: <a href="#" id="rights-email-link" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="d8b1b6beb798a2adacb1bbf6bcbd">[email&#160;protected]</span></a></p>
 
   <h2>7. Beschwerderecht</h2>
   <p>Sie haben das Recht, sich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren. Die zuständige Behörde für Hessen ist der <a href="https://datenschutz.hessen.de" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">Hessische Beauftragte für Datenschutz und Informationsfreiheit (HBDI)</a>.</p>
@@ -1797,7 +1800,7 @@ footer {
 </div>
 
 <!-- ═══════════════════════════════════ IMPRESSUM ═══════════════════════════════════ -->
-<div id="impressum-page" class="page" style="display:none;">
+<div id="impressum-page" class="page">
   <button class="back-btn" onclick="hideImpressum()" style="margin-bottom:40px;">← Zurück</button>
   <div class="label">Rechtliches</div>
   <h1>Impressum</h1>
@@ -1844,7 +1847,7 @@ footer {
 
 <!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
 <nav>
-  <div class="nav-logo" onclick="showPage('home')">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span><span style="font-weight:300;letter-spacing:0.08em;font-size:1rem;">3D STUDIO</span></div>
+  <div class="nav-logo" onclick="showPage('home')" ontouchend="event.preventDefault();showPage('home')" role="button" aria-label="Go to homepage">ZUTIC<span style="color:var(--gold);margin:0 2px;">·</span><span style="font-weight:300;letter-spacing:0.08em;font-size:1rem;">3D STUDIO</span></div>
   <ul class="nav-links">
     <li><a onclick="showPage('home')" id="nav-home" class="active" data-i18n="nav.home">Home</a></li>
     <li><a onclick="showPage('work')" id="nav-work" data-i18n="nav.work">Work</a></li>
@@ -2147,10 +2150,10 @@ footer {
     </div>
 
     <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('gangbang-studio')">
-      <img src="img_08_lounge.png" alt="Gang Bang Studio Lounge" loading="lazy">
+      <img src="img_08_lounge.png" alt="Bang Bang Tattoo Studio Lounge" loading="lazy">
       <div class="work-card-overlay">
         <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
-        <div class="work-card-title">Gang Bang Studio — Lounge</div>
+        <div class="work-card-title">Bang Bang Tattoo Studio — Lounge</div>
       </div>
       <div class="work-card-arrow">↗</div>
     </div>
@@ -2174,55 +2177,10 @@ footer {
     </div>
 
     <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
-      <img src="img_03_interior.png" alt="Interior Privat" loading="lazy">
+      <img src="img_06_sunset.png" alt="EWA Living" loading="lazy">
       <div class="work-card-overlay">
         <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Residential</span></div>
-        <div class="work-card-title">EWA Living — Wohnküche</div>
-      </div>
-      <div class="work-card-arrow">↗</div>
-    </div>
-
-    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
-      <img src="img_01_dining.png" alt="Interior Esstisch" loading="lazy">
-      <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">Interior</span></div>
-        <div class="work-card-title">EWA Living — Esstisch</div>
-      </div>
-      <div class="work-card-arrow">↗</div>
-    </div>
-
-    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
-      <img src="img_05_kitchen.png" alt="Interior Kücheninsel" loading="lazy">
-      <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">Residential</span></div>
-        <div class="work-card-title">EWA Living — Kücheninsel</div>
-      </div>
-      <div class="work-card-arrow">↗</div>
-    </div>
-
-    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
-      <img src="img_10_aerial.png" alt="Interior Vogelperspektive" loading="lazy">
-      <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">Residential</span></div>
-        <div class="work-card-title">EWA Living — Vogelperspektive</div>
-      </div>
-      <div class="work-card-arrow">↗</div>
-    </div>
-
-    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
-      <img src="img_06_sunset.png" alt="Interior Sunset View" loading="lazy">
-      <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">Residential</span></div>
-        <div class="work-card-title">EWA Living — Sunset View</div>
-      </div>
-      <div class="work-card-arrow">↗</div>
-    </div>
-
-    <div class="all-work-card" data-tags="interior residential" onclick="showCaseStudy('ewa-apartment')">
-      <img src="img_04_interior2.png" alt="Interior Abend" loading="lazy">
-      <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">Interior</span></div>
-        <div class="work-card-title">EWA Living — Abendstimmung</div>
+        <div class="work-card-title">EWA Living — Full Render Suite</div>
       </div>
       <div class="work-card-arrow">↗</div>
     </div>
@@ -2240,16 +2198,7 @@ footer {
       <img src="img_11_cheesecake1.png" alt="Uglyfaces Cheesecake Shop" loading="lazy">
       <div class="work-card-overlay">
         <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
-        <div class="work-card-title">Cheesecake Shop</div>
-      </div>
-      <div class="work-card-arrow">↗</div>
-    </div>
-
-    <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('cheesecake-shop')">
-      <img src="img_12_cheesecake2.png" alt="Uglyfaces Top View" loading="lazy">
-      <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">Interior</span></div>
-        <div class="work-card-title">Cheesecake Shop — Isometrische Ansicht</div>
+        <div class="work-card-title">Cheesecake Shop — Uglyfaces</div>
       </div>
       <div class="work-card-arrow">↗</div>
     </div>
@@ -2364,7 +2313,7 @@ footer {
       <div class="label" style="margin-bottom:14px;" data-i18n="contact.label">Get In Touch</div>
       <h1 class="display-lg" style="margin-bottom:32px;"><span data-i18n="contact.title1">Let's build</span><br><em style="font-style:italic;color:var(--gold);" data-i18n="contact.title2">something<br>great.</em></h1>
       <p class="body-text" style="margin-bottom:32px;" data-i18n="contact.desc">Whether you have a clear brief or just a rough idea — reach out. We'll help you scope and budget the project correctly from the start.</p>
-      <a href="#" class="contact-email" id="contact-email-link">info@zutic.de</a>
+      <a href="#" class="contact-email" id="contact-email-link"><span class="__cf_email__" data-cfemail="137a7d757c536966677a703d7776">[email&#160;protected]</span></a>
       <div style="margin-top:48px;padding-top:40px;border-top:1px solid var(--border);">
         <div class="label" style="margin-bottom:14px;" data-i18n="contact.locLabel">Based In</div>
         <p class="body-text" data-i18n="contact.locDesc">Frankfurt am Main, Germany.<br>Working globally.</p>
@@ -2446,7 +2395,7 @@ footer {
         <div style="margin-top:4px;">
           <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;line-height:1.5;">
             <input type="checkbox" id="dsgvo-consent" required style="margin-top:3px;flex-shrink:0;accent-color:var(--gold);width:13px;height:13px;">
-            <span style="font-family:var(--font-body);font-size:0.75rem;color:var(--white-dim);text-transform:none;letter-spacing:0;font-weight:300;">
+            <span data-i18n="form.privacy" style="font-family:var(--font-body);font-size:0.75rem;color:var(--white-dim);text-transform:none;letter-spacing:0;font-weight:300;">
               Ich habe die <a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;text-decoration:underline;">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. *
             </span>
           </label>
@@ -2477,7 +2426,7 @@ footer {
 </div>
 
 <!-- ═══════════════════════════════════ JS ═══════════════════════════════════ -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─── CASE STUDY DATA ───
 const projects = {
   'coca-cola-festival': {
@@ -2490,10 +2439,15 @@ const projects = {
     tags: ['Retail', 'Brand'],
     cover: 'img_13_coke_festival.png',
     shortDesc: 'Full 3D concept for a modular container-based festival activation with oversized brand elements.',
+    shortDesc_de: 'Vollständiges 3D-Konzept für eine modulare Container-Festivalaktivierung mit übergroßen Markenelementen.',
     problem: 'The client needed a compelling visual for internal sign-off on their festival booth concept — before any physical build started.',
+    problem_de: 'Der Kunde benötigte ein überzeugendes Visual für die interne Freigabe des Festivalstand-Konzepts — bevor mit dem physischen Aufbau begonnen wurde.',
     goal: 'Produce a photorealistic render of a multi-container Coca-Cola activation with branded elements and complete spatial context.',
+    goal_de: 'Fotorealistische Darstellung einer mehrteiligen Coca-Cola-Aktivierung mit Markenelementen und vollständigem räumlichem Kontext.',
     approach: 'We built the full scene in Blender from client sketches and CAD references. Modular containers were modelled accurately, branded, and placed within a realistic outdoor environment.',
+    approach_de: 'Die gesamte Szene wurde in Blender auf Basis von Kundenskizzen und CAD-Referenzen aufgebaut. Die modularen Container wurden präzise modelliert, gebrandet und in eine realistische Außenumgebung eingebettet.',
     deliverables: 'Full 4K exterior render, isometric overview, brand application variations.',
+    deliverables_de: 'Vollständiger 4K-Außenrender, isometrische Übersicht, Markenapplikationsvarianten.',
     gallery: ['img_13_coke_festival.png', '20.png']
   },
   'cheesecake-shop': {
@@ -2506,26 +2460,37 @@ const projects = {
     tags: ['Interior', 'Commercial'],
     cover: 'img_11_cheesecake1.png',
     shortDesc: 'Playful, nature-inspired retail interior concept for a cheesecake shop brand with bold yellow accents and lush greenery.',
+    shortDesc_de: 'Verspieltes, naturinspiriertes Retail-Innenkonzept für eine Cheesecake-Marke mit kräftigen Gelbtönen und üppigem Grün.',
     problem: 'Uglyfaces needed a distinctive store concept that stood out visually and communicated their fun, organic brand identity.',
+    problem_de: 'Uglyfaces benötigte ein unverwechselbares Ladenkonzept, das visuell heraussticht und die lebendige, organische Markenidentität transportiert.',
     goal: 'Design and render a full 3D interior that balances whimsy and functionality — bringing the brand to life before construction.',
+    goal_de: 'Einen vollständigen 3D-Innenraum gestalten und rendern, der Verspieltheit und Funktionalität vereint — die Marke zum Leben erwecken, noch vor dem Bau.',
     approach: 'We created a complete interior scheme with custom green terrazzo floors, yellow wood panelling, neon signage and living plant walls. Two key perspectives — street-level and isometric — were delivered for stakeholder presentations.',
+    approach_de: 'Wir entwickelten ein vollständiges Innenraumkonzept mit grünem Terrazzoboden, gelbem Holzverkleidung, Neon-Beschilderung und lebenden Pflanzenwänden. Zwei Hauptperspektiven — Straßenniveau und isometrisch — wurden für Stakeholder-Präsentationen geliefert.',
     deliverables: 'Eye-level interior render, isometric top-down overview, brand signage mockups.',
+    deliverables_de: 'Augenhöhen-Innenrender, isometrische Vogelperspektive, Markenbeschilderungs-Mockups.',
     gallery: ['img_11_cheesecake1.png', 'img_12_cheesecake2.png']
   },
   'gangbang-studio': {
-    title: 'Gang Bang Studio — Interior Documentation',
+    title: 'Bang Bang Tattoo Studio — Interior Design',
+    website: 'https://gangbangfrankfurt.de/',
     year: '2022',
-    client: 'Gang Bang Studio, Frankfurt',
+    client: 'Bang Bang Tattoo Studio, Frankfurt',
     role: 'Architectural Photography Support, Interior Visualization',
     tools: '3ds Max, V-Ray, Photoshop',
     timeline: '3 days',
     tags: ['Interior', 'Commercial'],
     cover: 'img_08_lounge.png',
     shortDesc: 'High-end interior documentation and visualization for a luxury creative studio in Frankfurt.',
-    problem: 'Gang Bang Studio required polished visual documentation of their newly completed Frankfurt space for press and social media.',
+    shortDesc_de: 'Hochwertige Innenraumdokumentation und Visualisierung für ein luxuriöses Kreativstudio in Frankfurt.',
+    problem: 'Bang Bang Tattoo Studio required polished visual documentation of their newly completed Frankfurt space for press and social media.',
+    problem_de: 'Bang Bang Tattoo Studio benötigte eine professionelle visuelle Dokumentation ihrer neu fertiggestellten Räumlichkeiten in Frankfurt für Presse und Social Media.',
     goal: 'Deliver a complete visual package capturing the dramatic interior — concrete pillars, LED walls, glass partitions and neon accents.',
+    goal_de: 'Ein vollständiges Visualpaket liefern, das das dramatische Interieur einfängt — Betonsäulen, LED-Wände, Glastrennwände und Neonakzente.',
     approach: 'A combination of on-site photography direction and 3D complementary renders. We aligned both mediums to create a seamless look.',
+    approach_de: 'Eine Kombination aus fotografischer Leitung vor Ort und ergänzenden 3D-Renders. Beide Medien wurden aufeinander abgestimmt, um einen nahtlosen Look zu erzeugen.',
     deliverables: 'Photography direction, 3D matching renders, retouched final assets.',
+    deliverables_de: 'Fotografische Leitung, passende 3D-Renders, retuschierte Endbilder.',
     gallery: ['img_08_lounge.png', 'img_09_character.png']
   },
   'redbull-bar': {
@@ -2538,10 +2503,15 @@ const projects = {
     tags: ['Retail', 'Brand'],
     cover: 'img_07_redbull.png',
     shortDesc: 'Photorealistic concept render of a branded Red Bull bar unit for event and hospitality use.',
+    shortDesc_de: 'Fotorealistischer Konzeptrender einer gebrandeten Red-Bull-Bareinheit für Event- und Gastronomieeinsatz.',
     problem: 'Red Bull needed a pre-production visual of their bar unit design to present to event partners and get stakeholder buy-in.',
+    problem_de: 'Der Kunde benötigte ein Vorproduktions-Visual des Bareinheit-Designs zur Präsentation bei Eventpartnern und zur Einholung der Stakeholder-Zustimmung.',
     goal: 'Create a compelling, realistic render that captures the brand identity, material quality and spatial footprint of the bar.',
+    goal_de: 'Einen überzeugenden, realistischen Render erstellen, der Markenidentität, Materialqualität und räumliche Präsenz der Bar einfängt.',
     approach: 'Working from 2D sketches and brand guidelines, we modelled the full bar unit, stocked it with product, and lit it with professional studio-style lighting.',
+    approach_de: 'Auf Basis von 2D-Skizzen und Brand Guidelines modellierten wir die vollständige Bareinheit, bestückten sie mit Produkten und beleuchteten sie mit professionellem Studio-Licht.',
     deliverables: 'Front and three-quarter renders at 4K, brand application variants.',
+    deliverables_de: 'Front- und Dreiviertel-Renders in 4K, Markenapplikationsvarianten.',
     gallery: ['img_07_redbull.png']
   },
   'zutic-restaurant': {
@@ -2554,10 +2524,15 @@ const projects = {
     tags: ['Interior', 'Commercial'],
     cover: 'img_02_restaurant.png',
     shortDesc: 'Complete interior visualization package for a modern fast-casual restaurant concept.',
+    shortDesc_de: 'Vollständiges Innenraum-Visualisierungspaket für ein modernes Fast-Casual-Restaurantkonzept.',
     problem: 'The client was pitching a new restaurant format to investors and franchise partners — no physical space existed yet.',
+    problem_de: 'Der Kunde präsentierte ein neues Restaurantformat an Investoren und Franchisepartner — der physische Raum existierte noch nicht.',
     goal: 'Render the complete interior with enough detail and atmosphere to make investors feel they are already inside.',
+    goal_de: 'Den gesamten Innenraum mit ausreichend Detail und Atmosphäre rendern, damit Investoren das Gefühl haben, bereits darin zu sein.',
     approach: 'Full interior modelling from architectural floor plan. Materials, lighting and props were all custom-built for the brand identity.',
+    approach_de: 'Vollständige Innenraummodellierung auf Basis des Architekturgrundrisses. Materialien, Beleuchtung und Requisiten wurden individuell für die Markenidentität entwickelt.',
     deliverables: 'Six 4K interior renders from key perspectives, one isometric floor plan overview.',
+    deliverables_de: 'Sechs 4K-Innenrenderings aus Schlüsselperspektiven, eine isometrische Grundrissübersicht.',
     gallery: ['img_02_restaurant.png', 'BACKLEFT_MID_FINAL_4K__1_.png', 'freank_grundriss_right.png']
   },
   'coca-cola-product': {
@@ -2570,10 +2545,15 @@ const projects = {
     tags: ['Product', 'Brand'],
     cover: '20.png',
     shortDesc: 'High-end packshot series for the Coca-Cola glass bottle — white studio and dark dramatic variants.',
+    shortDesc_de: 'Hochwertige Packshot-Serie für die Coca-Cola-Glasflasche — weiße Studio- und dunkle dramatische Varianten.',
     problem: 'Existing photography was outdated and not optimized for digital-first campaigns. CGI allowed unlimited reuse and variation.',
+    problem_de: 'Bestehende Fotografien waren veraltet und nicht für digitale Kampagnen optimiert. CGI ermöglicht unbegrenzte Wiederverwendung und Variation.',
     goal: 'Replace traditional photography with an identical-quality CGI packshot that can be adapted to any background, colour and scenario.',
+    goal_de: 'Traditionelle Fotografie durch einen gleichwertigen CGI-Packshot ersetzen, der an jeden Hintergrund, jede Farbe und jedes Szenario angepasst werden kann.',
     approach: 'Ultra-precise modelling of the 250ml glass bottle with accurate caustics, refractive glass and liquid simulation.',
+    approach_de: 'Ultrapräzise Modellierung der 250ml-Glasflasche mit exakten Kaustiken, brechendem Glas und Flüssigkeitssimulation.',
     deliverables: 'White background studio shot, dark dramatic variant, PSD with isolated layers.',
+    deliverables_de: 'Weißer Hintergrund-Studioshot, dunkle dramatische Variante, PSD mit isolierten Ebenen.',
     gallery: ['20.png', '20.png']
   },
   'ewa-apartment': {
@@ -2586,10 +2566,15 @@ const projects = {
     tags: ['Interior', 'Residential'],
     cover: 'img_03_interior.png',
     shortDesc: 'Complete residential visualization suite for a modern open-plan living, kitchen and dining space.',
+    shortDesc_de: 'Vollständiges Wohnvisualisierungspaket für einen modernen offenen Wohn-, Küchen- und Essbereich.',
     problem: 'The client was renovating their apartment and needed realistic renders to make final decisions on layout, colours and furniture.',
+    problem_de: 'Der Kunde renovierte seine Wohnung und benötigte realistische Renders für finale Entscheidungen zu Grundriss, Farben und Möblierung.',
     goal: 'Produce a comprehensive set of renders from multiple angles so the client could fully experience the space before construction.',
+    goal_de: 'Einen umfassenden Rendersatz aus mehreren Perspektiven erstellen, damit der Kunde den Raum vor dem Umbau vollständig erleben kann.',
     approach: 'Full scene built from architectural drawings. Six key camera positions, two lighting scenarios (day/evening), and multiple furniture variants.',
+    approach_de: 'Vollständiger Szenenaufbau auf Basis von Architekturplänen. Sechs Kamerapositionen, zwei Lichtstimmungen (Tag/Abend) und mehrere Möblierungsvarianten.',
     deliverables: 'Six 4K renders, isometric floor plan, evening lighting variant set.',
+    deliverables_de: 'Sechs 4K-Renders, isometrischer Grundriss, Abendlicht-Variantenset.',
     gallery: ['img_03_interior.png', 'img_01_dining.png', 'img_04_interior2.png', 'img_05_kitchen.png', 'img_06_sunset.png', 'img_10_aerial.png']
   }
 };
@@ -2637,23 +2622,27 @@ function showCaseStudy(slug) {
     </div>
 
     <div class="case-header">
-      <p style="font-size:1.05rem;color:var(--white-dim);max-width:680px;line-height:1.7;">${p.shortDesc}</p>
+      <p style="font-size:1.05rem;color:var(--white-dim);max-width:680px;line-height:1.7;">${currentLang === 'de' && p.shortDesc_de ? p.shortDesc_de : p.shortDesc}</p>
       <div class="case-meta-grid">
-        <div class="case-meta-item"><div class="case-meta-label">${getCaseLabel('client')}</div><div class="case-meta-value">${p.client}</div></div>
       </div>
     </div>
+
+    ${p.website ? `<div style="padding:24px 48px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div class="label">${currentLang === 'de' ? 'Studio besuchen' : 'Visit Studio'}</div>
+      <a href="${p.website}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,169,110,0.35);padding:14px 28px;transition:all 0.3s var(--ease);text-decoration:none;align-self:flex-start;" onmouseover="this.style.background='rgba(200,169,110,0.08)';this.style.borderColor='var(--gold)'" onmouseout="this.style.background='';this.style.borderColor='rgba(200,169,110,0.35)'">Bang Bang ↗</a>
+    </div>` : ''}
 
     <div class="case-summary">
       <div>
         <div class="label" style="margin-bottom:20px;">${getCaseLabel('summary')}</div>
         <div style="display:flex;flex-direction:column;gap:32px;">
-          <div class="case-summary-block"><h4>${getCaseLabel('problem')}</h4><p>${p.problem}</p></div>
-          <div class="case-summary-block"><h4>${getCaseLabel('goal')}</h4><p>${p.goal}</p></div>
+          <div class="case-summary-block"><h4>${getCaseLabel('problem')}</h4><p>${currentLang === 'de' && p.problem_de ? p.problem_de : p.problem}</p></div>
+          <div class="case-summary-block"><h4>${getCaseLabel('goal')}</h4><p>${currentLang === 'de' && p.goal_de ? p.goal_de : p.goal}</p></div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:32px;padding-top:44px;">
-        <div class="case-summary-block"><h4>${getCaseLabel('approach')}</h4><p>${p.approach}</p></div>
-        <div class="case-summary-block"><h4>${getCaseLabel('deliverables')}</h4><p>${p.deliverables}</p></div>
+        <div class="case-summary-block"><h4>${getCaseLabel('approach')}</h4><p>${currentLang === 'de' && p.approach_de ? p.approach_de : p.approach}</p></div>
+        <div class="case-summary-block"><h4>${getCaseLabel('deliverables')}</h4><p>${currentLang === 'de' && p.deliverables_de ? p.deliverables_de : p.deliverables}</p></div>
       </div>
     </div>
 
@@ -2661,6 +2650,8 @@ function showCaseStudy(slug) {
       <div class="label" style="margin-bottom:40px;">${getCaseLabel('gallery')}</div>
       <div class="gallery-grid">${galleryHtml}</div>
     </div>
+
+
 
     <div class="case-cta">
       <div>
@@ -2821,22 +2812,17 @@ const translations = {
     'contact.locLabel': 'Based In', 'contact.locDesc': 'Frankfurt am Main, Germany.<br>Working globally.',
     'form.name': 'Name *', 'form.company': 'Company (optional)', 'form.companyPh': 'Company / Agency', 'form.email': 'Email *',
     'form.type': "What's it about? *", 'form.typePh': 'Select project type…', 'form.typeNote': 'Helps us ask the right questions straight away.',
-    'form.t1': 'Trade Fair / Stand Visualization', 'form.t2': 'Interior Fit-out / Retail', 'form.t3': 'Architecture / Interior', 'form.t4': 'Promo Stand / Brand Activation', 'form.t5': 'Other',
+    'form.t1': 'Trade Fair / Booth Visualization', 'form.t2': 'Interior Fit-Out / Retail Design', 'form.t3': 'Architecture / Interior', 'form.t4': 'Promo Stand / Brand Activation', 'form.t5': 'Other',
     'form.timing': 'Timing (optional)', 'form.timingPh': 'When is it needed?', 'form.timingNote': 'So we can plan realistically.',
-    'form.ti1': 'ASAP (1–3 days)', 'form.ti2': '1–2 weeks', 'form.ti3': '3–4 weeks', 'form.ti4': '1–2 months', 'form.ti5': 'Flexible / open',
-    'form.scope': 'What do you need? (optional)', 'form.scopeNote': "You don't need to know everything yet.",
-    'form.c1': '1–3 Renderings', 'form.c2': '4–8 Renderings', 'form.c3': 'Variants (material/colour/branding)', 'form.c4': 'Animation / Camera fly-through', 'form.c5': '360° / Panorama', 'form.c6': 'Concept / Look & Feel only',
-    'form.msg': 'Brief Description *', 'form.msgPh': 'Goal, floor/stand size, desired perspectives, references/links, deadline…',
+    'form.ti1': 'ASAP (1–3 Days)', 'form.ti2': '1–2 Weeks', 'form.ti3': '3–4 Weeks', 'form.ti4': '1–2 Months', 'form.ti5': 'Flexible / Open',
+    'form.scope': 'What should we deliver? (optional)', 'form.scopeNote': "Don\'t worry if things aren\'t finalized yet — we\'ll help you structure it.",
+    'form.c1': '1–3 Renderings', 'form.c2': '4–8 Renderings', 'form.c3': 'Variants (Material/Color/Branding)', 'form.c4': 'Animation (Tracking Shot)', 'form.c5': '360° / Panorama', 'form.c6': 'Concept Only (no final render)',
+    'form.msg': 'Short Briefing *', 'form.msgPh': 'Goal, floor/stand size, desired perspectives, references/links, deadline…',
     'form.budget': 'Budget Range (optional)', 'form.budgetPh': 'Select a range…', 'form.budgetNote': 'For orientation only — we will suggest the right package.',
     'form.b1': 'Still open / need an estimate', 'form.b2': '< 1,000 €', 'form.b3': '1,000 – 2,500 €', 'form.b4': '2,500 – 5,000 €', 'form.b5': '5,000 – 10,000 €', 'form.b6': '10,000 €+',
+    'form.privacy': 'I have read the <a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;text-decoration:underline;">privacy policy</a> and agree to the processing of my data for handling my request. *',
     'form.submit': 'Send Request →', 'form.success': '✓ Request sent! We\'ll get back to you within 24 hours.',
-    'form.trustNote': 'We\'ll get back to you within 24h (business days) with questions and a clear next recommendation.',
-    'form.type': 'Project Type', 'form.typePh': 'Select a service…',
-    'form.t1': 'Retail Spaces', 'form.t2': 'Interior Fit-out', 'form.t3': 'Trade Fair & Promotional', 'form.t4': 'Brand Environments', 'form.t5': 'Other',
-    'form.budget': 'Budget Range', 'form.budgetPh': 'Select a range…',
-    'form.b1': 'Open / Need an estimate', 'form.b2': '< €1,000 (Mini-Visual / 1 Shot)', 'form.b3': '€1,000 – €2,500 (2–3 Shots)', 'form.b4': '€2,500 – €5,000 (4–6 Shots / Variants)', 'form.b5': '€5,000 – €10,000 (Larger projects / multiple areas)', 'form.b6': '€10,000+ (Rollout / High-end / Animation)',
-    'form.msg': 'Tell Us About Your Project *', 'form.msgPh': 'Describe your project, goals, timeline, and any references you have…',
-    'form.success': '✓ Message sent! We\'ll get back to you within 24 hours.', 'form.submit': 'Send Message →',
+    'form.trustNote': 'We\'ll get back to you within 24h (business days) — with follow-up questions and a clear next recommendation.',
   },
   de: {
     'nav.home': 'Start', 'nav.work': 'Projekte', 'nav.studio': 'Studio', 'nav.contact': 'Kontakt', 'nav.cta': 'Angebot anfragen',
@@ -2908,6 +2894,7 @@ const translations = {
     'form.b1': 'Noch offen / brauche Einschätzung', 'form.b2': '< 1.000 € (Mini-Visual / 1 Shot)', 'form.b3': '1.000 – 2.500 € (2–3 Shots)', 'form.b4': '2.500 – 5.000 € (4–6 Shots / Varianten)', 'form.b5': '5.000 – 10.000 € (größere Projekte / mehrere Bereiche)', 'form.b6': '10.000 €+ (Rollout / High-end / Animation)',
     'form.msg': 'Ihr Projekt *', 'form.msgPh': 'Beschreiben Sie Ihr Projekt, Ziele, Zeitplan und vorhandene Referenzen…',
     'form.success': '✓ Nachricht gesendet! Wir melden uns innerhalb von 24 Stunden.', 'form.submit': 'Nachricht senden →',
+    'form.privacy': 'Ich habe die <a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;text-decoration:underline;">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. *',
   }
 };
 
@@ -3004,21 +2991,21 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     });
   };
   window.showPrivacy = function() {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    document.getElementById('privacy-page').style.display = 'block';
+    document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+    document.getElementById('privacy-page').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   window.hidePrivacy = function() {
-    document.getElementById('privacy-page').style.display = 'none';
+    document.getElementById('privacy-page').classList.remove('active');
     showPage('home');
   };
   window.showImpressum = function() {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    document.getElementById('impressum-page').style.display = 'block';
+    document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+    document.getElementById('impressum-page').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   window.hideImpressum = function() {
-    document.getElementById('impressum-page').style.display = 'none';
+    document.getElementById('impressum-page').classList.remove('active');
     showPage('home');
   };
   document.getElementById('cookie-modal').addEventListener('click', function(e) {
@@ -3081,18 +3068,7 @@ if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
   document.querySelectorAll('.btn-primary, .btn-ghost, .ps-col').forEach(btn => {
     popObserver.observe(btn);
   });
-
-  document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => {
-    btn.addEventListener('touchstart', () => {
-      btn.classList.add('btn-settle');
-      btn.classList.remove('btn-pop');
-    }, { passive: true });
-    btn.addEventListener('touchend', () => {
-      setTimeout(() => btn.classList.remove('btn-settle'), 300);
-    }, { passive: true });
-  });
 }
 </script>
 </body>
 </html>
-      
