@@ -2604,8 +2604,14 @@ function showCaseStudy(slug) {
   const p = projects[slug];
   if (!p) return;
 
+  const twoSquare = ['coca-cola-festival', 'coca-cola-product'];
   const galleryHtml = p.gallery.map((img, i) => {
-    const cls = i === 0 ? 'gallery-item full tall' : 'gallery-item';
+    let cls;
+    if (twoSquare.includes(slug)) {
+      cls = 'gallery-item';
+    } else {
+      cls = i === 0 ? 'gallery-item full tall' : 'gallery-item';
+    }
     return `<div class="${cls}"><img src="${img}" alt="${p.title}" loading="lazy"></div>`;
   }).join('');
 
