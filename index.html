@@ -1692,7 +1692,7 @@ footer {
 <div id="cookie-banner" role="dialog" aria-label="Cookie-Einstellungen">
   <div class="cookie-text">
     <h4>Datenschutz & Cookies</h4>
-    <p>Wir verwenden Cookies, um die Website-Funktionalität sicherzustellen (notwendig) und — mit Ihrer Zustimmung — anonyme Nutzungsstatistiken zu erheben (Analyse). Weitere Informationen finden Sie in unserer <a onclick="showPrivacy()">Datenschutzerklärung</a>.</p>
+    <p>Wir verwenden Cookies, um die Website-Funktionalität sicherzustellen (notwendig) und — mit Ihrer Zustimmung — anonyme Nutzungsstatistiken zu erheben (Analyse). Weitere Informationen finden Sie in unserer <a onclick="showPrivacy()" data-i18n="footer.privacy">Datenschutzerklärung</a>.</p>
   </div>
   <div class="cookie-actions">
     <button class="btn-accept-essential" onclick="cookieAcceptEssential()">Nur notwendige</button>
@@ -2114,9 +2114,9 @@ footer {
       <a onclick="showPage('work')">Work</a>
       <a onclick="showPage('about')">Studio</a>
       <a onclick="showPage('contact')">Contact</a>
-      <a onclick="showImpressum()" >Impressum</a>
-      <a onclick="showPrivacy()" >Datenschutz</a>
-      <a onclick="cookieOpenSettings()" >Cookies</a>
+      <a onclick="showImpressum()" data-i18n="footer.impressum">Impressum</a>
+      <a onclick="showPrivacy()" data-i18n="footer.privacy">Datenschutz</a>
+      <a onclick="cookieOpenSettings()" data-i18n="footer.cookies">Cookies</a>
     </div>
   </footer>
 
@@ -2212,9 +2212,9 @@ footer {
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('about')">Studio</a>
       <a onclick="showPage('contact')">Contact</a>
-      <a onclick="showImpressum()" >Impressum</a>
-      <a onclick="showPrivacy()" >Datenschutz</a>
-      <a onclick="cookieOpenSettings()" >Cookie-Einstellungen</a>
+      <a onclick="showImpressum()" data-i18n="footer.impressum">Impressum</a>
+      <a onclick="showPrivacy()" data-i18n="footer.privacy">Datenschutz</a>
+      <a onclick="cookieOpenSettings()" data-i18n="footer.cookies">Cookie-Einstellungen</a>
     </div>
   </footer>
 </div>
@@ -2229,9 +2229,9 @@ footer {
     <div class="footer-links">
       <a onclick="showPage('work')">More Work</a>
       <a onclick="showPage('contact')">Contact</a>
-      <a onclick="showImpressum()">Impressum</a>
-      <a onclick="showPrivacy()">Datenschutz</a>
-      <a onclick="cookieOpenSettings()">Cookies</a>
+      <a onclick="showImpressum()" data-i18n="footer.impressum">Impressum</a>
+      <a onclick="showPrivacy()" data-i18n="footer.privacy">Datenschutz</a>
+      <a onclick="cookieOpenSettings()" data-i18n="footer.cookies">Cookies</a>
     </div>
   </footer>
 </div>
@@ -2299,9 +2299,9 @@ footer {
     <div class="footer-links">
       <a onclick="showPage('work')">Work</a>
       <a onclick="showPage('contact')">Contact</a>
-      <a onclick="showImpressum()">Impressum</a>
-      <a onclick="showPrivacy()">Datenschutz</a>
-      <a onclick="cookieOpenSettings()">Cookies</a>
+      <a onclick="showImpressum()" data-i18n="footer.impressum">Impressum</a>
+      <a onclick="showPrivacy()" data-i18n="footer.privacy">Datenschutz</a>
+      <a onclick="cookieOpenSettings()" data-i18n="footer.cookies">Cookies</a>
     </div>
   </footer>
 </div>
@@ -2418,9 +2418,9 @@ footer {
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('work')">Work</a>
       <a onclick="showPage('about')">Studio</a>
-      <a onclick="showImpressum()">Impressum</a>
-      <a onclick="showPrivacy()">Datenschutz</a>
-      <a onclick="cookieOpenSettings()">Cookies</a>
+      <a onclick="showImpressum()" data-i18n="footer.impressum">Impressum</a>
+      <a onclick="showPrivacy()" data-i18n="footer.privacy">Datenschutz</a>
+      <a onclick="cookieOpenSettings()" data-i18n="footer.cookies">Cookies</a>
     </div>
   </footer>
 </div>
@@ -2821,6 +2821,7 @@ const translations = {
     'form.budget': 'Budget Range (optional)', 'form.budgetPh': 'Select a range…', 'form.budgetNote': 'For orientation only — we will suggest the right package.',
     'form.b1': 'Still open / need an estimate', 'form.b2': '< 1,000 €', 'form.b3': '1,000 – 2,500 €', 'form.b4': '2,500 – 5,000 €', 'form.b5': '5,000 – 10,000 €', 'form.b6': '10,000 €+',
     'form.privacy': 'I have read the <a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;text-decoration:underline;">privacy policy</a> and agree to the processing of my data for handling my request. *',
+    'footer.impressum': 'Legal Notice', 'footer.privacy': 'Privacy', 'footer.cookies': 'Cookies',
     'form.submit': 'Send Request →', 'form.success': '✓ Request sent! We\'ll get back to you within 24 hours.',
     'form.trustNote': 'We\'ll get back to you within 24h (business days) — with follow-up questions and a clear next recommendation.',
   },
@@ -2894,6 +2895,7 @@ const translations = {
     'form.b1': 'Noch offen / brauche Einschätzung', 'form.b2': '< 1.000 € (Mini-Visual / 1 Shot)', 'form.b3': '1.000 – 2.500 € (2–3 Shots)', 'form.b4': '2.500 – 5.000 € (4–6 Shots / Varianten)', 'form.b5': '5.000 – 10.000 € (größere Projekte / mehrere Bereiche)', 'form.b6': '10.000 €+ (Rollout / High-end / Animation)',
     'form.msg': 'Ihr Projekt *', 'form.msgPh': 'Beschreiben Sie Ihr Projekt, Ziele, Zeitplan und vorhandene Referenzen…',
     'form.success': '✓ Nachricht gesendet! Wir melden uns innerhalb von 24 Stunden.', 'form.submit': 'Nachricht senden →',
+    'footer.impressum': 'Impressum', 'footer.privacy': 'Datenschutz', 'footer.cookies': 'Cookies',
     'form.privacy': 'Ich habe die <a onclick="showPrivacy()" style="color:var(--gold);cursor:pointer;text-decoration:underline;">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. *',
   }
 };
