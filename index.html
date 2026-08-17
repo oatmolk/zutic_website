@@ -1958,12 +1958,12 @@ footer {
         <div class="work-card-arrow">↗</div>
       </div>
 
-      <!-- 5 — Cheesecake top view: sichtbar nur auf Desktop -->
-      <div class="work-card tilt hide-mobile" onclick="showCaseStudy('cheesecake-shop')">
-        <img src="img_12_cheesecake2.png" alt="Cheesecake Shop" loading="lazy">
+      <!-- 5 — Topps Fan Container: sichtbar nur auf Desktop -->
+      <div class="work-card tilt hide-mobile" onclick="showCaseStudy('topps-fan-container')">
+        <img src="topps_hero.webp" alt="Topps Fan Container" loading="lazy">
         <div class="work-card-overlay">
-          <div class="work-card-tags"><span class="tag">Interior</span><span class="tag">Commercial</span></div>
-          <div class="work-card-title">Cheesecake Shop</div>
+          <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
+          <div class="work-card-title">Topps Fan Container</div>
         </div>
         <div class="work-card-arrow">↗</div>
       </div>
@@ -2142,6 +2142,15 @@ footer {
 
   <div class="all-work-grid" id="allWorkGrid">
 
+    <div class="all-work-card" data-tags="retail brand" onclick="showCaseStudy('topps-fan-container')">
+      <img src="topps_hero.webp" alt="Topps Fan Container" loading="lazy">
+      <div class="work-card-overlay">
+        <div class="work-card-tags"><span class="tag">Retail</span><span class="tag">Brand</span></div>
+        <div class="work-card-title">Topps Fan Container</div>
+      </div>
+      <div class="work-card-arrow">↗</div>
+    </div>
+
     <div class="all-work-card" data-tags="retail brand" onclick="showCaseStudy('redbull-bar')">
       <img src="img_07_redbull.png" alt="Red Bull Bar" loading="lazy">
       <div class="work-card-overlay">
@@ -2160,11 +2169,11 @@ footer {
       <div class="work-card-arrow">↗</div>
     </div>
 
-    <div class="all-work-card" data-tags="interior commercial" onclick="showCaseStudy('gangbang-studio')">
-      <img src="img_09_character.png" alt="Character CGI" loading="lazy" style="object-position:center 20%;">
+    <div class="all-work-card" data-tags="product brand" onclick="showCaseStudy('coca-cola-product')">
+      <img src="20.png" alt="Coca-Cola Bottle Packshot" loading="lazy">
       <div class="work-card-overlay">
-        <div class="work-card-tags"><span class="tag">3D</span><span class="tag">Character</span></div>
-        <div class="work-card-title">Character CGI</div>
+        <div class="work-card-tags"><span class="tag">Product</span><span class="tag">Brand</span></div>
+        <div class="work-card-title">Coca-Cola Bottle — Packshot Series</div>
       </div>
       <div class="work-card-arrow">↗</div>
     </div>
@@ -2431,6 +2440,26 @@ footer {
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─── CASE STUDY DATA ───
 const projects = {
+  'topps-fan-container': {
+    title: 'Topps Fan Container',
+    year: '2026',
+    client: 'WWP Deutschland (End client: Topps)',
+    role: '3D Visualization, Lighting, Postproduction',
+    timeline: '7 working days',
+    tags: ['Retail', 'Brand'],
+    cover: 'topps_hero.webp',
+    shortDesc: 'A two-storey container activation for Topps at the Champions League final. The renderings passed UEFA licensing approval — and the setup was built as visualized.',
+    shortDesc_de: 'Zweigeschossige Container-Aktivierung für Topps zum Champions-League-Finale. Die Renderings passierten die UEFA-Lizenzfreigabe — und der Aufbau stand am Ende so, wie visualisiert.',
+    problem: 'Before a single container was moved, the activation had to clear UEFA licensing approval. Every branded surface had to be readable and verifiable — a rendering that flattered the design would have failed the review.',
+    problem_de: 'Bevor ein einziger Container bewegt wurde, musste die Aktivierung die UEFA-Lizenzfreigabe passieren. Jede gebrandete Fläche musste lesbar und prüfbar sein — ein Rendering, das dem Entwurf schmeichelt, wäre durch die Prüfung gefallen.',
+    goal: 'Turn mockups, floor plans and the given design concept into renderings precise enough to serve as the basis for approval — not as mood images, but as a reliable representation of the built result.',
+    goal_de: 'Mockups, Grundrisse und das vorgegebene Designkonzept in Renderings überführen, die als Freigabegrundlage taugen — keine Stimmungsbilder, sondern eine belastbare Darstellung des gebauten Ergebnisses.',
+    approach: 'We modelled the full setup including the promo area and stayed with a neutral daylight setup throughout. Dramatic lighting would have looked better and shown less — at this stage the point was legibility of every branded surface, not atmosphere. Isometric views cover the layout, perspective views the visitor experience.',
+    approach_de: 'Das vollständige Setup inklusive Promofläche wurde modelliert, durchgehend in neutralem Tageslicht. Eine dramatischere Lichtstimmung hätte besser ausgesehen und weniger gezeigt — in dieser Phase ging es um die Lesbarkeit jeder gebrandeten Fläche, nicht um Atmosphäre. Die isometrischen Ansichten zeigen die Anordnung, die Perspektiven das Besuchererlebnis.',
+    deliverables: 'Six 4K renderings — three isometric views of the full setup, one hero perspective, plus interior and rooftop terrace details. Approved by UEFA, built as visualized.',
+    deliverables_de: 'Sechs 4K-Renderings — drei isometrische Ansichten des Gesamtaufbaus, eine Hero-Perspektive sowie Innenraum- und Dachterrassendetails. Von der UEFA freigegeben, so gebaut wie visualisiert.',
+    gallery: ['topps_hero.webp', 'topps_iso_1.webp', 'topps_iso_2.webp', 'topps_iso_3.webp', 'topps_interior.webp', 'topps_terrace.webp']
+  },
   'coca-cola-festival': {
     title: 'Coca-Cola Festival Setup',
     year: '2023',
@@ -2606,7 +2635,7 @@ function showCaseStudy(slug) {
   const p = projects[slug];
   if (!p) return;
 
-  const twoSquare = ['coca-cola-festival', 'coca-cola-product'];
+  const twoSquare = ['coca-cola-festival', 'coca-cola-product', 'topps-fan-container'];
   const galleryHtml = p.gallery.map((img, i) => {
     let cls;
     if (twoSquare.includes(slug)) {
