@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>33 – Redes Valley in 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,500&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --ink: #F4EFE6; --muted: #A9B8AD; --gold: #E8B65A; --gold-soft: rgba(232,182,90,.18);
+    --panel: rgba(12,20,16,.72); --line: rgba(244,239,230,.14);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; background: #0b1210; color: var(--ink); font-family: 'DM Sans', Arial, sans-serif; overflow: hidden; overscroll-behavior: none; -webkit-user-select: none; user-select: none; }
+  canvas#scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  .hud { position: fixed; pointer-events: none; z-index: 2; }
+  .hud * { pointer-events: auto; }
+  #title { top: calc(16px + env(safe-area-inset-top)); left: calc(16px + env(safe-area-inset-left)); pointer-events: none; text-shadow: 0 1px 12px rgba(5,10,8,.75), 0 0 2px rgba(5,10,8,.6); }
+  #title .big { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 56px; line-height: .9; color: var(--gold); letter-spacing: -.03em; }
+  #title .sub { font-size: 15px; margin-top: 6px; color: var(--ink); }
+  #title .coords { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink); background: rgba(12,20,16,.55); display: inline-block; padding: 3px 7px; border-radius: 6px; margin-top: 4px; letter-spacing: .04em; }
+  #topright { top: calc(16px + env(safe-area-inset-top)); right: calc(16px + env(safe-area-inset-right)); display: flex; gap: 8px; }
+  .chip { font: 500 12px 'JetBrains Mono', monospace; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer; }
+  .chip.on { border-color: var(--gold); color: var(--gold); background: rgba(40,30,10,.7); }
+  #bottom { left: 0; right: 0; bottom: 0; padding: 0 12px calc(12px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .panel { width: min(560px, 100%); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); display: none; }
+  .panel.show { display: block; }
+  .panel h4 { margin: 0 0 8px; font: 500 11px 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  .panel p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--muted); }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 8px; }
+  .legend div { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); }
+  .sw { width: 14px; height: 14px; border-radius: 4px; flex: none; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  input[type=range] { width: 100%; accent-color: var(--gold); margin: 4px 0 6px; }
+  .readout { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink); line-height: 1.6; }
+  .readout b { color: var(--gold); font-weight: 500; }
+  #modes { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  #modes::-webkit-scrollbar { display: none; }
+  #modes button { flex: none; font: 500 13px 'DM Sans', sans-serif; color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 10px 14px; cursor: pointer; }
+  #modes button.on { color: #1F2E25; background: var(--gold); }
+  #modes .sep { width: 1px; background: var(--line); margin: 6px 2px; flex: none; }
+  #modes button.toggle.on { color: var(--gold); background: var(--gold-soft); }
+  #pin { position: fixed; z-index: 1; transform: translate(-50%, -100%); pointer-events: none; text-align: center; }
+  #pin .n { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 30px; color: var(--gold); text-shadow: 0 0 18px rgba(232,182,90,.6); line-height: 1; }
+  #pin .l { font: 500 10px 'JetBrains Mono', monospace; color: var(--ink); letter-spacing: .1em; background: rgba(12,20,16,.6); padding: 2px 6px; border-radius: 4px; margin-top: 2px; }
+  #labels { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+  .lbl { position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); white-space: nowrap; display: none; text-align: center;
+         font: 500 10px 'JetBrains Mono', monospace; letter-spacing: .08em; color: var(--ink); text-shadow: 0 1px 6px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.9); }
+  .lbl .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink); margin: 3px auto 0; box-shadow: 0 0 6px rgba(0,0,0,.8); }
+  .lbl.cap { font-size: 11.5px; font-weight: 500; }
+  .lbl.poi { color: var(--gold); font-size: 11px; background: rgba(12,20,16,.72); padding: 3px 7px 2px; border-radius: 6px; text-shadow: none; }
+  .lbl.poi .dot { background: var(--gold); width: 8px; height: 8px; transform: rotate(45deg); border-radius: 1px; }
+  .lbl.park { color: #9fe3b8; font-size: 11px; }
+  .lbl.reg { font: italic 400 20px 'Fraunces', Georgia, serif; letter-spacing: 0; color: var(--ink); }
+  .lbl.poi small { display: block; font-size: 9px; color: var(--muted); letter-spacing: .04em; }
+  .lbl.reg small { display: block; font: 500 10px 'JetBrains Mono', monospace; color: var(--muted); letter-spacing: .08em; }
+  .lbl.reg .dot { display: none; }
+  .chip.tourbtn { background: var(--gold); color: #1F2E25; border-color: var(--gold); font-weight: 500; }
+  #more { display: none; }
+  #modes button.vis.on { color: #1F2E25; background: #F2D08A; }
+  .phaselbl { display: flex; justify-content: space-between; font: 500 10px 'JetBrains Mono', monospace; color: var(--muted); margin: -2px 0 10px; }
+  #p-vision .legend { margin-top: 4px; }
+  #p-vision p { margin-top: 6px; font-size: 11.5px; }
+  #tour { left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom)); width: min(620px, calc(100% - 24px));
+          background: rgba(12,20,16,.82); border: 1px solid var(--line); border-radius: 20px; padding: 16px 18px 14px;
+          backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: none; z-index: 4; }
+  #tour.show { display: block; animation: rise .5s ease-out both; }
+  @keyframes rise { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
+  #tour .tbar { display: flex; justify-content: space-between; align-items: center; font: 500 11px 'JetBrains Mono', monospace; color: var(--gold); letter-spacing: .12em; }
+  #tour h2 { margin: 6px 0 6px; font: italic 400 28px/1.1 'Fraunces', Georgia, serif; color: var(--ink); }
+  #tour p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.5; color: #d5dccf; }
+  #tour .tnav { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  #tdots { display: flex; gap: 5px; }
+  #tdots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(244,239,230,.25); display: block; }
+  #tdots i.on { background: var(--gold); }
+  body.touring #modes, body.touring .panel { display: none !important; }
+  @media (max-width: 560px) {
+    #topright .opt { display: none; }
+    #topright.open .opt { display: inline-block; }
+    #more { display: inline-block; }
+    #topright { flex-direction: column; align-items: flex-end; }
+    #tour h2 { font-size: 22px; }
+    #tour p { font-size: 13px; }
+    #tour { padding: 12px 14px 12px; }
+  }
+  @media (min-width: 561px) and (max-width: 1024px) { #tour { width: min(640px, calc(100% - 48px)); } .panel { width: min(600px, 100%); } }
+  #loader { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #0b1210; transition: opacity .8s; }
+  #loader .big { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 72px; color: var(--gold); }
+  #loader .msg { font: 12px 'JetBrains Mono', monospace; color: var(--muted); letter-spacing: .1em; }
+  #about { position: fixed; inset: 0; z-index: 6; display: none; align-items: center; justify-content: center; background: rgba(5,8,7,.7); padding: 20px; }
+  #about.show { display: flex; }
+  #about .box { max-width: 460px; background: #121c18; border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+  #about h3 { margin: 0 0 10px; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; font-size: 28px; color: var(--gold); }
+  #about p { font-size: 14px; line-height: 1.5; color: var(--muted); margin: 0 0 10px; }
+  #about a { color: var(--gold); }
+  @media (max-width: 560px) {
+    #title .big { font-size: 40px; }
+    #topright { gap: 6px; }
+    #title .sub { font-size: 13px; margin-top: 4px; }
+    #title .coords { font-size: 10px; }
+    #topright { gap: 6px; flex-direction: column; align-items: flex-end; }
+    .chip { font-size: 11px; padding: 7px 10px; }
+    #modes button { padding: 9px 10px; font-size: 12.5px; }
+    #modes .sep { margin: 6px 0; }
+    .panel { padding: 12px 14px; max-height: 40vh; overflow-y: auto; border-radius: 16px; }
+    .panel p { font-size: 12px; }
+    .legend { grid-template-columns: 1fr; gap: 5px; }
+    .legend div { font-size: 12px; }
+    .readout { font-size: 11px; }
+    .lbl { font-size: 9px; }
+    .lbl.reg { font-size: 16px; }
+  }
+  .panel h4 { cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .panel h4::after { content: '–'; color: var(--muted); font-size: 14px; }
+  .panel.min h4::after { content: '+'; }
+  .panel.min > :not(h4) { display: none; }
+  .panel.min h4 { margin: 0; }
+  #hint { position: fixed; left: 50%; top: 46%; transform: translate(-50%, -50%); z-index: 3; pointer-events: none; font: 500 12px 'JetBrains Mono', monospace; letter-spacing: .08em;
+          color: var(--ink); background: rgba(12,20,16,.72); border: 1px solid var(--line); padding: 10px 14px; border-radius: 999px; opacity: 0; transition: opacity .6s; white-space: nowrap; }
+  #hint.show { opacity: 1; }
+  @media (max-width: 560px) and (max-height: 700px) { #title .coords { display: none; } }
+  @media (min-width: 900px) { #title .big { font-size: 72px; } #title .sub { font-size: 17px; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<div id="loader"><div class="big">33</div><div class="msg" id="loadmsg">LOADING THE VALLEY …</div></div>
+
+<div id="labels"></div>
+<div id="hint">Drag to turn · pinch to zoom</div>
+<div id="pin"><div class="n">33</div><div class="l">33 HA</div></div>
+
+<div class="hud" id="title">
+  <div class="big">33</div>
+  <div class="sub">Redes Valley · Asturias</div>
+  <div class="coords">43.2092° N · 5.3897° W · 33 ha</div>
+</div>
+
+<div class="hud" id="topright">
+  <button class="chip tourbtn" id="tourbtn">▶ Tour</button>
+  <button class="chip opt" id="drone">Drone</button>
+  <button class="chip opt" id="region">Region</button>
+  <button class="chip opt" id="exag">Relief 1×</button>
+  <button class="chip opt" id="info">i</button>
+  <button class="chip" id="more" aria-label="More">⋯</button>
+</div>
+
+<div class="hud" id="tour">
+  <div class="tbar"><span id="tstep">1 / 8</span><button class="chip" id="tclose" aria-label="Close tour">✕</button></div>
+  <h2 id="ttitle"></h2>
+  <p id="ttext"></p>
+  <div class="tnav"><button class="chip" id="tprev">‹ Back</button><div id="tdots"></div><button class="chip on" id="tnext">Next ›</button></div>
+</div>
+
+<div class="hud" id="bottom">
+  <div class="panel" id="p-landuse">
+    <h4>What could grow where</h4>
+    <div class="legend">
+      <div><span class="sw" style="background:#EBB247"></span>Sun slopes · gardens, orchard</div>
+      <div><span class="sw" style="background:#7FA05A"></span>East / west · meadows, berries</div>
+      <div><span class="sw" style="background:#1E4A30"></span>Shade slopes · forest, chestnut</div>
+      <div><span class="sw" style="background:#77706A"></span>Steeper than ~30° · leave wild</div>
+    </div>
+    <p>Read from the terrain alone (direction and steepness of each slope). Soil, frost and park rules still need checking.</p>
+  </div>
+  <div class="panel" id="p-water">
+    <h4>Where the rain flows</h4>
+    <p>Every glowing line is where rainwater from the slopes above gathers, calculated from the 5 m elevation model. Brighter means a larger catchment: good places for cisterns, ponds and swales.</p>
+  </div>
+  <div class="panel" id="p-sun">
+    <h4>Sun over the site</h4>
+    <div class="row" id="seasons">
+      <button class="chip" data-d="2027-03-21" data-o="1">Spring</button>
+      <button class="chip on" data-d="2027-06-21" data-o="2">Summer</button>
+      <button class="chip" data-d="2027-09-23" data-o="2">Autumn</button>
+      <button class="chip" data-d="2027-12-21" data-o="1">Winter</button>
+    </div>
+    <input type="range" id="time" min="300" max="1380" step="5" value="660">
+    <div class="readout" id="sunread"></div>
+  </div>
+  <div class="panel" id="p-vision">
+    <h4>33 · the vision</h4>
+    <input type="range" id="phase" min="0" max="4" step="1" value="4" aria-label="Years from now">
+    <div class="phaselbl"><span>Today</span><span>Year 2</span><span>Year 5</span><span>Year 10</span><span>Year 20</span></div>
+    <div class="legend" id="vlegend"></div>
+    <div class="readout" id="vinfo">Tap a building to read about it.</div>
+    <p>Concept layout from the terrain analysis, a starting point for planning, not a design.</p>
+  </div>
+  <div class="panel" id="p-parcel">
+    <h4>Cadastral parcel</h4>
+    <div class="readout" id="parcelread">Tap the ground to see which parcel it belongs to.</div>
+  </div>
+  <div id="modes">
+    <button data-mode="0" class="on">Satellite</button>
+    <button data-mode="1">Hologram</button>
+    <button data-mode="2">Land use</button>
+    <span class="sep"></span>
+    <button class="toggle vis" id="t-vision">Vision</button>
+    <button class="toggle" id="t-flows">Flows</button>
+    <button class="toggle" id="t-water">Water</button>
+    <button class="toggle" id="t-sun">Sun</button>
+    <button class="toggle" id="t-parcels">Parcels</button>
+  </div>
+</div>
+
+<div id="about"><div class="box">
+  <h3>33 · Redes Valley</h3>
+  <p>The real terrain around the 33 hectares near the Tanes reservoir in Caso, Asturias, inside the Redes UNESCO Biosphere Reserve. Inner area 6 × 6 km from the 5 m LiDAR elevation model with aerial photos at about 1.5 m per pixel, valley 20 × 20 km from the 25 m model, region to the coast 120 × 120 km from the 200 m model. Buildings are the real footprints and floor counts from the Spanish cadastre (Dirección General del Catastro, INSPIRE); roof shapes are simplified and roof colours come from the aerial photo. Individual trees are placed where the aerial photo shows forest canopy, with heights estimated; they are not surveyed trees. Village names from the IGN gazetteer (Nomenclátor Geográfico Básico). The bee museum (Museo de la Apicultura) is shown at the village of Tañes; its exact building is not marked.</p>
+  <p>Drag to orbit, pinch or scroll to zoom. Water flow, land use and sun hours are calculated from the terrain and are indicative only.</p>
+  <p>Elevation, orthophoto and place names: MDT05, MDT25, MDT200, PNOA and NGBE © Instituto Geográfico Nacional de España, CC BY 4.0 (<a href="https://www.scne.es">scne.es</a>).</p>
+  <button class="chip" id="closeabout">Close</button>
+</div></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Sky } from 'three/addons/objects/Sky.js';
+
+// ---------------------------------------------------------------- constants
+const LAT = 43.2092227, LON = -5.3897274;
+const SITE_H = 730;            // m, elevation of the site cell
+const U = 10;                  // metres per scene unit
+const INNER_HALF = 300;        // 3 km
+const OUTER_HALF = 1000;       // 10 km
+const REGION_HALF = 6000;      // 60 km
+const RING_R = Math.sqrt(330000 / Math.PI) / U;   // 33 ha
+const LAKE_H = 492.5;
+const isMobile = matchMedia('(pointer:coarse)').matches || innerWidth < 760;
+
+const loadmsg = document.getElementById('loadmsg');
+
+// ---------------------------------------------------------------- loading
+async function blobURL(path) {
+  const r = await fetch(path);
+  if (!r.ok) throw new Error(path + ' ' + r.status);
+  return URL.createObjectURL(await r.blob());
+}
+function loadImage(url) {
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+}
+async function heightArray(path, decode) {
+  const img = await loadImage(await blobURL(path));
+  const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0);
+  const d = ctx.getImageData(0, 0, img.width, img.height).data;
+  const out = new Float32Array(img.width * img.height);
+  for (let i = 0; i < out.length; i++) out[i] = decode(d[i * 4] * 256 + d[i * 4 + 1]);
+  return { w: img.width, h: img.height, data: out };
+}
+async function texture(path) {
+  const t = await new THREE.TextureLoader().loadAsync(await blobURL(path));
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+// bilinear sample; u,v in 0..1 with v=0 at north edge (image top)
+function sample(H, u, v) {
+  const x = Math.min(Math.max(u, 0), 1) * (H.w - 1), y = Math.min(Math.max(v, 0), 1) * (H.h - 1);
+  const x0 = Math.floor(x), y0 = Math.floor(y), x1 = Math.min(x0 + 1, H.w - 1), y1 = Math.min(y0 + 1, H.h - 1);
+  const fx = x - x0, fy = y - y0, D = H.data, W = H.w;
+  const a = D[y0 * W + x0] * (1 - fx) + D[y0 * W + x1] * fx;
+  const b = D[y1 * W + x0] * (1 - fx) + D[y1 * W + x1] * fx;
+  return a * (1 - fy) + b * fy;
+}
+
+// ---------------------------------------------------------------- renderer
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.75 : 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 30000);
+camera.position.set(0, 1500, 900);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 5, 0);
+controls.enableDamping = true;
+controls.maxPolarAngle = 1.46;
+controls.minDistance = 3;
+controls.maxDistance = 9000;
+controls.enabled = false;
+
+const sun = new THREE.DirectionalLight(0xfff1dc, 3.0);
+sun.castShadow = true;
+sun.shadow.mapSize.set(isMobile ? 2048 : 4096, isMobile ? 2048 : 4096);
+Object.assign(sun.shadow.camera, { left: -330, right: 330, top: 330, bottom: -330, near: 10, far: 3000 });
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.6;
+scene.add(sun, sun.target);
+const hemi = new THREE.HemisphereLight(0xbfd6e6, 0x2a2a1e, 0.9);
+const sky = new Sky();
+sky.scale.setScalar(25000);
+sky.material.uniforms.turbidity.value = 3;
+sky.material.uniforms.rayleigh.value = 2.2;
+sky.material.uniforms.mieCoefficient.value = 0.004;
+sky.material.uniforms.mieDirectionalG.value = 0.8;
+scene.add(sky);
+scene.add(hemi);
+
+// shared uniforms
+const U_ = {
+  uMode: { value: 0 }, uTime: { value: 0 }, uScan: { value: -200 }, uWaterOn: { value: 0 },
+  uRingR: { value: RING_R }, uInnerHalf: { value: INNER_HALF }, uLakeH: { value: LAKE_H },
+  uVision: { value: 0 }, uPhase: { value: 0 },
+};
+
+function makeMaterial(map, opts) {
+  const m = new THREE.MeshStandardMaterial({ map, roughness: 0.95, metalness: 0.0 });
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, U_, {
+      uOuter: { value: opts.outer ? 1 : 0 },
+      uWaterMap: { value: opts.water || BLANK },
+      uHasWater: { value: opts.water ? 1 : 0 },
+      uHole: { value: opts.hole || 0 },
+      uZoneMap: { value: opts.zones || BLANK },
+      uHasZones: { value: opts.zones ? 1 : 0 },
+      uRegion: { value: opts.region ? 1 : 0 },
+    });
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', `#include <common>
+        attribute float aH; varying float vH; varying vec3 vWPos; varying vec3 vWN;`)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        vH = aH; vWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;
+        vWN = normalize(mat3(modelMatrix) * objectNormal);`);
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform int uMode; uniform float uTime, uScan, uWaterOn, uRingR, uInnerHalf, uLakeH, uOuter, uHasWater, uHole, uRegion, uHasZones, uVision, uPhase;
+        uniform sampler2D uZoneMap;
+        uniform sampler2D uWaterMap;
+        varying float vH; varying vec3 vWPos; varying vec3 vWN;
+        float lineAA(float v, float interval, float width) {
+          float fw = max(fwidth(v), 1e-4);
+          float d = abs(fract(v / interval + 0.5) - 0.5) * interval / fw;
+          return 1.0 - clamp(d - width, 0.0, 1.0);
+        }`)
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        if (uHole > 0.0 && abs(vWPos.x) < uHole - 0.5 && abs(vWPos.z) < uHole - 0.5) discard;
+        vec3 Nw = normalize(vWN);
+        float slopeDeg = degrees(acos(clamp(Nw.y, 0.0, 1.0)));
+        vec2 hz = Nw.xz / max(length(Nw.xz), 1e-4);
+        float southness = hz.y;
+        float isLake = (1.0 - step(uLakeH, vH)) * (1.0 - smoothstep(2.0, 5.0, slopeDeg)) * (1.0 - uRegion);
+        float isSea = 1.0 - step(0.8, vH);
+        if (uMode == 1) {
+          diffuseColor.rgb = mix(vec3(0.010, 0.017, 0.014), vec3(0.004, 0.012, 0.020), isLake);
+        } else if (uMode == 2) {
+          vec3 north = vec3(0.07, 0.22, 0.12), side = vec3(0.42, 0.60, 0.28), sunc = vec3(0.93, 0.66, 0.22);
+          vec3 rock = vec3(0.42, 0.39, 0.36), lake = vec3(0.04, 0.16, 0.26);
+          vec3 c = mix(north, side, smoothstep(-0.65, -0.05, southness));
+          c = mix(c, sunc, smoothstep(0.25, 0.75, southness));
+          c = mix(c, rock, smoothstep(29.0, 36.0, slopeDeg));
+          c = mix(c, lake, isLake);
+          if (uOuter > 0.5) c = mix(c, vec3(0.12, 0.16, 0.14), 0.45);
+          diffuseColor.rgb = c;
+        }
+        if (uVision > 0.01 && uHasZones > 0.5 && uMode != 1) {
+          vec3 zm = texture2D(uZoneMap, vMapUv).rgb;
+          vec3 zc = diffuseColor.rgb; float za = 0.0;
+          float g = zm.r * step(1.0, uPhase), o = zm.g * step(3.0, uPhase), so = zm.b * step(2.0, uPhase);
+          if (o > 0.0) { zc = mix(zc, vec3(0.58, 0.80, 0.32), o); za = max(za, o * 0.7); }
+          if (g > 0.0) { zc = mix(zc, vec3(1.0, 0.74, 0.25), g); za = max(za, g * 0.8); }
+          if (so > 0.0) { zc = mix(zc, vec3(0.25, 0.42, 0.62), so); za = max(za, so * 0.6); }
+          diffuseColor.rgb = mix(diffuseColor.rgb, zc, za * uVision);
+        }
+        if (uRegion > 0.5 && uMode == 0) diffuseColor.rgb = mix(diffuseColor.rgb, vec3(dot(diffuseColor.rgb, vec3(0.33))), 0.35) * 0.85;
+        diffuseColor.rgb = mix(diffuseColor.rgb, uMode == 1 ? vec3(0.004, 0.012, 0.022) : vec3(0.035, 0.11, 0.17), isSea);`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        vec3 em = vec3(0.0);
+        float dens = clamp(fwidth(vH) / 3.0, 0.0, 1.0);
+        float l10 = lineAA(vH, 10.0, 0.0) * (1.0 - uOuter) * (1.0 - dens);
+        float l50 = lineAA(vH, uRegion > 0.5 ? 200.0 : 50.0, 0.3) * (1.0 - isSea);
+        if (uMode == 1) {
+          vec3 gold = vec3(1.0, 0.70, 0.28);
+          float fade = uRegion > 0.5 ? 0.22 : (uOuter > 0.5 ? 0.3 : 1.0);
+          em += gold * (l10 * 0.14 + l50 * 0.85) * (1.0 - isLake) * fade;
+          float gx = lineAA(vWPos.x, 20.0, 0.3), gz = lineAA(vWPos.z, 20.0, 0.3);
+          em += vec3(0.25, 0.65, 0.9) * max(gx, gz) * isLake * 0.16;
+          float d = vWPos.z - uScan;
+          em += vec3(0.25, 0.65, 0.9) * max(lineAA(vWPos.x, 200.0, 0.3), lineAA(vWPos.z, 200.0, 0.3)) * isSea * 0.12;
+          em += vec3(0.35, 1.0, 0.72) * exp(-d * d * 0.03) * 1.4 * (1.0 - uOuter);
+          em += vec3(0.20, 0.60, 0.45) * exp(-max(d, 0.0) * 0.03) * step(0.0, d) * 0.06 * (1.0 - uOuter);
+        } else if (uMode == 2) {
+          em += vec3(1.0, 0.85, 0.5) * l50 * 0.18 * (1.0 - isLake);
+        }
+        if (uWaterOn > 0.5 && uHasWater > 0.5) {
+          float w = texture2D(uWaterMap, vMapUv).a;
+          float pulse = 0.6 + 0.4 * sin(uTime * 2.4 + vH * 0.09);
+          em += vec3(0.30, 0.78, 1.0) * w * pulse * (uMode == 1 ? 2.2 : 1.5);
+        }
+        float r = length(vWPos.xz);
+        float rd = abs(r - uRingR);
+        em += vec3(1.0, 0.76, 0.32) * (1.0 - smoothstep(0.12, 0.55, rd)) * (1.8 + 0.7 * sin(uTime * 2.0));
+        em += vec3(1.0, 0.78, 0.35) * 0.05 * (1.0 - step(uRingR, r));
+        totalEmissiveRadiance += em;`);
+  };
+  return m;
+}
+
+// ---------------------------------------------------------------- terrain meshes
+const BLANK = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1); BLANK.needsUpdate = true;
+let EXAG = 1.0;
+const meshes = [];
+function buildTerrain(H, half, seg, parent, material) {
+  const geo = new THREE.PlaneGeometry(half * 2, half * 2, seg, seg);
+  geo.rotateX(-Math.PI / 2);
+  const pos = geo.attributes.position, uv = geo.attributes.uv;
+  const hArr = new Float32Array(pos.count);
+  const band = half * 0.1;
+  for (let i = 0; i < pos.count; i++) {
+    const u = uv.getX(i), v = 1 - uv.getY(i);
+    let h = sample(H, u, v);
+    if (parent) {   // ease the outer edge into the coarser terrain around it, so no walls show
+      const x = pos.getX(i), z = pos.getZ(i);
+      const d = Math.min(half - Math.abs(x), half - Math.abs(z));
+      const k = THREE.MathUtils.smoothstep(d, 0, band);
+      if (k < 1) h = parent(x * U, -z * U) * (1 - k) + h * k;
+    }
+    hArr[i] = h;
+  }
+  geo.setAttribute('aH', new THREE.BufferAttribute(hArr, 1));
+  const mesh = new THREE.Mesh(geo, material);
+  mesh.userData.hArr = hArr;
+  meshes.push(mesh);
+  applyHeights(mesh);
+  return mesh;
+}
+function applyHeights(mesh) {
+  const pos = mesh.geometry.attributes.position, h = mesh.userData.hArr;
+  for (let i = 0; i < pos.count; i++) pos.setY(i, (h[i] - SITE_H) / U * EXAG);
+  pos.needsUpdate = true;
+  mesh.geometry.computeVertexNormals();
+  mesh.geometry.computeBoundingSphere();
+}
+
+// ---------------------------------------------------------------- sun maths
+function sunPosition(dateUTC, lat, lon) {
+  const rad = Math.PI / 180;
+  const d = dateUTC.getTime() / 86400000 + 2440587.5 - 2451545.0;
+  const g = (357.529 + 0.98560028 * d) * rad;
+  const q = 280.459 + 0.98564736 * d;
+  const L = (q + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * rad;
+  const e = (23.439 - 0.00000036 * d) * rad;
+  const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+  const dec = Math.asin(Math.sin(e) * Math.sin(L));
+  const gmst = (18.697374558 + 24.06570982441908 * d) % 24;
+  const ha = ((gmst * 15 + lon) * rad) - ra;
+  const phi = lat * rad;
+  const alt = Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(ha));
+  const az = Math.atan2(Math.sin(ha), Math.cos(ha) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi)) + Math.PI; // from north, clockwise
+  return { alt, az };
+}
+let WIDE = null;
+function sunlitAtSite(alt, az) {
+  if (alt <= 0) return false;
+  const tanA = Math.tan(alt), ex = Math.sin(az), ny = Math.cos(az);
+  const h0 = SITE_H + 2;
+  for (let dist = 40; dist < 9800; dist += 40) {
+    const xm = ex * dist, nm = ny * dist;
+    const u = 0.5 + xm / 20000, v = 0.5 - nm / 20000;
+    if (u < 0 || u > 1 || v < 0 || v > 1) break;
+    if (sample(WIDE, u, v) > h0 + dist * tanA) return false;
+  }
+  return true;
+}
+const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(Math.round(m % 60)).padStart(2, '0')}`;
+let dayCache = {};
+function daySummary(dateStr, offset) {
+  const key = dateStr;
+  if (dayCache[key]) return dayCache[key];
+  let lit = 0, first = null, last = null, rise = null, set = null;
+  for (let m = 240; m <= 1380; m += 5) {
+    const t = new Date(`${dateStr}T00:00:00Z`); t.setUTCMinutes(m - offset * 60);
+    const { alt, az } = sunPosition(t, LAT, LON);
+    if (alt > 0) { if (rise === null) rise = m; set = m; }
+    if (sunlitAtSite(alt, az)) { lit += 5; if (first === null) first = m; last = m; }
+  }
+  return (dayCache[key] = { lit, first, last, rise, set });
+}
+
+// ---------------------------------------------------------------- state & UI
+let mode = 0, sunOn = false, waterOn = false;
+let season = { d: '2027-06-21', o: 2 };
+const timeEl = document.getElementById('time');
+const panels = { landuse: document.getElementById('p-landuse'), water: document.getElementById('p-water'), sun: document.getElementById('p-sun') };
+
+function defaultSun() {
+  // pleasant late-morning light from the south-east for the default views
+  return { alt: 38 * Math.PI / 180, az: 150 * Math.PI / 180 };
+}
+function updateSun() {
+  let s;
+  if (sunOn) {
+    const mins = +timeEl.value;
+    const t = new Date(`${season.d}T00:00:00Z`); t.setUTCMinutes(mins - season.o * 60);
+    s = sunPosition(t, LAT, LON);
+    const sum = daySummary(season.d, season.o);
+    const litNow = sunlitAtSite(s.alt, s.az);
+    const altDeg = (s.alt * 180 / Math.PI).toFixed(0), azDeg = (s.az * 180 / Math.PI).toFixed(0);
+    document.getElementById('sunread').innerHTML =
+      `<b>${fmt(mins)}</b> local · sun ${altDeg}° high, ${azDeg}° from north<br>` +
+      `Site right now: <b>${s.alt <= 0 ? 'night' : litNow ? 'in the sun' : 'in the shade of the mountains'}</b><br>` +
+      `Direct sun on the site this day: <b>${Math.floor(sum.lit / 60)} h ${sum.lit % 60} min</b>` +
+      (sum.first !== null ? ` · ${fmt(sum.first)}–${fmt(sum.last)}` : '') +
+      `<br><span style="color:var(--muted)">Sunrise–sunset on open ground ${sum.rise !== null ? fmt(sum.rise) + '–' + fmt(sum.set) : '–'}</span>`;
+  } else {
+    s = defaultSun();
+  }
+  const up = Math.max(s.alt, -0.05);
+  const dir = new THREE.Vector3(Math.cos(up) * Math.sin(s.az), Math.sin(up), -Math.cos(up) * Math.cos(s.az));
+  sun.position.copy(dir.multiplyScalar(1200));
+  const day = THREE.MathUtils.smoothstep(s.alt, -0.02, 0.12);
+  const warm = THREE.MathUtils.smoothstep(s.alt, 0.0, 0.5);
+  sun.color.setRGB(1.0, 0.72 + 0.25 * warm, 0.50 + 0.42 * warm);
+  sun.intensity = (mode === 1 ? 0.6 : 3.2) * day;
+  hemi.intensity = (mode === 1 ? 0.25 : 0.25 + 0.75 * day);
+  sky.visible = mode !== 1;
+  sky.material.uniforms.sunPosition.value.copy(dir).normalize();
+  const haze = mode === 1 ? new THREE.Color(0x05080a) : new THREE.Color().setRGB(0.05 + 0.55 * day, 0.07 + 0.62 * day, 0.10 + 0.70 * day);
+  scene.background = haze;
+  scene.fog.color.copy(haze);
+  if (mist) mist.visible = mode === 0;
+}
+
+function setMode(m) {
+  mode = m;
+  U_.uMode.value = m;
+  document.querySelectorAll('#modes button[data-mode]').forEach(b => b.classList.toggle('on', +b.dataset.mode === m));
+  points.visible = m === 1;
+  if (treeMesh) treeMesh.visible = m === 0;
+  if (bldMesh) bldMesh.visible = m !== 1;
+  if (typeof updateVisionVisibility === 'function' && VISION) updateVisionVisibility();
+  renderer.toneMappingExposure = m === 1 ? 1.25 : 1.05;
+  refreshPanels();
+  updateSun();
+}
+function refreshPanels() {
+  // one panel at a time: sun > vision > parcels > water > land use
+  const pv = document.getElementById('p-vision'), pp = document.getElementById('p-parcel');
+  const which = sunOn ? 'sun' : (typeof visionOn !== 'undefined' && visionOn) ? 'vision' : (typeof parcelsOn !== 'undefined' && parcelsOn) ? 'parcel' : waterOn ? 'water' : mode === 2 ? 'landuse' : '';
+  panels.sun.classList.toggle('show', which === 'sun');
+  if (pv) pv.classList.toggle('show', which === 'vision');
+  if (pp) pp.classList.toggle('show', which === 'parcel');
+  panels.water.classList.toggle('show', which === 'water');
+  panels.landuse.classList.toggle('show', which === 'landuse');
+}
+
+document.querySelectorAll('#modes button[data-mode]').forEach(b => b.onclick = () => setMode(+b.dataset.mode));
+document.getElementById('t-water').onclick = (e) => {
+  waterOn = !waterOn; U_.uWaterOn.value = waterOn ? 1 : 0; e.currentTarget.classList.toggle('on', waterOn); refreshPanels();
+};
+document.getElementById('t-sun').onclick = (e) => {
+  sunOn = !sunOn; e.currentTarget.classList.toggle('on', sunOn); refreshPanels(); updateSun();
+};
+document.querySelectorAll('#seasons .chip').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#seasons .chip').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); season = { d: b.dataset.d, o: +b.dataset.o }; updateSun();
+});
+timeEl.oninput = updateSun;
+document.getElementById('exag').onclick = (e) => {
+  EXAG = EXAG === 1 ? 1.5 : 1;
+  e.currentTarget.textContent = `Relief ${EXAG}×`;
+  e.currentTarget.classList.toggle('on', EXAG !== 1);
+  meshes.forEach(applyHeights);
+  rebuildPoints();
+  placeTrees();
+  placeHouses();
+  placeParcels();
+  placeVision();
+  if (mist) mist.children.forEach((pl, i) => pl.position.y = sceneY(LAKE_H - 1) + [0.6, 1.6, 2.8][i]);
+};
+document.querySelectorAll('.panel h4').forEach(h => h.onclick = () => h.parentElement.classList.toggle('min'));
+document.getElementById('info').onclick = () => document.getElementById('about').classList.add('show');
+document.getElementById('closeabout').onclick = () => document.getElementById('about').classList.remove('show');
+
+// ---------------------------------------------------------------- point cloud (hologram)
+let points;
+function rebuildPoints() {
+  const inner = meshes[0];
+  const p = inner.geometry.attributes.position;
+  const step = isMobile ? 2 : 1;
+  const arr = [];
+  for (let i = 0; i < p.count; i += step) {
+    if (inner.userData.hArr[i] < LAKE_H) continue;
+    arr.push(p.getX(i), p.getY(i) + 0.35, p.getZ(i));
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3));
+  if (points) { points.geometry.dispose(); points.geometry = g; }
+  else {
+    points = new THREE.Points(g, new THREE.PointsMaterial({
+      color: 0x6fffc0, size: isMobile ? 1.6 : 1.4, sizeAttenuation: false,
+      transparent: true, opacity: 0.32, blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
+    points.visible = false;
+    scene.add(points);
+  }
+}
+
+// ---------------------------------------------------------------- beam at the site
+function addBeam() {
+  const g = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 70, 12, 1, true),
+    new THREE.MeshBasicMaterial({ color: 0xffd28a, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }));
+  const glow = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 70, 24, 1, true),
+    new THREE.MeshBasicMaterial({ color: 0xe8b65a, transparent: true, opacity: 0.10, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+  core.position.y = glow.position.y = 35;
+  g.add(core, glow);
+  scene.add(g);
+  return g;
+}
+
+function applyHash() {
+  const h = location.hash.replace('#', '');
+  setMode(h === 'hologram' ? 1 : h === 'landuse' ? 2 : 0);
+  if ((h === 'water') !== waterOn) document.getElementById('t-water').click();
+  if ((h === 'sun') !== sunOn) document.getElementById('t-sun').click();
+}
+
+// ---------------------------------------------------------------- go
+// ---------------------------------------------------------------- terrain height lookup (metres)
+let HIN = null, HREG = null;
+function terrainH(xm, nm) {
+  if (HIN && Math.abs(xm) < 2990 && Math.abs(nm) < 2990) return sample(HIN, 0.5 + xm / 6000, 0.5 - nm / 6000);
+  if (WIDE && Math.abs(xm) < 9990 && Math.abs(nm) < 9990) return sample(WIDE, 0.5 + xm / 20000, 0.5 - nm / 20000);
+  if (HREG) return sample(HREG, 0.5 + xm / 120000, 0.5 - nm / 120000);
+  return SITE_H;
+}
+const sceneY = (hm) => (hm - SITE_H) / U * EXAG;
+
+// ---------------------------------------------------------------- labels
+const labels = [];
+const labelBox = document.getElementById('labels');
+function addLabel(name, xm, nm, kind, sub, lift) {
+  const el = document.createElement('div');
+  el.className = 'lbl ' + kind;
+  el.innerHTML = `${name}${sub ? `<small>${sub}</small>` : ''}<div class="dot"></div>`;
+  labelBox.appendChild(el);
+  labels.push({ el, xm, nm, kind, lift: lift || 0, pos: new THREE.Vector3(), occluded: false, shown: false });
+}
+async function loadLabels() {
+  const r = await fetch('labels.json');
+  const L = await r.json();
+  const capitals = { 'El Campu': 'El Campu · Campo de Caso', 'Rusecu': 'Rusecu · Rioseco' };
+  L.villages.forEach(([n, x, y]) => addLabel(n, x, y, 'vil', '', 1.5));
+  L.capitals.forEach(([n, x, y]) => addLabel(capitals[n] || n, x, y, 'cap', '', 2.5));
+  const tanes = L.villages.find(v => v[0] === 'Tañes');
+  if (tanes) addLabel('Bee museum', tanes[1], tanes[2], 'poi', 'Museo de la Apicultura', 9);
+  addLabel('Parque Natural de Redes', L.park[0], L.park[1], 'park', '', 6);
+  const regSub = { 'Gijón': '45 km', 'Oviedo': '41 km', 'Cantabrian Sea': '', 'Picos de Europa': '' };
+  for (const [n, [x, y]] of Object.entries(L.regions)) {
+    const km = Math.round(Math.hypot(x, y) / 1000);
+    addLabel(n, x, y, 'reg', n === 'Cantabrian Sea' ? `${km} km north` : `${km} km`, n === 'Cantabrian Sea' ? 8 : 25);
+  }
+}
+const tmpV = new THREE.Vector3();
+function occluded(p) {
+  const c = camera.position;
+  for (let i = 1; i < 24; i++) {
+    const t = i / 24;
+    tmpV.lerpVectors(c, p, t);
+    if (sceneY(terrainH(tmpV.x * U, -tmpV.z * U)) > tmpV.y + 0.5) return true;
+  }
+  return false;
+}
+let frameN = 0;
+function updateLabels() {
+  frameN++;
+  const camDist = camera.position.distanceTo(controls.target);
+  for (const l of labels) {
+    let want;
+    const dCam = Math.hypot(camera.position.x - l.xm / U, camera.position.z + l.nm / U);
+    if (l.kind === 'reg') want = camDist > 1100;
+    else if (l.kind === 'vil') want = camDist < 1300 && dCam < 1500;
+    else if (l.kind === 'cap') want = camDist < 3200;
+    else want = camDist < 3200;
+    if (!want) { if (l.shown) { l.el.style.display = 'none'; l.shown = false; } continue; }
+    l.pos.set(l.xm / U, sceneY(terrainH(l.xm, l.nm)) + l.lift, -l.nm / U);
+    if ((frameN + labels.indexOf(l)) % 10 === 0) l.occluded = l.kind !== 'reg' && occluded(l.pos);
+    tmpV.copy(l.pos).project(camera);
+    const vis = tmpV.z < 1 && Math.abs(tmpV.x) < 1.1 && Math.abs(tmpV.y) < 1.1 && !l.occluded;
+    if (vis !== l.shown) { l.el.style.display = vis ? 'block' : 'none'; l.shown = vis; }
+    if (vis) l.el.style.transform = `translate(${(tmpV.x + 1) / 2 * innerWidth}px, ${(1 - tmpV.y) / 2 * innerHeight}px) translate(-50%, -100%)`;
+  }
+}
+
+// ---------------------------------------------------------------- camera moves
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+let anim = null, autoRotate = true, beam = null;
+const VIEWS = {
+  site: { p: new THREE.Vector3(-150, 115, 290), t: new THREE.Vector3(0, 5, 0) },
+  region: { p: new THREE.Vector3(420, 820, 2100), t: new THREE.Vector3(-650, -60, -2900) },
+  drone: { p: new THREE.Vector3(-18, 7, 34), t: new THREE.Vector3(6, 1, -30) },
+};
+function viewScale() { const a = innerWidth / innerHeight; return a < 1 ? 1.25 + (1 - a) * 0.6 : 1; }
+function fitCamera() {
+  const a = innerWidth / innerHeight;
+  camera.fov = a < 1 ? Math.min(62, 2 * Math.atan(Math.tan(25 * Math.PI / 180) / a) * 180 / Math.PI) : 45;
+  camera.aspect = a; camera.updateProjectionMatrix();
+}
+function scaledPos(view) {
+  const off = view.p.clone().sub(view.t).multiplyScalar(viewScale());
+  if (innerWidth < innerHeight) off.y *= (view === VIEWS.region ? 3.2 : 1.9);   // portrait: look down more, less sky
+  return view.t.clone().add(off);
+}
+function flyTo(view, dur = 3200, fromP, delay = 0) {
+  const p1 = scaledPos(view);
+  anim = { p0: (fromP || camera.position).clone(), p1, t0: controls.target.clone(), t1: view.t.clone(), start: performance.now() + delay, dur };
+  controls.enabled = false;
+}
+controls.addEventListener('start', () => { autoRotate = false; });
+let inRegion = false;
+document.getElementById('drone').onclick = () => {
+  autoRotate = false; inRegion = false;
+  const r = document.getElementById('region'); r.classList.remove('on'); r.textContent = 'Region';
+  const off = VIEWS.drone; anim = null;
+  anim = { p0: camera.position.clone(), p1: off.p.clone(), t0: controls.target.clone(), t1: off.t.clone(), start: performance.now(), dur: 3600 };
+  controls.enabled = false;
+};
+document.getElementById('region').onclick = (e) => {
+  inRegion = !inRegion;
+  e.currentTarget.classList.toggle('on', inRegion);
+  e.currentTarget.textContent = inRegion ? 'Back to site' : 'Region';
+  autoRotate = false;
+  flyTo(inRegion ? VIEWS.region : VIEWS.site);
+};
+
+
+// ---------------------------------------------------------------- trees (from the aerial photo)
+let TREES = null, treeMeshes = [];
+let treeMesh = null;   // kept for visibility toggles: a group of the LOD meshes
+function crownGeometry(detail, seed) {
+  const g = new THREE.IcosahedronGeometry(1, detail);
+  const pa = g.attributes.position, na = g.attributes.normal, v = new THREE.Vector3();
+  const rnd = (x) => { const t = Math.sin(x * 12.9898 + seed * 78.233) * 43758.5453; return t - Math.floor(t); };
+  const cache = new Map();
+  for (let i = 0; i < pa.count; i++) {
+    v.fromBufferAttribute(pa, i);
+    const key = `${v.x.toFixed(3)},${v.y.toFixed(3)},${v.z.toFixed(3)}`;
+    if (!cache.has(key)) cache.set(key, 0.78 + 0.34 * rnd(cache.size + 1));
+    const k = cache.get(key);
+    const n = v.clone().normalize();
+    v.multiplyScalar(k); if (v.y < 0) v.y *= 0.7;
+    pa.setXYZ(i, v.x, v.y, v.z); na.setXYZ(i, n.x, n.y, n.z);
+  }
+  return g;
+}
+async function loadTrees() {
+  // the tree list is packed byte-for-byte into a greyscale PNG (the host only serves web formats)
+  const img = await loadImage(await blobURL('trees.png'));
+  const cv = document.createElement('canvas'); cv.width = img.width; cv.height = img.height;
+  const cx = cv.getContext('2d', { willReadFrequently: true });
+  cx.drawImage(img, 0, 0);
+  const px = cx.getImageData(0, 0, img.width, img.height).data;
+  const bytes = new Uint8Array(img.width * img.height);
+  for (let i = 0; i < bytes.length; i++) bytes[i] = px[i * 4];
+  const buf = bytes.buffer;
+  const n = new DataView(buf).getUint32(0, true);
+  let o = 4;
+  const xs = new Uint16Array(buf.slice(o, o + 2 * n)); o += 2 * n;
+  const ys = new Uint16Array(buf.slice(o, o + 2 * n)); o += 2 * n;
+  const hs = new Uint8Array(buf, o, n); o += n;
+  const rs = new Uint8Array(buf, o, n); o += n;
+  const cs = new Uint8Array(buf, o, 3 * n);
+  const near = [], far = [];
+  for (let i = 0; i < n; i++) {
+    const dx = xs[i] / 10 - 3000, dy = ys[i] / 10 - 3000, d2 = dx * dx + dy * dy;
+    if (isMobile && (d2 > 2500 * 2500 || near.length + far.length >= 90000)) continue;
+    (d2 < 800 * 800 ? near : far).push(i);
+  }
+  TREES = { xs, ys, hs, rs, cs };
+  treeMesh = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 });
+  const sets = [[near, crownGeometry(1, 1)], [far, crownGeometry(0, 2)]];
+  const c = new THREE.Color();
+  for (const [idx, geo] of sets) {
+    const im = new THREE.InstancedMesh(geo, mat, idx.length);
+    im.userData.idx = idx;
+    im.castShadow = !isMobile; im.receiveShadow = true;
+    idx.forEach((i, k) => {
+      const j = ((i * 9301 + 49297) % 233280) / 233280;          // stable per-tree variation
+      c.setRGB(cs[3 * i] / 255, cs[3 * i + 1] / 255, cs[3 * i + 2] / 255, THREE.SRGBColorSpace);
+      c.offsetHSL((j - 0.5) * 0.04, 0.06, (j - 0.5) * 0.06);
+      c.r *= 0.9; c.g *= 1.0; c.b *= 0.72;
+      im.setColorAt(k, c);
+    });
+    treeMeshes.push(im); treeMesh.add(im);
+  }
+  placeTrees();
+  scene.add(treeMesh);
+}
+let clearings = [];
+function placeTrees() {
+  if (!treeMesh) return;
+  const { xs, ys, hs, rs } = TREES;
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), sc = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+  for (const im of treeMeshes) {
+    im.userData.idx.forEach((i, k) => {
+      const xm = xs[i] / 10, ym = ys[i] / 10;
+      const ground = sceneY(sample(HIN, xm / 6000, ym / 6000));
+      const h = hs[i] / 4 / U * EXAG, r = rs[i] / 20 / U;
+      const crown = Math.min(h * 0.62, r * 2.5);
+      if (clearings.length && clearings.some(([cx, cy, cr]) => (xm - cx) ** 2 + (ym - cy) ** 2 < cr * cr)) { m.makeScale(0, 0, 0); im.setMatrixAt(k, m); return; }
+      const j = ((i * 7919) % 1000) / 1000;
+      p.set((xm - 3000) / U, ground + h - crown / 2, (ym - 3000) / U);
+      q.setFromAxisAngle(up, (i * 2.399) % 6.283);
+      sc.set(r * (0.85 + 0.3 * j), crown / 2, r * (1.15 - 0.3 * j));
+      m.compose(p, q, sc);
+      im.setMatrixAt(k, m);
+    });
+    im.instanceMatrix.needsUpdate = true;
+    im.computeBoundingSphere();
+  }
+}
+
+// ---------------------------------------------------------------- buildings (cadastre footprints + floors)
+let BUILDINGS = null, bldMesh = null;
+let houseWalls = null, houseRoofs = null;   // kept so older toggles keep working
+async function loadHouses() {
+  BUILDINGS = await (await fetch('buildings.json')).json();
+  bldMesh = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, side: THREE.DoubleSide }));
+  bldMesh.castShadow = bldMesh.receiveShadow = true;
+  houseWalls = houseRoofs = bldMesh;
+  placeHouses();
+  placeParcels();
+  scene.add(bldMesh);
+}
+function placeHouses() {
+  if (!bldMesh) return;
+  const pos = [], col = [];
+  const wall = new THREE.Color(0xd6ccba), roof = new THREE.Color(), tmp = new THREE.Color();
+  const tri = (a, b, c, color) => { pos.push(...a, ...b, ...c); for (let i = 0; i < 3; i++) col.push(color.r, color.g, color.b); };
+  for (const [floors, pts, rgb] of BUILDINGS) {
+    const n = pts.length / 2;
+    if (n < 3) continue;
+    const P = [];
+    let gmin = Infinity;
+    for (let i = 0; i < n; i++) {
+      const xm = pts[2 * i], ym = pts[2 * i + 1];
+      P.push([(xm - 3000) / U, (ym - 3000) / U]);
+      gmin = Math.min(gmin, sceneY(sample(HIN, xm / 6000, ym / 6000)));
+    }
+    const base = gmin - 0.2;
+    const hM = floors > 0 ? floors * 3.0 + 0.4 : 2.6;
+    const top = base + 0.2 + hM / U * EXAG;
+    roof.setRGB(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, THREE.SRGBColorSpace).multiplyScalar(1.08);
+    // walls
+    for (let i = 0; i < n; i++) {
+      const [x1, z1] = P[i], [x2, z2] = P[(i + 1) % n];
+      const shade = 0.82 + 0.18 * Math.abs(Math.cos(Math.atan2(z2 - z1, x2 - x1)));
+      tmp.copy(wall).multiplyScalar(shade);
+      tri([x1, base, z1], [x2, base, z2], [x2, top, z2], tmp);
+      tri([x1, base, z1], [x2, top, z2], [x1, top, z1], tmp);
+    }
+    // roof: gable on four-cornered footprints, flat cap otherwise
+    if (n === 4) {
+      const d01 = Math.hypot(P[1][0] - P[0][0], P[1][1] - P[0][1]), d12 = Math.hypot(P[2][0] - P[1][0], P[2][1] - P[1][1]);
+      const s = d01 >= d12 ? 0 : 1;                                   // ridge runs along the longer side
+      const A = P[s], B = P[s + 1], C = P[(s + 2) % 4], D = P[(s + 3) % 4];
+      const rh = Math.min(d01, d12) * 0.32 * EXAG;
+      const m1 = [(D[0] + A[0]) / 2, top + rh, (D[1] + A[1]) / 2], m2 = [(B[0] + C[0]) / 2, top + rh, (B[1] + C[1]) / 2];
+      const a = [A[0], top, A[1]], b = [B[0], top, B[1]], c = [C[0], top, C[1]], d = [D[0], top, D[1]];
+      tri(a, b, m2, roof); tri(a, m2, m1, roof);
+      tmp.copy(roof).multiplyScalar(0.8);
+      tri(c, d, m1, tmp); tri(c, m1, m2, tmp);
+      tri(d, a, m1, wall); tri(b, c, m2, wall);
+    } else {
+      const contour = P.map(([x, z]) => new THREE.Vector2(x, z));
+      for (const [i, j, k] of THREE.ShapeUtils.triangulateShape(contour, [])) {
+        tri([P[i][0], top, P[i][1]], [P[j][0], top, P[j][1]], [P[k][0], top, P[k][1]], roof);
+      }
+    }
+  }
+  const g = bldMesh.geometry;
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.computeVertexNormals();
+  g.computeBoundingSphere();
+}
+
+
+// ---------------------------------------------------------------- cadastral parcels
+let PARCELS = null, parcelLines = null, parcelHi = null, parcelsOn = false;
+function drapedLine(pts, lift) {
+  const out = [];
+  const k = pts.length / 2;
+  for (let i = 0; i < k - 1; i++) {
+    const x1 = pts[2 * i], y1 = pts[2 * i + 1], x2 = pts[2 * i + 2], y2 = pts[2 * i + 3];
+    const steps = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) / 8));
+    for (let s = 0; s < steps; s++) {
+      for (const t of [s / steps, (s + 1) / steps]) {
+        const xm = x1 + (x2 - x1) * t, ym = y1 + (y2 - y1) * t;
+        out.push((xm - 3000) / U, sceneY(sample(HIN, xm / 6000, ym / 6000)) + lift, (ym - 3000) / U);
+      }
+    }
+  }
+  return out;
+}
+async function loadParcels() {
+  PARCELS = await (await fetch('parcels.json')).json();
+  parcelLines = new THREE.LineSegments(new THREE.BufferGeometry(),
+    new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, depthWrite: false }));
+  parcelHi = new THREE.LineSegments(new THREE.BufferGeometry(),
+    new THREE.LineBasicMaterial({ color: 0xffc960, transparent: true, opacity: 1, depthWrite: false }));
+  parcelLines.renderOrder = parcelHi.renderOrder = 6;
+  parcelLines.visible = parcelHi.visible = false;
+  placeParcels();
+  scene.add(parcelLines, parcelHi);
+}
+function placeParcels() {
+  if (!parcelLines) return;
+  const all = [];
+  for (const [, , pts] of PARCELS) all.push(...drapedLine(pts, 0.35));
+  parcelLines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(all, 3));
+  parcelLines.geometry.computeBoundingSphere();
+  if (parcelHi.userData.pts) highlightParcel(parcelHi.userData.pts);
+}
+function highlightParcel(pts) {
+  parcelHi.userData.pts = pts;
+  parcelHi.geometry.setAttribute('position', new THREE.Float32BufferAttribute(drapedLine(pts, 0.6), 3));
+  parcelHi.geometry.computeBoundingSphere();
+}
+function insidePoly(px, py, pts) {
+  let c = false; const k = pts.length / 2;
+  for (let i = 0, j = k - 1; i < k; j = i++) {
+    const xi = pts[2 * i], yi = pts[2 * i + 1], xj = pts[2 * j], yj = pts[2 * j + 1];
+    if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+function showParcelAt(xm, ym) {
+  const hit = PARCELS.find(([, , pts]) => insidePoly(xm, ym, pts));
+  const el = document.getElementById('parcelread');
+  if (!hit) { el.innerHTML = 'No parcel data here (the cadastre layer covers about 1.6 km around the site).'; return; }
+  const [ref, area, pts] = hit;
+  highlightParcel(pts);
+  el.innerHTML = `Reference <b>${ref}</b><br>Area <b>${(area / 10000).toFixed(2)} ha</b> (${area.toLocaleString('en')} m²)`;
+}
+document.getElementById('t-parcels').onclick = (e) => {
+  parcelsOn = !parcelsOn;
+  e.currentTarget.classList.toggle('on', parcelsOn);
+  parcelLines.visible = parcelHi.visible = parcelsOn;
+  refreshPanels();
+  if (parcelsOn && !parcelHi.userData.pts) showParcelAt(3000, 3000);
+};
+// tap (not drag) on the ground picks a parcel
+let downAt = null;
+canvas.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
+canvas.addEventListener('pointerup', (e) => {
+  if (!parcelsOn || !downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 6) return;
+  const ray = new THREE.Raycaster();
+  ray.setFromCamera(new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera);
+  const hit = ray.intersectObject(meshes[0], false)[0];
+  if (hit) showParcelAt(hit.point.x * U + 3000, hit.point.z * U + 3000);
+});
+
+// ---------------------------------------------------------------- morning mist over the reservoir
+let mist = null;
+function addMist() {
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: { uTime: U_.uTime },
+    vertexShader: `varying vec3 vP; void main(){ vP = (modelMatrix * vec4(position,1.)).xyz; gl_Position = projectionMatrix * viewMatrix * vec4(vP,1.); }`,
+    fragmentShader: `uniform float uTime; varying vec3 vP;
+      float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+      float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+        return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
+      float fbm(vec2 p){ float s=0., a=.5; for(int i=0;i<5;i++){ s+=a*n(p); p*=2.03; a*=.5; } return s; }
+      void main(){
+        vec2 q = vP.xz * 0.018 + vec2(uTime * 0.012, uTime * 0.005);
+        float d = fbm(q) * fbm(q * 1.7 - uTime * 0.01);
+        float edge = 1.0 - smoothstep(180.0, 300.0, max(abs(vP.x), abs(vP.z)));
+        gl_FragColor = vec4(vec3(0.93, 0.95, 0.97), smoothstep(0.12, 0.42, d) * 0.55 * edge);
+      }`,
+  });
+  mist = new THREE.Group();
+  for (const dy of [0.6, 1.6, 2.8]) {
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), mat);
+    pl.rotation.x = -Math.PI / 2;
+    pl.position.y = sceneY(LAKE_H - 1) + dy;
+    mist.add(pl);
+  }
+  mist.renderOrder = 5;
+  scene.add(mist);
+}
+
+// ---------------------------------------------------------------- vision layer (concept village)
+let VISION = null, visionOn = false, flowsOn = false, PHASE = 4;
+const vgroup = new THREE.Group(); vgroup.visible = false; scene.add(vgroup);
+let vBld = null, vPanels = null, vPath = null, vFlows = [], vTriOwner = [];
+const flowMat = {};
+const toScene = (xm, ym, lift = 0) => new THREE.Vector3((xm - 3000) / U, sceneY(sample(HIN, xm / 6000, ym / 6000)) + lift, (ym - 3000) / U);
+const VCOL = {
+  core: [0xcbbfa8, 0x3f4247], hall: [0x8c6a4b, 0x5f7d46], workshop: [0x8c6a4b, 0x3f4247], cabin: [0x9a7653, 0x3f4247],
+  greenhouse: [0xd9eef2, 0xcfe7ee], server: [0x6f7378, 0x4b4f55], cistern: [0x8d8f8a, 0x3c6e8a],
+};
+function buildVisionGeometry() {
+  const pos = [], col = []; vTriOwner = [];
+  const wall = new THREE.Color(), roof = new THREE.Color(), tmp = new THREE.Color();
+  let owner = 0;
+  const tri = (a, b, c, color) => { pos.push(...a, ...b, ...c); for (let i = 0; i < 3; i++) col.push(color.r, color.g, color.b); vTriOwner.push(owner); };
+  VISION.buildings.forEach((B, bi) => {
+    if (B.phase > PHASE) return;
+    owner = bi;
+    const pts = B.pts, n = pts.length / 2, P = [];
+    let gmin = Infinity;
+    for (let i = 0; i < n; i++) {
+      const xm = pts[2 * i], ym = pts[2 * i + 1];
+      P.push([(xm - 3000) / U, (ym - 3000) / U]);
+      gmin = Math.min(gmin, sceneY(sample(HIN, xm / 6000, ym / 6000)));
+    }
+    const base = gmin - 0.3;
+    const hM = B.kind === 'cistern' ? 1.6 : B.kind === 'hall' ? 5.5 : B.floors * 3.2 + 0.6;
+    const top = gmin + hM / U * EXAG;
+    wall.setHex(VCOL[B.kind][0]); roof.setHex(VCOL[B.kind][1]);
+    for (let i = 0; i < n; i++) {
+      const [x1, z1] = P[i], [x2, z2] = P[(i + 1) % n];
+      tmp.copy(wall).multiplyScalar(0.8 + 0.2 * Math.abs(Math.cos(Math.atan2(z2 - z1, x2 - x1))));
+      tri([x1, base, z1], [x2, base, z2], [x2, top, z2], tmp);
+      tri([x1, base, z1], [x2, top, z2], [x1, top, z1], tmp);
+    }
+    if (n === 4 && B.kind !== 'greenhouse') {
+      const d01 = Math.hypot(P[1][0] - P[0][0], P[1][1] - P[0][1]), d12 = Math.hypot(P[2][0] - P[1][0], P[2][1] - P[1][1]);
+      const s = d01 >= d12 ? 0 : 1;
+      const A = P[s], Bp = P[s + 1], C = P[(s + 2) % 4], D = P[(s + 3) % 4];
+      const rh = Math.min(d01, d12) * 0.36 * EXAG;
+      const m1 = [(D[0] + A[0]) / 2, top + rh, (D[1] + A[1]) / 2], m2 = [(Bp[0] + C[0]) / 2, top + rh, (Bp[1] + C[1]) / 2];
+      const a = [A[0], top, A[1]], b = [Bp[0], top, Bp[1]], c = [C[0], top, C[1]], d = [D[0], top, D[1]];
+      tri(a, b, m2, roof); tri(a, m2, m1, roof);
+      tmp.copy(roof).multiplyScalar(0.8); tri(c, d, m1, tmp); tri(c, m1, m2, tmp);
+      tri(d, a, m1, wall); tri(b, c, m2, wall);
+    } else if (B.kind === 'greenhouse') {
+      const d01 = Math.hypot(P[1][0] - P[0][0], P[1][1] - P[0][1]), d12 = Math.hypot(P[2][0] - P[1][0], P[2][1] - P[1][1]);
+      const s = d01 >= d12 ? 0 : 1;
+      const A = P[s], Bp = P[s + 1], C = P[(s + 2) % 4], D = P[(s + 3) % 4];
+      const rh = Math.min(d01, d12) * 0.45 * EXAG;
+      const m1 = [(D[0] + A[0]) / 2, top + rh, (D[1] + A[1]) / 2], m2 = [(Bp[0] + C[0]) / 2, top + rh, (Bp[1] + C[1]) / 2];
+      const a = [A[0], top, A[1]], b = [Bp[0], top, Bp[1]], c = [C[0], top, C[1]], d = [D[0], top, D[1]];
+      tri(a, b, m2, roof); tri(a, m2, m1, roof); tri(c, d, m1, roof); tri(c, m1, m2, roof); tri(d, a, m1, roof); tri(b, c, m2, roof);
+    } else {
+      const cx = P.reduce((s2, p) => s2 + p[0], 0) / n, cz = P.reduce((s2, p) => s2 + p[1], 0) / n;
+      const apex = [cx, top + (B.kind === 'hall' ? 0.45 * EXAG : 0), cz];
+      for (let i = 0; i < n; i++) { const [x1, z1] = P[i], [x2, z2] = P[(i + 1) % n]; tri([x1, top, z1], [x2, top, z2], apex, roof); }
+    }
+  });
+  const g = vBld.geometry;
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.computeVertexNormals(); g.computeBoundingSphere();
+}
+function placePanels() {
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(0, 0, 0, 'YXZ'), sc = new THREE.Vector3(1, 1, 1);
+  VISION.panels.forEach(([xm, ym, ang], k) => {
+    const p = toScene(xm, ym, 0.12);
+    e.set(-0.5, -ang, 0, 'YXZ'); q.setFromEuler(e);
+    m.compose(p, q, sc); vPanels.setMatrixAt(k, m);
+  });
+  vPanels.instanceMatrix.needsUpdate = true; vPanels.computeBoundingSphere();
+}
+function drapedPolyline(pts, lift) {
+  const out = [];
+  for (let i = 0; i < pts.length / 2 - 1; i++) {
+    const x1 = pts[2 * i], y1 = pts[2 * i + 1], x2 = pts[2 * i + 2], y2 = pts[2 * i + 3];
+    const steps = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) / 6));
+    for (let s2 = 0; s2 < steps; s2++) { const t = s2 / steps; out.push(toScene(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, lift)); }
+  }
+  out.push(toScene(pts[pts.length - 2], pts[pts.length - 1], lift));
+  return out;
+}
+function makeFlowMat(color) {
+  return new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { uTime: U_.uTime, uColor: { value: new THREE.Color(color) } },
+    vertexShader: 'attribute float d; varying float vd; void main(){ vd = d; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform float uTime; uniform vec3 uColor; varying float vd; void main(){ float a = smoothstep(0.55, 1.0, fract(vd * 0.35 - uTime * 0.9)); gl_FragColor = vec4(uColor * (0.35 + 1.6 * a), 0.25 + 0.75 * a); }',
+  });
+}
+function placeVisionLines() {
+  // meditation walk
+  const pp = drapedPolyline(VISION.paths[0].pts, 0.45);
+  vPath.geometry.setFromPoints(pp); vPath.computeLineDistances();
+  // flows: arcs between places
+  vFlows.forEach(l => { vgroup.remove(l); l.geometry.dispose(); });
+  vFlows = [];
+  for (const f of VISION.flows) {
+    const [x1, y1, x2, y2] = f.pts;
+    const a = toScene(x1, y1, 1.2), b = toScene(x2, y2, 1.2), len = a.distanceTo(b);
+    const pts = [], d = [];
+    for (let i = 0; i <= 40; i++) {
+      const t = i / 40, v = new THREE.Vector3().lerpVectors(a, b, t);
+      v.y = Math.max(v.y, sceneY(sample(HIN, (v.x * U + 3000) / 6000, (v.z * U + 3000) / 6000)) + 1.2) + Math.sin(Math.PI * t) * len * 0.18;
+      pts.push(v); d.push(t * len);
+    }
+    const g = new THREE.BufferGeometry().setFromPoints(pts);
+    g.setAttribute('d', new THREE.Float32BufferAttribute(d, 1));
+    const line = new THREE.Line(g, flowMat[f.kind]);
+    line.userData.kind = f.kind; line.renderOrder = 7;
+    vFlows.push(line); vgroup.add(line);
+  }
+  updateVisionVisibility();
+}
+async function loadVision() {
+  VISION = await (await fetch('vision.json')).json();
+  flowMat.energy = makeFlowMat(0xffc94d); flowMat.heat = makeFlowMat(0xff7a3d); flowMat.water = makeFlowMat(0x5fd0ff);
+  vBld = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8, side: THREE.DoubleSide }));
+  vBld.castShadow = vBld.receiveShadow = true;
+  vPanels = new THREE.InstancedMesh(new THREE.BoxGeometry(5 / U, 0.12 / U, 2.2 / U), new THREE.MeshStandardMaterial({ color: 0x1d2a3a, metalness: 0.6, roughness: 0.25 }), VISION.panels.length);
+  vPanels.castShadow = true;
+  vPath = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color: 0xfff0d0, dashSize: 0.6, gapSize: 0.35, transparent: true, opacity: 0.95, depthWrite: false }));
+  vPath.renderOrder = 6;
+  vgroup.add(vBld, vPanels, vPath);
+  const L = document.getElementById('vlegend');
+  const sw = { 'Gardens & terraces': '#F2B847', 'Orchard (cider apples)': '#85B24D', 'Food forest & woodland': '#2E6B3F', 'Solar field': '#38618C', 'Village': '#EDE6D6' };
+  L.innerHTML = Object.entries(VISION.zones).map(([k, v]) => `<div><span class="sw" style="background:${sw[k]}"></span>${k} · ${v} ha</div>`).join('');
+  placeVision();
+  setPhase(4);
+}
+function placeVision() {
+  if (!VISION) return;
+  buildVisionGeometry(); placePanels(); placeVisionLines();
+}
+function updateVisionVisibility() {
+  vgroup.visible = visionOn && mode !== 1;
+  U_.uVision.value = visionOn ? 1 : 0;
+  if (!VISION) return;
+  vPanels.visible = PHASE >= 2;
+  vPath.visible = PHASE >= 1;
+  vFlows.forEach(l => { const need = { energy: 2, heat: 3, water: 2 }[l.userData.kind]; l.visible = flowsOn && PHASE >= need; });
+}
+function updateClearings() {
+  clearings = [];
+  if (visionOn && VISION) {
+    for (const B of VISION.buildings) {
+      if (B.phase > PHASE) continue;
+      const n = B.pts.length / 2; let cx = 0, cy = 0;
+      for (let i = 0; i < n; i++) { cx += B.pts[2 * i] / n; cy += B.pts[2 * i + 1] / n; }
+      let r = 0; for (let i = 0; i < n; i++) r = Math.max(r, Math.hypot(B.pts[2 * i] - cx, B.pts[2 * i + 1] - cy));
+      clearings.push([cx, cy, r + 7]);
+    }
+    if (PHASE >= 2) clearings.push([VISION.solar[0], VISION.solar[1], 40]);
+  }
+  placeTrees();
+}
+function setPhase(n) {
+  PHASE = n; U_.uPhase.value = n;
+  document.getElementById('phase').value = n;
+  if (VISION) { buildVisionGeometry(); updateVisionVisibility(); updateClearings(); }
+}
+function setVision(on) {
+  visionOn = on;
+  document.getElementById('t-vision').classList.toggle('on', on);
+  updateVisionVisibility(); updateClearings(); refreshPanels();
+}
+function setFlows(on) {
+  flowsOn = on;
+  document.getElementById('t-flows').classList.toggle('on', on);
+  if (on && !visionOn) setVision(true);
+  updateVisionVisibility();
+}
+document.getElementById('t-vision').onclick = () => setVision(!visionOn);
+document.getElementById('t-flows').onclick = () => setFlows(!flowsOn);
+document.getElementById('phase').oninput = (e) => setPhase(+e.target.value);
+// tap a vision building to read about it
+canvas.addEventListener('pointerup', (e) => {
+  if (!visionOn || !vBld || !downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 6) return;
+  const ray = new THREE.Raycaster();
+  ray.setFromCamera(new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera);
+  const hit = ray.intersectObject(vBld, false)[0];
+  if (!hit) return;
+  const B = VISION.buildings[vTriOwner[hit.faceIndex]];
+  const yrs = ['', 'years 0–2', 'years 2–5', 'years 5–10', 'years 10–20'][B.phase];
+  document.getElementById('vinfo').innerHTML = `<b>${B.name}</b> · ${yrs}<br><span style="color:var(--muted)">${B.desc}</span>`;
+});
+
+// ---------------------------------------------------------------- one helper per switch (used by the tour too)
+function setWater(on) { if (waterOn !== on) document.getElementById('t-water').click(); }
+function setSunOn(on) { if (sunOn !== on) document.getElementById('t-sun').click(); }
+
+// ---------------------------------------------------------------- guided tour
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+function viewAt(xm, ym, off, lift = 2) {
+  const t = toScene(xm, ym, lift);
+  return { p: t.clone().add(off), t };
+}
+let SUN_SUMMER = null, SUN_WINTER = null;
+const fmtH = (m) => `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`;
+const TOUR = [
+  { title: 'Between the mountains and the sea', view: () => VIEWS.region, setup: () => { setMode(0); setVision(false); setWater(false); setSunOn(false); },
+    text: () => 'Asturias, northern Spain. The Cantabrian Sea lies 51 km to the north; inland rise the mountains of the Redes UNESCO Biosphere Reserve. The site sits in the upper Nalón valley, above the Tanes reservoir.' },
+  { title: '33 hectares above the reservoir', view: () => VIEWS.site, setup: () => { setMode(0); setVision(false); },
+    text: () => 'A south-facing slope between 608 and 873 m, mostly chestnut and oak woodland with open meadows. The villages of Tañes and Abantru sit just below, with the road and the bee museum.' },
+  { title: 'Sun and water', view: () => VIEWS.site, setup: () => { setMode(2); setVision(false); setWater(true); },
+    text: () => `Most of the land faces the sun. Direct sun on the site, mountains included: about ${SUN_SUMMER} at midsummer and ${SUN_WINTER} at midwinter. The glowing lines show where the rain gathers on its way to the reservoir.` },
+  { title: 'A village that grows from the slope', view: () => viewAt(VISION.core[0], VISION.core[1], V3(26, 16, 44)), setup: () => { setMode(0); setWater(false); setVision(true); setPhase(4); setFlows(false); },
+    text: () => 'The common house and kitchen stand on the gentlest open ground at the bottom of the land, close to the road. Eight timber cabins for retreat guests follow the contour lines on the terraces above.' },
+  { title: 'The heart of 33', view: () => viewAt(VISION.hall[0], VISION.hall[1], V3(-24, 12, 34)), setup: () => { setMode(0); setVision(true); setPhase(4); },
+    text: () => 'Above the village, the octagonal meditation hall looks over the reservoir and the mountains. Silent mornings, daily Dzogchen practice and retreats led by visiting teachers. A meditation walk links hall, viewpoint and village.' },
+  { title: 'Living from the land', view: () => ({ p: V3(45, 78, 150), t: V3(0, -2, 0) }), setup: () => { setMode(0); setVision(true); setPhase(4); setFlows(true); },
+    text: () => { const z = VISION.zones; return `Gardens on the sunny terraces (${z['Gardens & terraces']} ha), cider orchards (${z['Orchard (cider apples)']} ha), solar panels (${z['Solar field']} ha) and a food forest in the woodland (${z['Food forest & woodland']} ha). Gold lines carry solar power, orange the server heat into the greenhouse, blue the water from three cisterns.`; } },
+  { title: 'Twenty years, step by step', view: () => ({ p: V3(45, 78, 150), t: V3(0, -2, 0) }), setup: () => { setMode(0); setVision(true); setFlows(true); playPhases(); },
+    text: () => 'Year 0–2: common house, first cabins and gardens. Year 2–5: meditation hall, cisterns, solar. Year 5–10: orchard harvests, greenhouse and server room. Year 10–20: a living food forest and a full village.' },
+  { title: 'Join the first circle', view: () => VIEWS.site, setup: () => { setMode(0); setVision(true); setPhase(4); setFlows(false); },
+    text: () => 'Walk the 33 hectares with us. Shape the village from day one, with money, skills or time, and bring one person who should be part of it.' },
+];
+let tourIdx = 0, phaseTimer = null;
+function playPhases() {
+  clearInterval(phaseTimer);
+  let n = 0; setPhase(0);
+  phaseTimer = setInterval(() => { n++; setPhase(n); if (n >= 4) clearInterval(phaseTimer); }, 1500);
+}
+function showStep(i) {
+  tourIdx = Math.max(0, Math.min(TOUR.length - 1, i));
+  const st = TOUR[tourIdx];
+  clearInterval(phaseTimer);
+  st.setup();
+  autoRotate = false;
+  const v = st.view();
+  flyTo(v, 3400);
+  document.getElementById('ttitle').textContent = st.title;
+  document.getElementById('ttext').textContent = st.text();
+  document.getElementById('tstep').textContent = `${tourIdx + 1} / ${TOUR.length}`;
+  document.getElementById('tdots').innerHTML = TOUR.map((_, k) => `<i class="${k === tourIdx ? 'on' : ''}"></i>`).join('');
+  document.getElementById('tprev').style.visibility = tourIdx ? 'visible' : 'hidden';
+  document.getElementById('tnext').textContent = tourIdx === TOUR.length - 1 ? 'Explore ›' : 'Next ›';
+}
+function startTour() {
+  if (!SUN_SUMMER) { const s1 = daySummary('2027-06-21', 2), s2 = daySummary('2027-12-21', 1); SUN_SUMMER = fmtH(s1.lit); SUN_WINTER = fmtH(s2.lit); }
+  document.body.classList.add('touring');
+  document.getElementById('tour').classList.add('show');
+  showStep(0);
+}
+function endTour() {
+  clearInterval(phaseTimer);
+  document.body.classList.remove('touring');
+  document.getElementById('tour').classList.remove('show');
+  refreshPanels();
+}
+document.getElementById('tourbtn').onclick = startTour;
+document.getElementById('tclose').onclick = endTour;
+document.getElementById('tprev').onclick = () => showStep(tourIdx - 1);
+document.getElementById('tnext').onclick = () => tourIdx === TOUR.length - 1 ? endTour() : showStep(tourIdx + 1);
+document.getElementById('more').onclick = () => document.getElementById('topright').classList.toggle('open');
+
+
+// ---------------------------------------------------------------- go
+async function init() {
+  scene.fog = new THREE.FogExp2(0x2c3a40, 0.00075);
+  loadmsg.textContent = 'LOADING ELEVATION …';
+  const [Hin, Hwide, Hreg] = await Promise.all([
+    heightArray('heights.png', v => 480 + v / 50),
+    heightArray('heights_wide.png', v => v / 20),
+    heightArray('heights_region.png', v => v / 10 - 50),
+  ]);
+  WIDE = Hwide; HIN = Hin; HREG = Hreg;
+  loadmsg.textContent = 'LOADING HIGH-RES AERIAL PHOTOS (~14 MB) …';
+  const [tIn, tWide, tReg, tWater, tZones] = await Promise.all([texture('ortho.jpg'), texture('ortho_wide.jpg'), texture('ortho_region.jpg'), texture('water.png'), texture('zones.png')]);
+  tZones.colorSpace = THREE.NoColorSpace;
+  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  tIn.anisotropy = tWide.anisotropy = tReg.anisotropy = aniso;
+  tWater.colorSpace = THREE.NoColorSpace;
+
+  loadmsg.textContent = 'BUILDING THE VALLEY …';
+  const inner = buildTerrain(Hin, INNER_HALF, isMobile ? 300 : 600, (x, n) => sample(Hwide, 0.5 + x / 20000, 0.5 - n / 20000), makeMaterial(tIn, { water: tWater, zones: tZones }));
+  inner.castShadow = inner.receiveShadow = true;
+  const outer = buildTerrain(Hwide, OUTER_HALF, isMobile ? 200 : 480, (x, n) => sample(Hreg, 0.5 + x / 120000, 0.5 - n / 120000), makeMaterial(tWide, { outer: true, hole: INNER_HALF }));
+  outer.position.y = -0.15;
+  outer.receiveShadow = true;
+  const region = buildTerrain(Hreg, REGION_HALF, isMobile ? 160 : 360, null, makeMaterial(tReg, { outer: true, hole: OUTER_HALF, region: true }));
+  region.position.y = -0.8;
+  scene.add(inner, outer, region);
+  rebuildPoints();
+  beam = addBeam();
+  loadmsg.textContent = 'PLANTING THE TREES …';
+  try { await loadTrees(); } catch (e) { console.warn('trees', e); }
+  try { await loadHouses(); } catch (e) { console.warn('houses', e); }
+  try { await loadParcels(); } catch (e) { console.warn('parcels', e); }
+  try { await loadVision(); } catch (e) { console.warn('vision', e); }
+  addMist();
+  try { await loadLabels(); } catch (e) { console.warn('labels', e); }
+  applyHash();
+  addEventListener('hashchange', applyHash);
+
+  document.getElementById('loader').style.opacity = 0;
+  setTimeout(() => document.getElementById('loader').remove(), 900);
+  // open on the whole region with the sea, then fly down into the valley
+  const start = scaledPos(VIEWS.region);
+  camera.position.copy(start);
+  controls.target.copy(VIEWS.region.t);
+  camera.lookAt(controls.target);
+  flyTo(VIEWS.site, 7000, start, 2200);
+  if (location.hash === '#region') document.getElementById('region').click();
+  if (location.hash === '#drone') setTimeout(() => document.getElementById('drone').click(), 50);
+  if (location.hash === '#parcels') document.getElementById('t-parcels').click();
+  if (location.hash === '#vision') { setVision(true); setFlows(true); flyTo({ p: new THREE.Vector3(70, 120, 230), t: new THREE.Vector3(0, 0, 0) }, 3000); }
+  const tm = location.hash.match(/^#tour(\d*)$/);
+  if (tm) setTimeout(() => { startTour(); if (tm[1]) showStep(+tm[1] - 1); }, 100);
+}
+
+const pin = document.getElementById('pin');
+const pinPos = new THREE.Vector3();
+const clock = new THREE.Clock();
+let hintShown = false;
+function frame() {
+  requestAnimationFrame(frame);
+  const t = clock.getElapsedTime();
+  U_.uTime.value = t;
+  U_.uScan.value = -INNER_HALF + ((t * 45) % (INNER_HALF * 2 + 60));
+  if (anim) {
+    const k = Math.min(Math.max((performance.now() - anim.start) / anim.dur, 0), 1), e = ease(k);
+    camera.position.lerpVectors(anim.p0, anim.p1, e);
+    controls.target.lerpVectors(anim.t0, anim.t1, e);
+    camera.lookAt(controls.target);
+    if (k >= 1) { anim = null; controls.enabled = true; if (!hintShown && !document.body.classList.contains('touring')) { hintShown = true; const h = document.getElementById('hint'); h.classList.add('show'); setTimeout(() => h.classList.remove('show'), 2800); } }
+  } else if (controls.enabled) {
+    if (autoRotate) {
+      const p = camera.position.clone().sub(controls.target);
+      p.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.0009);
+      camera.position.copy(controls.target).add(p);
+    }
+    controls.update();
+  }
+  const camDist = camera.position.distanceTo(controls.target);
+  scene.fog.density = Math.min(0.00075, Math.max(0.00003, 0.32 / camDist)) * (mode === 1 ? 1.4 : 1);
+  pinPos.set(0, 72, 0).project(camera);
+  const near = camera.position.distanceTo(new THREE.Vector3(0, 0, 0)) < 90;
+  if (beam) beam.visible = !near;
+  const vis = pinPos.z < 1 && !near;
+  pin.style.display = vis ? 'block' : 'none';
+  pin.style.left = ((pinPos.x + 1) / 2 * innerWidth) + 'px';
+  pin.style.top = ((1 - pinPos.y) / 2 * innerHeight) + 'px';
+  updateLabels();
+  renderer.render(scene, camera);
+}
+fitCamera();
+addEventListener('resize', () => {
+  fitCamera();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+init().then(frame).catch(err => { loadmsg.textContent = 'COULD NOT LOAD: ' + err.message; console.error(err); });
+</script>
+</body>
+</html>
